@@ -1,0 +1,95 @@
+{
+  "SettingConfiguration": {
+    "Settings": {
+      "Caption": {
+        "Id": "Caption",
+        "Key": "Caption",
+        "Value": "Grow Room Controller"
+      },
+      "Description": {
+        "Id": "Description",
+        "Key": "Description",
+        "Value": "Raspberry Pi to run your grow room."
+      },
+      "Locale": {
+        "Id": "Locale",
+        "Key": "Locale",
+        "Value": "en-US"
+      }
+    }
+  },
+  "DataPointConfiguration": {
+    "DataPoints": {
+      "AirTemp": {
+        "Id": "AirTemp",
+        "Caption": "Air Temperature",
+        "Icon": "AirTemp",
+        "Template": "OffOnValueTemplate",
+        "ShowInUI": true
+      },
+      "AirHumidity": {
+        "Id": "AirHumidity",
+        "Caption": "Air Humidity",
+        "Icon": "AirHumidity",
+        "Template": "OffOnValueTemplate",
+        "ShowInUI": true
+      },
+      "CO2PPM": {
+        "Id": "CO2PPM",
+        "Caption": "CO2 Parts per million",
+        "Icon": "CO2",
+        "Template": "PPMValueTemplate",
+        "ShowInUI": true
+      },
+      "Time": {
+        "Id": "Time",
+        "Caption": "Time",
+        "Icon": "Time",
+        "Template": "OffOnDateTimeTemplate",
+        "ShowInUI": true
+      },
+      "LightOn": {
+        "Id": "LightOn",
+        "Caption": "Lights currently on",
+        "Icon": "LightOn",
+        "Template": "OffOnValueTemplate",
+        "ShowInUI": true
+      },
+      "PlantMoisture": {
+        "Id": "PlantMoisture",
+        "Caption": "Plant Growth Medium Moisture Level",
+        "Icon": "PlantMoisture",
+        "Template": "LevelTemplate",
+        "ShowInUI": false
+      },
+      "NutrientpH": {
+        "Id": "NutrientpH",
+        "Caption": "Nutrient pH",
+        "Icon": "NutrientpH",
+        "Template": "LevelTemplate",
+        "ShowInUI": false
+      },
+      "NutrientPPM": {
+        "Id": "NutrientPPM",
+        "Caption": "Nutrient Parts per million",
+        "Icon": "NutrientPPM",
+        "Template": "LevelTemplate",
+        "ShowInUI": false
+      },
+      "NutrientTemp": {
+        "Id": "NutrientTemp",
+        "Caption": "Nutrient Temperature",
+        "Icon": "NutrientTemp",
+        "Template": "LevelTemplate",
+        "ShowInUI": false
+      },
+      "NutrientVolume": {
+        "Id": "NutrientVolume",
+        "Caption": "Nutrient Volume",
+        "Icon": "NutrientVolume",
+        "Template": "LevelTemplate",
+        "ShowInUI": false
+      }
+    }
+  }
+}

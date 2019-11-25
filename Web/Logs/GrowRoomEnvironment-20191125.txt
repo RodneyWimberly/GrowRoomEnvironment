@@ -1,0 +1,469 @@
+2019-11-25T03:39:49.4239677-08:00  [INF] Starting IdentityServer4 version "3.0.2.0" (8add0571)
+2019-11-25T03:39:49.4375519-08:00  [FTL] No storage mechanism for clients specified. Use the 'AddInMemoryClients' extension method to register a development version. (941f913a)
+2019-11-25T03:39:55.2620976-08:00  [FTL] Application startup exception (6c57a5ba)
+System.InvalidOperationException: No storage mechanism for clients specified. Use the 'AddInMemoryClients' extension method to register a development version.
+   at Microsoft.AspNetCore.Builder.IdentityServerApplicationBuilderExtensions.TestService(IServiceProvider serviceProvider, Type service, ILogger logger, String message, Boolean doThrow)
+   at Microsoft.AspNetCore.Builder.IdentityServerApplicationBuilderExtensions.Validate(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Builder.IdentityServerApplicationBuilderExtensions.UseIdentityServer(IApplicationBuilder app, IdentityServerMiddlewareOptions options)
+   at GrowRoomEnvironment.Web.Startup.Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory) in C:\Projects\Iot\GrowRoomEnvironment\Web\Startup.cs:line 243
+   at System.RuntimeMethodHandle.InvokeMethod(Object target, Object[] arguments, Signature sig, Boolean constructor, Boolean wrapExceptions)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.Invoke(Object instance, IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConfigureBuilder.<>c__DisplayClass4_0.<Build>b__0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Mvc.Filters.MiddlewareFilterBuilderStartupFilter.<>c__DisplayClass0_0.<Configure>g__MiddlewareFilterBuilder|0(IApplicationBuilder builder)
+   at Microsoft.AspNetCore.HostFilteringStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder app)
+   at Microsoft.AspNetCore.Hosting.WebHost.BuildApplication()
+2019-11-25T03:58:23.4284359-08:00  [WRN] The entity type '"ApiResource"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4362936-08:00  [WRN] The entity type '"ApiResourceClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4367452-08:00  [WRN] The entity type '"ApiResourceProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4368094-08:00  [WRN] The entity type '"ApiScope"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4368639-08:00  [WRN] The entity type '"ApiScopeClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4369176-08:00  [WRN] The entity type '"ApiSecret"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4369577-08:00  [WRN] The entity type '"Client"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4369990-08:00  [WRN] The entity type '"ClientClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4370306-08:00  [WRN] The entity type '"ClientCorsOrigin"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4370774-08:00  [WRN] The entity type '"ClientGrantType"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4371092-08:00  [WRN] The entity type '"ClientIdPRestriction"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4371423-08:00  [WRN] The entity type '"ClientPostLogoutRedirectUri"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4371827-08:00  [WRN] The entity type '"ClientProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4372431-08:00  [WRN] The entity type '"ClientRedirectUri"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4372949-08:00  [WRN] The entity type '"ClientScope"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4373864-08:00  [WRN] The entity type '"ClientSecret"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4374404-08:00  [WRN] The entity type '"IdentityClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4374879-08:00  [WRN] The entity type '"IdentityResource"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4375302-08:00  [WRN] The entity type '"IdentityResourceProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T03:58:23.4795390-08:00  [INF] Entity Framework Core "3.0.1" initialized '"ConfigurationDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:02:10.5587554-08:00  [WRN] The entity type '"DeviceFlowCodes"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:02:10.5667604-08:00  [WRN] The entity type '"PersistedGrant"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:02:10.6025113-08:00  [INF] Entity Framework Core "3.0.1" initialized '"PersistedGrantDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:05:41.1037893-08:00  [WRN] The entity type '"ApiResource"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1115234-08:00  [WRN] The entity type '"ApiResourceClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1116592-08:00  [WRN] The entity type '"ApiResourceProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1117038-08:00  [WRN] The entity type '"ApiScope"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1117340-08:00  [WRN] The entity type '"ApiScopeClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1117662-08:00  [WRN] The entity type '"ApiSecret"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1117927-08:00  [WRN] The entity type '"Client"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1118271-08:00  [WRN] The entity type '"ClientClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1118553-08:00  [WRN] The entity type '"ClientCorsOrigin"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1118861-08:00  [WRN] The entity type '"ClientGrantType"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1119119-08:00  [WRN] The entity type '"ClientIdPRestriction"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1119425-08:00  [WRN] The entity type '"ClientPostLogoutRedirectUri"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1119840-08:00  [WRN] The entity type '"ClientProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1120183-08:00  [WRN] The entity type '"ClientRedirectUri"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1120463-08:00  [WRN] The entity type '"ClientScope"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1120840-08:00  [WRN] The entity type '"ClientSecret"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1121135-08:00  [WRN] The entity type '"IdentityClaim"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1121534-08:00  [WRN] The entity type '"IdentityResource"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1121881-08:00  [WRN] The entity type '"IdentityResourceProperty"' is configured to use schema '"IdentityConfigurationSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:05:41.1454788-08:00  [INF] Entity Framework Core "3.0.1" initialized '"ConfigurationDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:05:41.3196362-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';" (65d11854)
+2019-11-25T04:05:41.3450722-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';" (65d11854)
+2019-11-25T04:05:41.3571726-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"MigrationId\", \"ProductVersion\"
+FROM \"__EFMigrationsHistory\"
+ORDER BY \"MigrationId\";" (65d11854)
+2019-11-25T04:05:41.3856943-08:00  [INF] Applying migration '"20191125115823_AddConfiguration"'. (0e2ac64d)
+2019-11-25T04:05:41.4967562-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiResources\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiResources\" PRIMARY KEY AUTOINCREMENT,
+    \"Enabled\" INTEGER NOT NULL,
+    \"Name\" TEXT NOT NULL,
+    \"DisplayName\" TEXT NULL,
+    \"Description\" TEXT NULL,
+    \"Created\" TEXT NOT NULL,
+    \"Updated\" TEXT NULL,
+    \"LastAccessed\" TEXT NULL,
+    \"NonEditable\" INTEGER NOT NULL
+);" (65d11854)
+2019-11-25T04:05:41.4978938-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"Clients\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_Clients\" PRIMARY KEY AUTOINCREMENT,
+    \"Enabled\" INTEGER NOT NULL,
+    \"ClientId\" TEXT NOT NULL,
+    \"ProtocolType\" TEXT NOT NULL,
+    \"RequireClientSecret\" INTEGER NOT NULL,
+    \"ClientName\" TEXT NULL,
+    \"Description\" TEXT NULL,
+    \"ClientUri\" TEXT NULL,
+    \"LogoUri\" TEXT NULL,
+    \"RequireConsent\" INTEGER NOT NULL,
+    \"AllowRememberConsent\" INTEGER NOT NULL,
+    \"AlwaysIncludeUserClaimsInIdToken\" INTEGER NOT NULL,
+    \"RequirePkce\" INTEGER NOT NULL,
+    \"AllowPlainTextPkce\" INTEGER NOT NULL,
+    \"AllowAccessTokensViaBrowser\" INTEGER NOT NULL,
+    \"FrontChannelLogoutUri\" TEXT NULL,
+    \"FrontChannelLogoutSessionRequired\" INTEGER NOT NULL,
+    \"BackChannelLogoutUri\" TEXT NULL,
+    \"BackChannelLogoutSessionRequired\" INTEGER NOT NULL,
+    \"AllowOfflineAccess\" INTEGER NOT NULL,
+    \"IdentityTokenLifetime\" INTEGER NOT NULL,
+    \"AccessTokenLifetime\" INTEGER NOT NULL,
+    \"AuthorizationCodeLifetime\" INTEGER NOT NULL,
+    \"ConsentLifetime\" INTEGER NULL,
+    \"AbsoluteRefreshTokenLifetime\" INTEGER NOT NULL,
+    \"SlidingRefreshTokenLifetime\" INTEGER NOT NULL,
+    \"RefreshTokenUsage\" INTEGER NOT NULL,
+    \"UpdateAccessTokenClaimsOnRefresh\" INTEGER NOT NULL,
+    \"RefreshTokenExpiration\" INTEGER NOT NULL,
+    \"AccessTokenType\" INTEGER NOT NULL,
+    \"EnableLocalLogin\" INTEGER NOT NULL,
+    \"IncludeJwtId\" INTEGER NOT NULL,
+    \"AlwaysSendClientClaims\" INTEGER NOT NULL,
+    \"ClientClaimsPrefix\" TEXT NULL,
+    \"PairWiseSubjectSalt\" TEXT NULL,
+    \"Created\" TEXT NOT NULL,
+    \"Updated\" TEXT NULL,
+    \"LastAccessed\" TEXT NULL,
+    \"UserSsoLifetime\" INTEGER NULL,
+    \"UserCodeType\" TEXT NULL,
+    \"DeviceCodeLifetime\" INTEGER NOT NULL,
+    \"NonEditable\" INTEGER NOT NULL
+);" (65d11854)
+2019-11-25T04:05:41.4981183-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"IdentityResources\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_IdentityResources\" PRIMARY KEY AUTOINCREMENT,
+    \"Enabled\" INTEGER NOT NULL,
+    \"Name\" TEXT NOT NULL,
+    \"DisplayName\" TEXT NULL,
+    \"Description\" TEXT NULL,
+    \"Required\" INTEGER NOT NULL,
+    \"Emphasize\" INTEGER NOT NULL,
+    \"ShowInDiscoveryDocument\" INTEGER NOT NULL,
+    \"Created\" TEXT NOT NULL,
+    \"Updated\" TEXT NULL,
+    \"NonEditable\" INTEGER NOT NULL
+);" (65d11854)
+2019-11-25T04:05:41.4982504-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiClaims\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiClaims\" PRIMARY KEY AUTOINCREMENT,
+    \"Type\" TEXT NOT NULL,
+    \"ApiResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ApiClaims_ApiResources_ApiResourceId\" FOREIGN KEY (\"ApiResourceId\") REFERENCES \"ApiResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4983779-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiProperties\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiProperties\" PRIMARY KEY AUTOINCREMENT,
+    \"Key\" TEXT NOT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"ApiResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ApiProperties_ApiResources_ApiResourceId\" FOREIGN KEY (\"ApiResourceId\") REFERENCES \"ApiResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4985269-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiScopes\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiScopes\" PRIMARY KEY AUTOINCREMENT,
+    \"Name\" TEXT NOT NULL,
+    \"DisplayName\" TEXT NULL,
+    \"Description\" TEXT NULL,
+    \"Required\" INTEGER NOT NULL,
+    \"Emphasize\" INTEGER NOT NULL,
+    \"ShowInDiscoveryDocument\" INTEGER NOT NULL,
+    \"ApiResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ApiScopes_ApiResources_ApiResourceId\" FOREIGN KEY (\"ApiResourceId\") REFERENCES \"ApiResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4986918-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiSecrets\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiSecrets\" PRIMARY KEY AUTOINCREMENT,
+    \"Description\" TEXT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"Expiration\" TEXT NULL,
+    \"Type\" TEXT NOT NULL,
+    \"Created\" TEXT NOT NULL,
+    \"ApiResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ApiSecrets_ApiResources_ApiResourceId\" FOREIGN KEY (\"ApiResourceId\") REFERENCES \"ApiResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4988172-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientClaims\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientClaims\" PRIMARY KEY AUTOINCREMENT,
+    \"Type\" TEXT NOT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientClaims_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4989308-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientCorsOrigins\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientCorsOrigins\" PRIMARY KEY AUTOINCREMENT,
+    \"Origin\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientCorsOrigins_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4990311-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientGrantTypes\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientGrantTypes\" PRIMARY KEY AUTOINCREMENT,
+    \"GrantType\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientGrantTypes_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4991271-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientIdPRestrictions\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientIdPRestrictions\" PRIMARY KEY AUTOINCREMENT,
+    \"Provider\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientIdPRestrictions_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4992302-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientPostLogoutRedirectUris\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientPostLogoutRedirectUris\" PRIMARY KEY AUTOINCREMENT,
+    \"PostLogoutRedirectUri\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientPostLogoutRedirectUris_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4993498-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientProperties\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientProperties\" PRIMARY KEY AUTOINCREMENT,
+    \"Key\" TEXT NOT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientProperties_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4994529-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientRedirectUris\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientRedirectUris\" PRIMARY KEY AUTOINCREMENT,
+    \"RedirectUri\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientRedirectUris_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4995811-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientScopes\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientScopes\" PRIMARY KEY AUTOINCREMENT,
+    \"Scope\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientScopes_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4996913-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ClientSecrets\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ClientSecrets\" PRIMARY KEY AUTOINCREMENT,
+    \"Description\" TEXT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"Expiration\" TEXT NULL,
+    \"Type\" TEXT NOT NULL,
+    \"Created\" TEXT NOT NULL,
+    \"ClientId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ClientSecrets_Clients_ClientId\" FOREIGN KEY (\"ClientId\") REFERENCES \"Clients\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4997986-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"IdentityClaims\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_IdentityClaims\" PRIMARY KEY AUTOINCREMENT,
+    \"Type\" TEXT NOT NULL,
+    \"IdentityResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_IdentityClaims_IdentityResources_IdentityResourceId\" FOREIGN KEY (\"IdentityResourceId\") REFERENCES \"IdentityResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.4999030-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"IdentityProperties\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_IdentityProperties\" PRIMARY KEY AUTOINCREMENT,
+    \"Key\" TEXT NOT NULL,
+    \"Value\" TEXT NOT NULL,
+    \"IdentityResourceId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_IdentityProperties_IdentityResources_IdentityResourceId\" FOREIGN KEY (\"IdentityResourceId\") REFERENCES \"IdentityResources\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.5000064-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"ApiScopeClaims\" (
+    \"Id\" INTEGER NOT NULL CONSTRAINT \"PK_ApiScopeClaims\" PRIMARY KEY AUTOINCREMENT,
+    \"Type\" TEXT NOT NULL,
+    \"ApiScopeId\" INTEGER NOT NULL,
+    CONSTRAINT \"FK_ApiScopeClaims_ApiScopes_ApiScopeId\" FOREIGN KEY (\"ApiScopeId\") REFERENCES \"ApiScopes\" (\"Id\") ON DELETE CASCADE
+);" (65d11854)
+2019-11-25T04:05:41.5001048-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ApiClaims_ApiResourceId\" ON \"ApiClaims\" (\"ApiResourceId\");" (65d11854)
+2019-11-25T04:05:41.5002232-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ApiProperties_ApiResourceId\" ON \"ApiProperties\" (\"ApiResourceId\");" (65d11854)
+2019-11-25T04:05:41.5003208-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE UNIQUE INDEX \"IX_ApiResources_Name\" ON \"ApiResources\" (\"Name\");" (65d11854)
+2019-11-25T04:05:41.5004634-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ApiScopeClaims_ApiScopeId\" ON \"ApiScopeClaims\" (\"ApiScopeId\");" (65d11854)
+2019-11-25T04:05:41.5005607-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ApiScopes_ApiResourceId\" ON \"ApiScopes\" (\"ApiResourceId\");" (65d11854)
+2019-11-25T04:05:41.5006500-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE UNIQUE INDEX \"IX_ApiScopes_Name\" ON \"ApiScopes\" (\"Name\");" (65d11854)
+2019-11-25T04:05:41.5007445-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ApiSecrets_ApiResourceId\" ON \"ApiSecrets\" (\"ApiResourceId\");" (65d11854)
+2019-11-25T04:05:41.5008421-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientClaims_ClientId\" ON \"ClientClaims\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5009324-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientCorsOrigins_ClientId\" ON \"ClientCorsOrigins\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5010270-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientGrantTypes_ClientId\" ON \"ClientGrantTypes\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5011203-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientIdPRestrictions_ClientId\" ON \"ClientIdPRestrictions\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5012158-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientPostLogoutRedirectUris_ClientId\" ON \"ClientPostLogoutRedirectUris\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5013057-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientProperties_ClientId\" ON \"ClientProperties\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5015027-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientRedirectUris_ClientId\" ON \"ClientRedirectUris\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5016341-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE UNIQUE INDEX \"IX_Clients_ClientId\" ON \"Clients\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5017777-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientScopes_ClientId\" ON \"ClientScopes\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5019057-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_ClientSecrets_ClientId\" ON \"ClientSecrets\" (\"ClientId\");" (65d11854)
+2019-11-25T04:05:41.5020483-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_IdentityClaims_IdentityResourceId\" ON \"IdentityClaims\" (\"IdentityResourceId\");" (65d11854)
+2019-11-25T04:05:41.5021561-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_IdentityProperties_IdentityResourceId\" ON \"IdentityProperties\" (\"IdentityResourceId\");" (65d11854)
+2019-11-25T04:05:41.5022534-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE UNIQUE INDEX \"IX_IdentityResources_Name\" ON \"IdentityResources\" (\"Name\");" (65d11854)
+2019-11-25T04:05:41.5023666-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")
+VALUES ('20191125115823_AddConfiguration', '3.0.1');" (65d11854)
+2019-11-25T04:08:06.7310197-08:00  [WRN] The entity type '"DeviceFlowCodes"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:08:06.7390946-08:00  [WRN] The entity type '"PersistedGrant"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:08:06.7793974-08:00  [INF] Entity Framework Core "3.0.1" initialized '"PersistedGrantDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:08:06.9047470-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';" (65d11854)
+2019-11-25T04:08:06.9298455-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"name\" = '__EFMigrationsHistory' AND \"type\" = 'table';" (65d11854)
+2019-11-25T04:08:06.9430346-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""SELECT \"MigrationId\", \"ProductVersion\"
+FROM \"__EFMigrationsHistory\"
+ORDER BY \"MigrationId\";" (65d11854)
+2019-11-25T04:08:06.9723310-08:00  [INF] Applying migration '"20191125120210_AddPersistedGrant"'. (0e2ac64d)
+2019-11-25T04:08:07.0164470-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"DeviceCodes\" (
+    \"UserCode\" TEXT NOT NULL CONSTRAINT \"PK_DeviceCodes\" PRIMARY KEY,
+    \"DeviceCode\" TEXT NOT NULL,
+    \"SubjectId\" TEXT NULL,
+    \"ClientId\" TEXT NOT NULL,
+    \"CreationTime\" TEXT NOT NULL,
+    \"Expiration\" TEXT NOT NULL,
+    \"Data\" TEXT NOT NULL
+);" (65d11854)
+2019-11-25T04:08:07.0175156-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE TABLE \"PersistedGrants\" (
+    \"Key\" TEXT NOT NULL CONSTRAINT \"PK_PersistedGrants\" PRIMARY KEY,
+    \"Type\" TEXT NOT NULL,
+    \"SubjectId\" TEXT NULL,
+    \"ClientId\" TEXT NOT NULL,
+    \"CreationTime\" TEXT NOT NULL,
+    \"Expiration\" TEXT NULL,
+    \"Data\" TEXT NOT NULL
+);" (65d11854)
+2019-11-25T04:08:07.0177024-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE UNIQUE INDEX \"IX_DeviceCodes_DeviceCode\" ON \"DeviceCodes\" (\"DeviceCode\");" (65d11854)
+2019-11-25T04:08:07.0178283-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_DeviceCodes_Expiration\" ON \"DeviceCodes\" (\"Expiration\");" (65d11854)
+2019-11-25T04:08:07.0179326-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_PersistedGrants_Expiration\" ON \"PersistedGrants\" (\"Expiration\");" (65d11854)
+2019-11-25T04:08:07.0180259-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""CREATE INDEX \"IX_PersistedGrants_SubjectId_ClientId_Type\" ON \"PersistedGrants\" (\"SubjectId\", \"ClientId\", \"Type\");" (65d11854)
+2019-11-25T04:08:07.0181230-08:00  [INF] Executing DbCommand [Parameters=[""], CommandType='Text', CommandTimeout='30']"
+""INSERT INTO \"__EFMigrationsHistory\" (\"MigrationId\", \"ProductVersion\")
+VALUES ('20191125120210_AddPersistedGrant', '3.0.1');" (65d11854)
+2019-11-25T04:15:23.9704711-08:00  [INF] Starting IdentityServer4 version "3.0.2.0" (8add0571)
+2019-11-25T04:15:25.3189850-08:00  [INF] Using the default authentication scheme "Identity.Application" for IdentityServer (4a54f457)
+2019-11-25T04:15:26.6019748-08:00  [INF] Starting @angular/cli on port 5321... (7fa5ac50)
+2019-11-25T04:15:29.8399149-08:00  [INF] User profile is available. Using '"C:\Users\Rodney\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest. (7ac5e29c)
+2019-11-25T04:15:36.4027158-08:00 0HLRHK4KTVLBG:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/   (ca22a1cb)
+2019-11-25T04:15:43.2658094-08:00  [ERR] Browserslist: caniuse-lite is outdated. Please run next command `npm update`
+ (ad9dc99d)
+2019-11-25T04:16:03.7275235-08:00  [WRN] The entity type '"DeviceFlowCodes"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:16:03.7276588-08:00  [WRN] The entity type '"PersistedGrant"' is configured to use schema '"IdentityOperationalSchema"'. SQLite does not support schemas. This configuration will be ignored by the SQLite provider. (5d2a9717)
+2019-11-25T04:16:03.8450776-08:00  [INF] Entity Framework Core "3.0.1" initialized '"PersistedGrantDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:16:20.6488734-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"p\".\"Key\", \"p\".\"ClientId\", \"p\".\"CreationTime\", \"p\".\"Data\", \"p\".\"Expiration\", \"p\".\"SubjectId\", \"p\".\"Type\"
+FROM \"PersistedGrants\" AS \"p\"
+WHERE \"p\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"p\".\"Key\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:16:20.9224143-08:00  [INF] Removing 0 grants (62cd9308)
+2019-11-25T04:16:20.9328277-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"d\".\"UserCode\", \"d\".\"ClientId\", \"d\".\"CreationTime\", \"d\".\"Data\", \"d\".\"DeviceCode\", \"d\".\"Expiration\", \"d\".\"SubjectId\"
+FROM \"DeviceCodes\" AS \"d\"
+WHERE \"d\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"d\".\"DeviceCode\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:16:21.0983006-08:00  [INF] Removing 0 device flow codes (171ba47d)
+2019-11-25T04:16:24.4034070-08:00  [INF] > growroomenvironment@0.0.0 start C:\Projects\Iot\GrowRoomEnvironment\Web\ClientApp
+> ng serve "--port" "5321"
+
+
+ (5f5b2d9a)
+2019-11-25T04:16:24.4039488-08:00  [INF] Date: 2019-11-25T12:16:24.395Z
+Hash: 636f611a6d1f041deb4e
+Time: 40458ms
+chunk {main} main.js, main.js.map (main) 26.7 kB [initial] [rendered]
+chunk {polyfills} polyfills.js, polyfills.js.map (polyfills) 274 kB [initial] [rendered]
+chunk {runtime} runtime.js, runtime.js.map (runtime) 6.08 kB [entry] [rendered]
+chunk {styles} styles.css, styles.css.map (styles) 141 kB [initial] [rendered]
+chunk {vendor} vendor.js, vendor.js.map (vendor) 4.27 MB [initial] [rendered]
+ (958425da)
+2019-11-25T04:16:24.4065783-08:00  [INF] ** Angular Live Development Server is listening on localhost:5321, open your browser on http://localhost:5321/ **
+ (4e0923bf)
+2019-11-25T04:16:24.5413792-08:00  [INF] i ∩╜ówdm∩╜ú: Compiled successfully.
+ (29058622)
+2019-11-25T04:16:29.0348652-08:00 0HLRHK4KTVLBG:00000001 [INF] Request finished in 52634.587700000004ms 200 text/html; charset=UTF-8 (791a596a)
+2019-11-25T04:16:29.0716263-08:00 0HLRHK4KTVLBH:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/styles.css   (ca22a1cb)
+2019-11-25T04:16:29.0721025-08:00 0HLRHK4KTVLBI:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/runtime.js   (ca22a1cb)
+2019-11-25T04:16:29.0724081-08:00 0HLRHK4KTVLBJ:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/polyfills.js   (ca22a1cb)
+2019-11-25T04:16:29.0727711-08:00 0HLRHK4KTVLBK:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/vendor.js   (ca22a1cb)
+2019-11-25T04:16:29.0729195-08:00 0HLRHK4KTVLBL:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/main.js   (ca22a1cb)
+2019-11-25T04:16:29.1072917-08:00 0HLRHK4KTVLBG:00000002 [INF] Request starting HTTP/1.1 GET http://localhost:5001/cache.manifest   (ca22a1cb)
+2019-11-25T04:16:29.1607504-08:00 0HLRHK4KTVLBJ:00000001 [INF] Request finished in 88.02850000000001ms 200 application/javascript; charset=UTF-8 (791a596a)
+2019-11-25T04:16:29.1696200-08:00 0HLRHK4KTVLBL:00000001 [INF] Request finished in 96.6862ms 200 application/javascript; charset=UTF-8 (791a596a)
+2019-11-25T04:16:29.1846974-08:00 0HLRHK4KTVLBG:00000002 [INF] Sending file. Request path: '"/cache.manifest"'. Physical path: '"C:\Projects\Iot\GrowRoomEnvironment\Web\wwwroot\cache.manifest"' (27b0a520)
+2019-11-25T04:16:29.1848029-08:00 0HLRHK4KTVLBG:00000002 [INF] Request finished in 77.54950000000001ms 200 application/x-ms-manifest (791a596a)
+2019-11-25T04:16:29.1883273-08:00 0HLRHK4KTVLBG:00000003 [INF] Request starting HTTP/1.1 GET http://localhost:5001/   (ca22a1cb)
+2019-11-25T04:16:29.2155153-08:00 0HLRHK4KTVLBG:00000003 [INF] Request finished in 27.2055ms 304  (791a596a)
+2019-11-25T04:16:29.2341809-08:00 0HLRHK4KTVLBG:00000004 [INF] Request starting HTTP/1.1 GET http://localhost:5001/cache.manifest   (ca22a1cb)
+2019-11-25T04:16:29.2362183-08:00 0HLRHK4KTVLBG:00000004 [INF] The file "/cache.manifest" was not modified (f1f8d725)
+2019-11-25T04:16:29.2367304-08:00 0HLRHK4KTVLBG:00000004 [INF] Request finished in 2.5677000000000003ms 304 application/x-ms-manifest (791a596a)
+2019-11-25T04:16:30.1889069-08:00 0HLRHK4KTVLBI:00000001 [INF] Request finished in 1116.7121ms 200 application/javascript; charset=UTF-8 (791a596a)
+2019-11-25T04:16:30.2015234-08:00 0HLRHK4KTVLBH:00000001 [INF] Request finished in 1129.8614ms 200 text/css; charset=UTF-8 (791a596a)
+2019-11-25T04:16:30.3950115-08:00 0HLRHK4KTVLBM:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/runtime.js.map   (ca22a1cb)
+2019-11-25T04:16:30.5891791-08:00 0HLRHK4KTVLBN:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/polyfills.js.map   (ca22a1cb)
+2019-11-25T04:16:30.7016369-08:00 0HLRHK4KTVLBM:00000001 [INF] Request finished in 306.7273ms 200 application/json; charset=UTF-8 (791a596a)
+2019-11-25T04:16:30.7027728-08:00 0HLRHK4KTVLBK:00000001 [INF] Request finished in 1629.9742ms 200 application/javascript; charset=UTF-8 (791a596a)
+2019-11-25T04:16:30.7148003-08:00 0HLRHK4KTVLBN:00000001 [INF] Request finished in 125.4795ms 200 application/json; charset=UTF-8 (791a596a)
+2019-11-25T04:16:31.2379867-08:00 0HLRHK4KTVLBP:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/main.js.map   (ca22a1cb)
+2019-11-25T04:16:31.2424699-08:00 0HLRHK4KTVLBP:00000001 [INF] Request finished in 4.6557ms 200 application/json; charset=UTF-8 (791a596a)
+2019-11-25T04:16:31.2508141-08:00 0HLRHK4KTVLBO:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/vendor.js.map   (ca22a1cb)
+2019-11-25T04:16:31.3572547-08:00 0HLRHK4KTVLBK:00000002 [INF] Request starting HTTP/1.1 GET http://localhost:5001/sockjs-node/info?t=1574684191330   (ca22a1cb)
+2019-11-25T04:16:31.4652895-08:00 0HLRHK4KTVLBH:00000002 [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (ca22a1cb)
+2019-11-25T04:16:31.4706579-08:00 0HLRHK4KTVLBH:00000002 [INF] Sending file. Request path: '"/favicon.ico"'. Physical path: '"C:\Projects\Iot\GrowRoomEnvironment\Web\wwwroot\favicon.ico"' (27b0a520)
+2019-11-25T04:16:31.4707797-08:00 0HLRHK4KTVLBH:00000002 [INF] Request finished in 5.7137ms 200 image/x-icon (791a596a)
+2019-11-25T04:16:31.4990450-08:00 0HLRHK4KTVLBO:00000001 [INF] Request finished in 248.252ms 200 application/json; charset=UTF-8 (791a596a)
+2019-11-25T04:16:32.3836586-08:00 0HLRHK4KTVLBK:00000002 [INF] Request finished in 1026.449ms 200 application/json; charset=UTF-8 (791a596a)
+2019-11-25T04:16:32.3959747-08:00 0HLRHK4KTVLBQ:00000001 [INF] Request starting HTTP/1.1 GET http://localhost:5001/sockjs-node/943/ggm1dmwc/websocket   (ca22a1cb)
+2019-11-25T04:16:32.4034857-08:00 0HLRHK4KTVLBQ:00000001 [INF] CORS policy execution successful. (5409d6ef)
+2019-11-25T04:16:32.4082638-08:00 0HLRHK4KTVLBQ:00000001 [INF] No CORS policy found for the specified request. (712d2911)
+2019-11-25T04:16:51.1300852-08:00  [INF] Entity Framework Core "3.0.1" initialized '"PersistedGrantDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:16:51.1353238-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"p\".\"Key\", \"p\".\"ClientId\", \"p\".\"CreationTime\", \"p\".\"Data\", \"p\".\"Expiration\", \"p\".\"SubjectId\", \"p\".\"Type\"
+FROM \"PersistedGrants\" AS \"p\"
+WHERE \"p\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"p\".\"Key\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:16:51.1997833-08:00  [INF] Removing 0 grants (62cd9308)
+2019-11-25T04:16:51.2007390-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"d\".\"UserCode\", \"d\".\"ClientId\", \"d\".\"CreationTime\", \"d\".\"Data\", \"d\".\"DeviceCode\", \"d\".\"Expiration\", \"d\".\"SubjectId\"
+FROM \"DeviceCodes\" AS \"d\"
+WHERE \"d\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"d\".\"DeviceCode\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:16:51.2489601-08:00  [INF] Removing 0 device flow codes (171ba47d)
+2019-11-25T04:17:19.6992990-08:00 0HLRHK4KTVLBK:00000003 [INF] Request starting HTTP/1.1 GET http://localhost:5001/weatherforecast   (ca22a1cb)
+2019-11-25T04:17:19.7011718-08:00 0HLRHK4KTVLBK:00000003 [INF] Executing endpoint '"GrowRoomEnvironment.Web.Controllers.WeatherForecastController.Get (GrowRoomEnvironment.Web)"' (500cc934)
+2019-11-25T04:17:19.7459391-08:00 0HLRHK4KTVLBK:00000003 [INF] Route matched with "{action = \"Get\", controller = \"WeatherForecast\", page = \"\"}". Executing controller action with signature "System.Collections.Generic.IEnumerable`1[GrowRoomEnvironment.Web.ViewModels.WeatherForecast] Get()" on controller "GrowRoomEnvironment.Web.Controllers.WeatherForecastController" ("GrowRoomEnvironment.Web"). (122b2fdf)
+2019-11-25T04:17:19.7563069-08:00 0HLRHK4KTVLBK:00000003 [INF] Executing ObjectResult, writing value of type '"GrowRoomEnvironment.Web.ViewModels.WeatherForecast[]"'. (8a1b66c8)
+2019-11-25T04:17:19.9184357-08:00 0HLRHK4KTVLBQ:00000001 [INF] Request finished in 47508.6508ms 101  (791a596a)
+2019-11-25T04:17:19.9658057-08:00 0HLRHK4KTVLBK:00000003 [INF] Executed action "GrowRoomEnvironment.Web.Controllers.WeatherForecastController.Get (GrowRoomEnvironment.Web)" in 33.315200000000004ms (afa2e885)
+2019-11-25T04:17:19.9660551-08:00 0HLRHK4KTVLBK:00000003 [INF] Executed endpoint '"GrowRoomEnvironment.Web.Controllers.WeatherForecastController.Get (GrowRoomEnvironment.Web)"' (99874f2b)
+2019-11-25T04:17:19.9678654-08:00 0HLRHK4KTVLBK:00000003 [INF] Request finished in 268.7339ms 200 application/json; charset=utf-8 (791a596a)
+2019-11-25T04:17:21.2812119-08:00  [INF] Entity Framework Core "3.0.1" initialized '"PersistedGrantDbContext"' using provider '"Microsoft.EntityFrameworkCore.Sqlite"' with options: "MigrationsAssembly=GrowRoomEnvironment.Web " (9958f5bb)
+2019-11-25T04:17:21.2828261-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"p\".\"Key\", \"p\".\"ClientId\", \"p\".\"CreationTime\", \"p\".\"Data\", \"p\".\"Expiration\", \"p\".\"SubjectId\", \"p\".\"Type\"
+FROM \"PersistedGrants\" AS \"p\"
+WHERE \"p\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"p\".\"Key\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:17:21.3342806-08:00  [INF] Removing 0 grants (62cd9308)
+2019-11-25T04:17:21.3352657-08:00  [INF] Executing DbCommand [Parameters=["@__p_0='?'"], CommandType='Text', CommandTimeout='30']"
+""SELECT \"d\".\"UserCode\", \"d\".\"ClientId\", \"d\".\"CreationTime\", \"d\".\"Data\", \"d\".\"DeviceCode\", \"d\".\"Expiration\", \"d\".\"SubjectId\"
+FROM \"DeviceCodes\" AS \"d\"
+WHERE \"d\".\"Expiration\" < rtrim(rtrim(strftime('%Y-%m-%d %H:%M:%f', 'now'), '0'), '.')
+ORDER BY \"d\".\"DeviceCode\"
+LIMIT @__p_0" (65d11854)
+2019-11-25T04:17:21.3891739-08:00  [INF] Removing 0 device flow codes (171ba47d)
