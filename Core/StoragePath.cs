@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -16,7 +17,10 @@ namespace GrowRoomEnvironment.Core
             WWWRootPath = Path.Combine(RootPath, "wwwroot");
             ClientAppPath = Path.Combine(RootPath, "ClientApp");
             EmailTemplatesPath = Path.Combine(RootPath, "EmailTemplates");
-            DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
+            if (_hostingEnvironment.IsDevelopment())
+                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment-Dev.db");
+            else
+                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
             LogFile = Path.Combine(RootPath, "Log.txt");
         }
 

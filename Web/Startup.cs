@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using FluentValidation;
 using Newtonsoft.Json.Serialization;
 using System.Text.Json;
+using Serilog;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -210,9 +211,13 @@ namespace GrowRoomEnvironment.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger, IDatabaseInitializer databaseInitializer)
         {
-            loggerFactory.AddFile(Configuration.GetSection("Logging"));
-            
             StoragePath.Initialize(env);
+
+            loggerFactory.AddSerilog(new LoggerConfiguration()
+                .WriteTo.SQLite(StoragePath.DbFile)
+                .CreateLogger());
+
+
             EmailTemplates.Initialize(env);
 
 
