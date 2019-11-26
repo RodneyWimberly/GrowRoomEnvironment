@@ -12,24 +12,25 @@ namespace GrowRoomEnvironment.DataAccess
 
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _applicationDbContext;
         private readonly IAccountManager _accountManager;
         private readonly ILogger _logger;
 
-        public DatabaseInitializer(ApplicationDbContext context, IAccountManager accountManager, ILogger<DatabaseInitializer> logger)
+        public DatabaseInitializer(ApplicationDbContext applicationDbContext, 
+            IAccountManager accountManager, ILogger<DatabaseInitializer> logger)
         {
             _accountManager = accountManager;
-            _context = context;
+            _applicationDbContext = applicationDbContext;
             _logger = logger;
         }
 
         public async Task SeedAsync()
         {
             // Migration
-            await _context.Database.MigrateAsync().ConfigureAwait(false);
-
+            await _applicationDbContext.Database.MigrateAsync().ConfigureAwait(false);
+           
             // Users and Roles
-            if (!await _context.Users.AnyAsync())
+            if (!await _applicationDbContext.Users.AnyAsync())
             {
                 _logger.LogInformation("Generating inbuilt accounts");
 
@@ -46,7 +47,7 @@ namespace GrowRoomEnvironment.DataAccess
             }
         
             // DataPoints
-            if (!await _context.DataPoints.AnyAsync())
+            if (!await _applicationDbContext.DataPoints.AnyAsync())
             {
                 _logger.LogInformation("Generating DataPoints");
 
@@ -161,17 +162,17 @@ namespace GrowRoomEnvironment.DataAccess
                 };
 
 
-                _context.DataPoints.Add(dp_1);
-                _context.DataPoints.Add(dp_2);
-                _context.DataPoints.Add(dp_3);
-                _context.DataPoints.Add(dp_4);
-                _context.DataPoints.Add(dp_5);
-                _context.DataPoints.Add(dp_6);
-                _context.DataPoints.Add(dp_7);
-                _context.DataPoints.Add(dp_8);
-                _context.DataPoints.Add(dp_9);
-                _context.DataPoints.Add(dp_10);
-                await _context.SaveChangesAsync();
+                _applicationDbContext.DataPoints.Add(dp_1);
+                _applicationDbContext.DataPoints.Add(dp_2);
+                _applicationDbContext.DataPoints.Add(dp_3);
+                _applicationDbContext.DataPoints.Add(dp_4);
+                _applicationDbContext.DataPoints.Add(dp_5);
+                _applicationDbContext.DataPoints.Add(dp_6);
+                _applicationDbContext.DataPoints.Add(dp_7);
+                _applicationDbContext.DataPoints.Add(dp_8);
+                _applicationDbContext.DataPoints.Add(dp_9);
+                _applicationDbContext.DataPoints.Add(dp_10);
+                await _applicationDbContext.SaveChangesAsync();
                 _logger.LogInformation("Seeding DataPoints completed");
             }
 
@@ -198,7 +199,7 @@ namespace GrowRoomEnvironment.DataAccess
             */
 
             // EnumLook
-            if (!await _context.EnumLookups.AnyAsync())
+            if (!await _applicationDbContext.EnumLookups.AnyAsync())
             {
                 _logger.LogInformation("Generating EnumLookups");
 
@@ -233,11 +234,11 @@ namespace GrowRoomEnvironment.DataAccess
                     UpdatedDate = DateTime.UtcNow
                 };
 
-                _context.EnumLookups.Add(el1);
-                _context.EnumLookups.Add(el2);
-                _context.EnumLookups.Add(el3);
+                _applicationDbContext.EnumLookups.Add(el1);
+                _applicationDbContext.EnumLookups.Add(el2);
+                _applicationDbContext.EnumLookups.Add(el3);
 
-                await _context.SaveChangesAsync();
+                await _applicationDbContext.SaveChangesAsync();
                 _logger.LogInformation("Seeding EnumLookups completed");
             }
         }

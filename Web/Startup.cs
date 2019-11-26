@@ -29,6 +29,7 @@ using FluentValidation;
 using Newtonsoft.Json.Serialization;
 using System.Text.Json;
 using Serilog;
+using IdentityServer4.EntityFramework.DbContexts;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -71,28 +72,8 @@ namespace GrowRoomEnvironment.Web
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
-            // Configure Identity options and password complexity here
-            /* services.Configure<IdentityOptions>(options =>
-             {
-                 // User settings
-                 options.User.RequireUniqueEmail = true;
-
-                 //    //// Password settings
-                 //    //options.Password.RequireDigit = true;
-                 //    //options.Password.RequiredLength = 8;
-                 //    //options.Password.RequireNonAlphanumeric = false;
-                 //    //options.Password.RequireUppercase = true;
-                 //    //options.Password.RequireLowercase = false;
-
-                 //    //// Lockout settings
-                 //    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                 //    //options.Lockout.MaxFailedAccessAttempts = 10;
-               
-             });*/
-
+                        
             services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
-
 
             // Adds IdentityServer.
             services.AddIdentityServer()
@@ -234,7 +215,7 @@ namespace GrowRoomEnvironment.Web
 
             try
             {
-                //Having database seeding here rather than in Program.Main() ensures logger is configured before seeding occurs
+                IdentityServerConfig.InitializeDatabase(app);
                 databaseInitializer.SeedAsync().Wait();
             }
             catch (Exception ex)
@@ -288,7 +269,7 @@ namespace GrowRoomEnvironment.Web
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
-                    //spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); // Increase the timeout if angular app is taking longer to startup
+                    spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); // Increase the timeout if angular app is taking longer to startup
                     //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); // Use this instead to use the angular cli server
 
                 }
@@ -296,5 +277,7 @@ namespace GrowRoomEnvironment.Web
 
            
         }
+
+       
     }
 }

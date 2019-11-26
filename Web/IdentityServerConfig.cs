@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using GrowRoomEnvironment.DataAccess.Core.Constants;
 using IdentityModel;
 using IdentityServer4;
+using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -12,6 +18,34 @@ namespace GrowRoomEnvironment.Web
         public const string ApiFriendlyName = "GrowRoomEnvironment.Web API";
         public const string ClientAppClientID = "growroom_spa";
         public const string SwaggerClientID = "swaggerui";
+
+        public static void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+
+                ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+                context.Database.Migrate();
+                if (!context.Clients.Any())
+                {
+                    context.Clients.AddRange(IdentityServerConfig.GetClients().Select(m => m.ToEntity()));
+                    context.SaveChanges();
+                }
+
+                if (!context.IdentityResources.Any())
+                {
+                    context.IdentityResources.AddRange(IdentityServerConfig.GetIdentityResources().Select(m => m.ToEntity()));
+                    context.SaveChanges();
+                }
+
+                if (!context.ApiResources.Any())
+                {
+                    context.ApiResources.AddRange(IdentityServerConfig.GetApiResources().Select(m => m.ToEntity()));
+                    context.SaveChanges();
+                }
+            }
+        }
 
         // Identity resources (used by UserInfo endpoint).
         public static IEnumerable<IdentityResource> GetIdentityResources()
