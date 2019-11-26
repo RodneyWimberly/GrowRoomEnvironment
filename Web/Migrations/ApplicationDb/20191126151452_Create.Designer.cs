@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191125074658_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20191126151452_Create")]
+    partial class Create
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -239,6 +239,58 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.HasIndex("Table");
 
                     b.ToTable("AppEnumLookups");
+                });
+
+            modelBuilder.Entity("GrowRoomEnvironment.DataAccess.Models.ExtendedLog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Browser")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Host")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("Level")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Path")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<DateTimeOffset>("TimeStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("User")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .HasName("IX_Log_EventId");
+
+                    b.HasIndex("Level")
+                        .HasName("IX_Log_Level");
+
+                    b.HasIndex("TimeStamp")
+                        .HasName("IX_Log_TimeStamp");
+
+                    b.ToTable("AppLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

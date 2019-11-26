@@ -12,14 +12,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace GrowRoomEnvironment.Web
 {
-    public class IdentityServerConfig
+    public static class IdentityServerConfigurationExtensions
     {
         public const string ApiName = "growroom_api";
         public const string ApiFriendlyName = "GrowRoomEnvironment.Web API";
         public const string ClientAppClientID = "growroom_spa";
         public const string SwaggerClientID = "swaggerui";
 
-        public static void InitializeDatabase(IApplicationBuilder app)
+        public static IApplicationBuilder InitializeIdentityServerDatabase(this IApplicationBuilder app)
         {
             using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -29,22 +29,32 @@ namespace GrowRoomEnvironment.Web
                 context.Database.Migrate();
                 if (!context.Clients.Any())
                 {
-                    context.Clients.AddRange(IdentityServerConfig.GetClients().Select(m => m.ToEntity()));
+                    context.Clients.AddRange(GetClients().Select(m => m.ToEntity()));
                     context.SaveChanges();
                 }
 
                 if (!context.IdentityResources.Any())
                 {
-                    context.IdentityResources.AddRange(IdentityServerConfig.GetIdentityResources().Select(m => m.ToEntity()));
+                    context.IdentityResources.AddRange(GetIdentityResources().Select(m => m.ToEntity()));
                     context.SaveChanges();
                 }
 
                 if (!context.ApiResources.Any())
                 {
-                    context.ApiResources.AddRange(IdentityServerConfig.GetApiResources().Select(m => m.ToEntity()));
+                    context.ApiResources.AddRange(GetApiResources().Select(m => m.ToEntity()));
                     context.SaveChanges();
                 }
             }
+            return app;
+        }
+
+        public static IIdentityServerBuilder UseInMemoryStore(this IIdentityServerBuilder builder)
+        {
+            builder.AddInMemoryPersistedGrants()
+                .AddInMemoryIdentityResources(GetIdentityResources())
+                .AddInMemoryApiResources(GetApiResources())
+                .AddInMemoryClients(GetClients());
+            return builder;
         }
 
         // Identity resources (used by UserInfo endpoint).
@@ -86,7 +96,7 @@ namespace GrowRoomEnvironment.Web
                 // http://docs.identityserver.io/en/release/reference/client.html.
                 new Client
                 {
-                    ClientId = IdentityServerConfig.ClientAppClientID,
+                    ClientId = IdentityServerConfigurationExtensions.ClientAppClientID,
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword, // Resource Owner Password Credential grant.
                     AllowAccessTokensViaBrowser = true,
                     RequireClientSecret = false, // This client does not need a secret to request tokens from the token endpoint.

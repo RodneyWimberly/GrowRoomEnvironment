@@ -30,7 +30,7 @@ namespace GrowRoomEnvironment.Web
                 {
                     new OpenApiSecurityRequirement
                     {
-                        [oAuthScheme] = new [] { IdentityServerConfig.ApiName}
+                        [oAuthScheme] = new [] { IdentityServerConfigurationExtensions.ApiName}
                     }
                 };
             }

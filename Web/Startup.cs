@@ -30,6 +30,7 @@ using Newtonsoft.Json.Serialization;
 using System.Text.Json;
 using Serilog;
 using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.AspNetCore.Http;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -82,13 +83,11 @@ namespace GrowRoomEnvironment.Web
                 {
                     options.ConfigureDbContext = builder =>
                     builder.UseSqlite(connectString, sql => sql.MigrationsAssembly(migrationsAssembly));
-                    options.DefaultSchema = "IdentityConfigurationSchema";
                 })
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
                     builder.UseSqlite(connectString, sql => sql.MigrationsAssembly(migrationsAssembly));
-                    options.DefaultSchema = "IdentityOperationalSchema";
                     options.EnableTokenCleanup = true;
                     options.TokenCleanupInterval = 30;
                 })
@@ -104,7 +103,7 @@ namespace GrowRoomEnvironment.Web
                     options.Authority = applicationUrl;
                     options.SupportedTokens = SupportedTokens.Jwt;
                     options.RequireHttpsMetadata = false; // Note: Set to true in production
-                    options.ApiName = IdentityServerConfig.ApiName;
+                    options.ApiName = IdentityServerConfigurationExtensions.ApiName;
                 });
 
             services.AddAuthorization(options =>
@@ -146,7 +145,7 @@ namespace GrowRoomEnvironment.Web
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = IdentityServerConfig.ApiFriendlyName, Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = IdentityServerConfigurationExtensions.ApiFriendlyName, Version = "v1" });
                 c.OperationFilter<AuthorizeCheckOperationFilter>();
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
@@ -158,7 +157,7 @@ namespace GrowRoomEnvironment.Web
                             TokenUrl = new Uri("/connect/token", UriKind.Relative),
                             Scopes = new Dictionary<string, string>()
                             {
-                                { IdentityServerConfig.ApiName, IdentityServerConfig.ApiFriendlyName }
+                                { IdentityServerConfigurationExtensions.ApiName, IdentityServerConfigurationExtensions.ApiFriendlyName }
                             }
                         }
                     }
@@ -187,16 +186,19 @@ namespace GrowRoomEnvironment.Web
 
             // DB Creation and Seeding
             services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger, IDatabaseInitializer databaseInitializer)
         {
             StoragePath.Initialize(env);
-
-            loggerFactory.AddSerilog(new LoggerConfiguration()
-                .WriteTo.SQLite(StoragePath.DbFile)
-                .CreateLogger());
+            //loggerFactory.AddEntityFramework<ApplicationDbContext>(app.ApplicationServices,);
+            //loggerFactory.AddFile(Configuration.GetSection("Logging"));
+            //loggerFactory.AddSerilog(new LoggerConfiguration()
+            //    .WriteTo.SQLite(StoragePath.DbFile)
+            //    .CreateLogger());
 
 
             EmailTemplates.Initialize(env);
@@ -215,7 +217,7 @@ namespace GrowRoomEnvironment.Web
 
             try
             {
-                IdentityServerConfig.InitializeDatabase(app);
+                app.InitializeIdentityServerDatabase();
                 databaseInitializer.SeedAsync().Wait();
             }
             catch (Exception ex)
@@ -244,8 +246,8 @@ namespace GrowRoomEnvironment.Web
             app.UseSwaggerUI(c =>
             {
                 c.DocumentTitle = "Swagger UI - AngularIot.Web";
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{IdentityServerConfig.ApiFriendlyName} V1");
-                c.OAuthClientId(IdentityServerConfig.SwaggerClientID);
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{IdentityServerConfigurationExtensions.ApiFriendlyName} V1");
+                c.OAuthClientId(IdentityServerConfigurationExtensions.SwaggerClientID);
                 c.OAuthClientSecret("no_password"); //Leaving it blank doesn't work
             });
 

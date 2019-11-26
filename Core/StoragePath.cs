@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 
@@ -17,10 +16,7 @@ namespace GrowRoomEnvironment.Core
             WWWRootPath = Path.Combine(RootPath, "wwwroot");
             ClientAppPath = Path.Combine(RootPath, "ClientApp");
             EmailTemplatesPath = Path.Combine(RootPath, "EmailTemplates");
-            if (_hostingEnvironment.IsDevelopment())
-                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment-Dev.db");
-            else
-                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
+            DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
             LogFile = Path.Combine(RootPath, "Log.txt");
         }
 
@@ -32,7 +28,7 @@ namespace GrowRoomEnvironment.Core
         public static string EmailTemplatesPath { get; private set; }
         public static string DbFile { get; private set; }
         public static string LogFile { get; set; }
-        public static void QuickLog(string text)
+        public static void AppendLogFile(string text)
         {
             string dirPath = Path.GetDirectoryName(LogFile);
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
 {
-    public partial class InitialCreate : Migration
+    public partial class Create : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,6 +45,27 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AppEnumLookups", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EventId = table.Column<int>(nullable: false),
+                    Level = table.Column<int>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(maxLength: 255, nullable: true),
+                    TimeStamp = table.Column<DateTimeOffset>(nullable: false),
+                    Browser = table.Column<string>(maxLength: 255, nullable: true),
+                    Host = table.Column<string>(maxLength: 255, nullable: true),
+                    Path = table.Column<string>(maxLength: 255, nullable: true),
+                    User = table.Column<string>(maxLength: 255, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppLogs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,6 +247,21 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                 column: "Table");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Log_EventId",
+                table: "AppLogs",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Log_Level",
+                table: "AppLogs",
+                column: "Level");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Log_TimeStamp",
+                table: "AppLogs",
+                column: "TimeStamp");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -270,6 +306,9 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
 
             migrationBuilder.DropTable(
                 name: "AppEnumLookups");
+
+            migrationBuilder.DropTable(
+                name: "AppLogs");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
