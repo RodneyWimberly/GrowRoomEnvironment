@@ -16,21 +16,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using FluentValidation;
-using Newtonsoft.Json.Serialization;
-using System.Text.Json;
-using Serilog;
-using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Logging;
+using NSwag.AspNetCore;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -132,43 +127,11 @@ namespace GrowRoomEnvironment.Web
 
 
             services.AddValidatorsFromAssembly(GetType().Assembly);
-            services.AddMvc().AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                })
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                });
-
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = IdentityServerConfigurationExtensions.ApiFriendlyName, Version = "v1" });
-                c.OperationFilter<AuthorizeCheckOperationFilter>();
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        Password = new OpenApiOAuthFlow
-                        {
-                            TokenUrl = new Uri("/connect/token", UriKind.Relative),
-                            Scopes = new Dictionary<string, string>()
-                            {
-                                { IdentityServerConfigurationExtensions.ApiName, IdentityServerConfigurationExtensions.ApiFriendlyName }
-                            }
-                        }
-                    }
-                });
-            });
-
+          
             services.AddAutoMapper(typeof(Startup));
 
             // Configurations
             services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
-
 
             // Business Services
             services.AddScoped<IEmailService, EmailService>();
@@ -193,14 +156,9 @@ namespace GrowRoomEnvironment.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger, IDatabaseInitializer databaseInitializer)
         {
+            IdentityModelEventSource.ShowPII = true;
+
             StoragePath.Initialize(env);
-            //loggerFactory.AddEntityFramework<ApplicationDbContext>(app.ApplicationServices,);
-            //loggerFactory.AddFile(Configuration.GetSection("Logging"));
-            //loggerFactory.AddSerilog(new LoggerConfiguration()
-            //    .WriteTo.SQLite(StoragePath.DbFile)
-            //    .CreateLogger());
-
-
             EmailTemplates.Initialize(env);
 
 
@@ -232,7 +190,7 @@ namespace GrowRoomEnvironment.Web
             {
                 app.UseSpaStaticFiles();
             }
-
+           
             app.UseRouting();
             app.UseCors(builder => builder
                .AllowAnyOrigin()
@@ -242,13 +200,11 @@ namespace GrowRoomEnvironment.Web
             app.UseIdentityServer();
             app.UseAuthorization();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            app.UseSwaggerUi3(settings =>
             {
-                c.DocumentTitle = "Swagger UI - AngularIot.Web";
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{IdentityServerConfigurationExtensions.ApiFriendlyName} V1");
-                c.OAuthClientId(IdentityServerConfigurationExtensions.SwaggerClientID);
-                c.OAuthClientSecret("no_password"); //Leaving it blank doesn't work
+                settings.OAuth2Client = new OAuth2ClientSettings { ClientId = IdentityServerConfigurationExtensions.SwaggerClientID, ClientSecret = "no_password" };
+                settings.Path = "/docs";
+                settings.DocumentPath = "/docs/api-specification.json";
             });
 
             //app.UseCookiePolicy();
@@ -263,23 +219,15 @@ namespace GrowRoomEnvironment.Web
 
             app.UseSpa(spa =>
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
-                    spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); // Increase the timeout if angular app is taking longer to startup
-                    //spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); // Use this instead to use the angular cli server
-
+                    //sqa.UseAngularCliServer(npmScript: "serve");
+                    //spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); // Increase the timeout if angular app is taking longer to startup
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); // Use this instead to use the angular cli server
                 }
             });
-
-           
         }
-
-       
     }
 }
