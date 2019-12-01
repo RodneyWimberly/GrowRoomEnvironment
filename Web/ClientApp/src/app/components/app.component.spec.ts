@@ -24,9 +24,9 @@ import { AuthService } from '../services/auth.service';
 import { AppTitleService } from '../services/app-title.service';
 import { AppTranslationService, TranslateLanguageLoader } from '../services/app-translation.service';
 import { ConfigurationService } from '../services/configuration.service';
-import { ThemeManager } from '../services/theme-manager';
+import { AppThemeService } from '../services/app-theme.service';
 import { AlertService } from '../services/alert.service';
-import { LocalStoreManager } from '../services/local-store-manager.service';
+import { LocalStorageService } from '../services/local-storage.service';
 import { NotificationService } from '../services/notification.service';
 import { NotificationEndpoint } from '../services/notification-endpoint.service';
 import { AccountService } from '../services/account.service';
@@ -61,14 +61,13 @@ describe('AppComponent', () => {
         AuthService,
         AlertService,
         ConfigurationService,
-        ThemeManager,
-        AppTitleService,
+        ThemeMAppThemeService     AppTitleService,
         AppTranslationService,
         NotificationService,
         NotificationEndpoint,
         AccountService,
         AccountEndpoint,
-        LocalStoreManager
+        LocalStorageService
       ]
     }).compileComponents();
   }));

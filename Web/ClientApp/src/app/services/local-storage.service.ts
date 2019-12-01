@@ -1,22 +1,14 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-
-import { Utilities } from './utilities';
+import { Utilities } from '../helpers/utilities';
+import { DbKeys } from '../helpers/db-keys';
 
 @Injectable()
 /**
 * Provides a wrapper for accessing the web storage API and synchronizing session storage across tabs/windows.
 */
-export class LocalStoreManager {
+export class LocalStorageService {
   private static syncListenerInitialised = false;
-
-  public static readonly DBKEY_USER_DATA = 'user_data';
-  private static readonly DBKEY_SYNC_KEYS = 'sync_keys';
   private syncKeys: string[] = [];
   private initEvent = new Subject();
 
@@ -34,18 +26,18 @@ export class LocalStoreManager {
 
 
   public initialiseStorageSyncListener() {
-    if (LocalStoreManager.syncListenerInitialised == true) {
+    if (LocalStorageService.syncListenerInitialised == true) {
       return;
     }
 
-    LocalStoreManager.syncListenerInitialised = true;
+    LocalStorageService.syncListenerInitialised = true;
     window.addEventListener('storage', this.sessionStorageTransferHandler, false);
     this.syncSessionStorage();
   }
 
   public deinitialiseStorageSyncListener() {
     window.removeEventListener('storage', this.sessionStorageTransferHandler, false);
-    LocalStoreManager.syncListenerInitialised = false;
+    LocalStorageService.syncListenerInitialised = false;
   }
 
   public clearAllStorage() {
@@ -55,7 +47,7 @@ export class LocalStoreManager {
 
   public clearAllSessionsStorage() {
     this.clearInstanceSessionStorage();
-    localStorage.removeItem(LocalStoreManager.DBKEY_SYNC_KEYS);
+    localStorage.removeItem(DbKeys.SYNC_KEYS);
 
     localStorage.setItem('clearAllSessionsStorage', '_dummy');
     localStorage.removeItem('clearAllSessionsStorage');
@@ -70,7 +62,7 @@ export class LocalStoreManager {
     localStorage.clear();
   }
 
-  public saveSessionData(data: any, key = LocalStoreManager.DBKEY_USER_DATA) {
+    public saveSessionData(data: any, key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     this.removeFromSyncKeys(key);
@@ -78,21 +70,21 @@ export class LocalStoreManager {
     this.sessionStorageSetItem(key, data);
   }
 
-  public saveSyncedSessionData(data: any, key = LocalStoreManager.DBKEY_USER_DATA) {
+    public saveSyncedSessionData(data: any, key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     localStorage.removeItem(key);
     this.addToSessionStorage(data, key);
   }
 
-  public savePermanentData(data: any, key = LocalStoreManager.DBKEY_USER_DATA) {
+    public savePermanentData(data: any, key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     this.removeFromSessionStorage(key);
     this.localStorageSetItem(key, data);
   }
 
-  public moveDataToSessionStorage(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public moveDataToSessionStorage(key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     const data = this.getData(key);
@@ -104,7 +96,7 @@ export class LocalStoreManager {
     this.saveSessionData(data, key);
   }
 
-  public moveDataToSyncedSessionStorage(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public moveDataToSyncedSessionStorage(key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     const data = this.getData(key);
@@ -116,7 +108,7 @@ export class LocalStoreManager {
     this.saveSyncedSessionData(data, key);
   }
 
-  public moveDataToPermanentStorage(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public moveDataToPermanentStorage(key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     const data = this.getData(key);
@@ -128,7 +120,7 @@ export class LocalStoreManager {
     this.savePermanentData(data, key);
   }
 
-  public exists(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public exists(key = DbKeys.USER_DATA) {
     let data = sessionStorage.getItem(key);
 
     if (data == null) {
@@ -138,7 +130,7 @@ export class LocalStoreManager {
     return data != null;
   }
 
-  public getData(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public getData(key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     let data = this.sessionStorageGetItem(key);
@@ -150,7 +142,7 @@ export class LocalStoreManager {
     return data;
   }
 
-  public getDataObject<T>(key = LocalStoreManager.DBKEY_USER_DATA, isDateType = false): T {
+    public getDataObject<T>(key = DbKeys.USER_DATA, isDateType = false): T {
     let data = this.getData(key);
 
     if (data != null) {
@@ -163,7 +155,7 @@ export class LocalStoreManager {
     }
   }
 
-  public deleteData(key = LocalStoreManager.DBKEY_USER_DATA) {
+    public deleteData(key = DbKeys.USER_DATA) {
     this.testForInvalidKeys(key);
 
     this.removeFromSessionStorage(key);
@@ -275,7 +267,7 @@ export class LocalStoreManager {
   }
 
   private getSyncKeysFromStorage(defaultValue: string[] = []): string[] {
-    const data = this.localStorageGetItem(LocalStoreManager.DBKEY_SYNC_KEYS);
+      const data = this.localStorageGetItem(DbKeys.SYNC_KEYS);
 
     if (data == null) {
       return defaultValue;
@@ -297,7 +289,7 @@ export class LocalStoreManager {
 
     if (!storedSyncKeys.some(x => x == key)) {
       storedSyncKeys.push(key);
-      this.localStorageSetItem(LocalStoreManager.DBKEY_SYNC_KEYS, storedSyncKeys);
+        this.localStorageSetItem(DbKeys.SYNC_KEYS, storedSyncKeys);
     }
   }
 
@@ -308,7 +300,7 @@ export class LocalStoreManager {
 
     if (index > -1) {
       storedSyncKeys.splice(index, 1);
-      this.localStorageSetItem(LocalStoreManager.DBKEY_SYNC_KEYS, storedSyncKeys);
+        this.localStorageSetItem(DbKeys.SYNC_KEYS, storedSyncKeys);
     }
   }
 

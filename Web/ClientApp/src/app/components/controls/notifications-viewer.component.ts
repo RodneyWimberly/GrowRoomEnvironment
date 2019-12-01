@@ -1,17 +1,11 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, OnDestroy, TemplateRef, ViewChild, Input } from '@angular/core';
-
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { AppTranslationService } from '../../services/app-translation.service';
 import { NotificationService } from '../../services/notification.service';
-import { AccountService } from '../../services/account.service';
-import { Permission } from '../../models/permission.model';
-import { Utilities } from '../../services/utilities';
-import { Notification } from '../../models/notification.model';
+import { AccountService } from "../../services/account.service";
+import { PermissionValues } from '../../services/endpoint.services';
+import { Utilities } from '../../helpers/utilities';
+import { NotificationModel } from '../../models/notification.model';
 
 
 @Component({
@@ -21,7 +15,7 @@ import { Notification } from '../../models/notification.model';
 })
 export class NotificationsViewerComponent implements OnInit, OnDestroy {
     columns: any[] = [];
-    rows: Notification[] = [];
+    rows: NotificationModel[] = [];
     loadingIndicator: boolean;
 
     dataLoadingConsecutiveFailurs = 0;
@@ -53,7 +47,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     @ViewChild('actionsTemplate', { static: true })
     actionsTemplate: TemplateRef<any>;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountService: AccountService, private notificationService: NotificationService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountClient: AccountService, private notificationService: NotificationService) {
     }
 
 
@@ -127,7 +121,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    private processResults(notifications: Notification[]) {
+    private processResults(notifications: NotificationModel[]) {
 
         if (this.isViewOnly) {
             notifications.sort((a, b) => {
@@ -147,12 +141,12 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    deleteNotification(row: Notification) {
+    deleteNotification(row: NotificationModel) {
         this.alertService.showDialog('Are you sure you want to delete the notification \"' + row.header + '\"?', DialogType.confirm, () => this.deleteNotificationHelper(row));
     }
 
 
-    deleteNotificationHelper(row: Notification) {
+    deleteNotificationHelper(row: NotificationModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
@@ -174,7 +168,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    togglePin(row: Notification) {
+    togglePin(row: NotificationModel) {
 
         const pin = !row.isPinned;
         const opText = pin ? 'Pinning' : 'Unpinning';
@@ -200,7 +194,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
 
 
     get canManageNotifications() {
-        return this.accountService.userHasPermission(Permission.manageRolesPermission); // Todo: Consider creating separate permission for notifications
+        return this.accountClient.userHasPermission(PermissionValues.ManageRoles); // Todo: Consider creating separate permission for notifications
     }
 
 }

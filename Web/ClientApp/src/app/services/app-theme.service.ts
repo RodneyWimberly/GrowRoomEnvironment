@@ -1,14 +1,9 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
-import { AppTheme } from '../models/app-theme.model';
+import { AppThemeModel } from '../models/app-theme.model';
 
 @Injectable()
-export class ThemeManager {
-    themes: Array<AppTheme> = [
+export class AppThemeService {
+    themes: Array<AppThemeModel> = [
         {
             id: 1,
             name: 'Default',
@@ -113,7 +108,7 @@ export class ThemeManager {
         }
     ];
 
-    public installTheme(theme?: AppTheme) {
+    public installTheme(theme?: AppThemeModel) {
         if (theme == null || theme.isDefault) {
             this.removeStyle('theme');
         } else {
@@ -121,11 +116,11 @@ export class ThemeManager {
         }
     }
 
-    public getDefaultTheme(): AppTheme {
+    public getDefaultTheme(): AppThemeModel {
         return this.themes.find(theme => theme.isDefault);
     }
 
-    public getThemeByID(id: number): AppTheme {
+    public getThemeByID(id: number): AppThemeModel {
         return this.themes.find(theme => theme.id === id);
     }
 

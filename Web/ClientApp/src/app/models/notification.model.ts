@@ -1,12 +1,7 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
-import { Utilities } from '../services/utilities';
+import { Utilities } from '../helpers/utilities';
 
 
-export class Notification {
+export class NotificationModel {
 
 
     public id: number;
@@ -17,7 +12,7 @@ export class Notification {
     public date: Date;
 
     public static Create(data: {}) {
-        const n = new Notification();
+        const n = new NotificationModel();
         Object.assign(n, data);
 
         if (n.date) {

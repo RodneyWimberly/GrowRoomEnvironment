@@ -1,12 +1,7 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
-import { PermissionValues } from './permission.model';
+import { PermissionValue } from '../services/endpoint.services';
 
 
-export interface AccessToken {
+export interface AccessTokenModel {
   nbf: number;
   exp: number;
   iss: string;
@@ -16,7 +11,7 @@ export interface AccessToken {
   auth_time: number;
   idp: string;
   role: string | string[];
-  permission: PermissionValues | PermissionValues[];
+  permission: PermissionValue | PermissionValue[];
   name: string;
   email: string;
   phone_number: string;

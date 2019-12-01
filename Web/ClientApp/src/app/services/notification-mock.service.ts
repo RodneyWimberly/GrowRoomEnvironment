@@ -1,17 +1,9 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
-
-
-
 @Injectable()
-export class NotificationEndpoint {
+export class NotificationMockService {
 
     private demoNotifications = [
         {

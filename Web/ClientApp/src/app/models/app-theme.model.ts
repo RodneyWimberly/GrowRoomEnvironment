@@ -1,9 +1,4 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
-export interface AppTheme {
+export interface AppThemeModel {
     id: number;
     name: string;
     href: string;

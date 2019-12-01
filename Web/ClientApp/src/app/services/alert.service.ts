@@ -1,24 +1,13 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { HttpResponseBase } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
-
-import { Utilities } from '../services/utilities';
-
-
+import { Utilities } from '../helpers/utilities';
 
 @Injectable()
 export class AlertService {
   private messages = new Subject<AlertCommand>();
   private dialogs = new Subject<AlertDialog>();
-
   private loadingMessageTimeoutId: any;
-
-
 
   showDialog(message: string);
   showDialog(message: string, type: DialogType, okCallback: (val?: any) => any);
@@ -30,9 +19,7 @@ export class AlertService {
     }
 
     this.dialogs.next({ message, type, okCallback, cancelCallback, okLabel, cancelLabel, defaultValue });
-  }
-
-
+    }
 
   showMessage(summary: string);
   showMessage(summary: string, detail: string, severity: MessageSeverity);
@@ -59,7 +46,6 @@ export class AlertService {
       this.showMessageHelper(data, separatorOrDetail, severity, false);
     }
   }
-
 
   showStickyMessage(summary: string);
   showStickyMessage(summary: string, detail: string, severity: MessageSeverity, error?: any);
@@ -144,8 +130,6 @@ export class AlertService {
     this.resetStickyMessage();
   }
 
-
-
   logDebug(msg) {
     console.debug(msg);
   }
@@ -178,7 +162,6 @@ export class AlertService {
     return this.messages.asObservable();
   }
 }
-
 
 // ******************** Dialog ********************//
 export class AlertDialog {

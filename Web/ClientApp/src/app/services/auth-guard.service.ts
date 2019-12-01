@@ -1,16 +1,11 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild, NavigationExtras, CanLoad, Route } from '@angular/router';
-import { AuthService } from './auth.service';
+import { AuthEndpointService } from './endpoint.services';
 
 
 @Injectable()
-export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
-    constructor(private authService: AuthService, private router: Router) { }
+export class AuthGuardService implements CanActivate, CanActivateChild, CanLoad {
+    constructor(private authEndpointService: AuthEndpointService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
 
@@ -30,11 +25,11 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
 
     checkLogin(url: string): boolean {
 
-        if (this.authService.isLoggedIn) {
+        if (this.authEndpointService.isLoggedIn) {
             return true;
         }
 
-        this.authService.loginRedirectUrl = url;
+        this.authEndpointService.loginRedirectUrl = url;
         this.router.navigate(['/login']);
 
         return false;

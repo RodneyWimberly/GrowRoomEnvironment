@@ -1,51 +1,46 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { map, flatMap, startWith } from 'rxjs/operators';
 
-import { AuthService } from './auth.service';
-import { NotificationEndpoint } from './notification-endpoint.service';
-import { Notification } from '../models/notification.model';
+import { AuthEndpointService } from './endpoint.services';
+import { NotificationMockService } from './notification-mock.service';
+import { NotificationModel } from '../models/notification.model';
 
 @Injectable()
 export class NotificationService {
 
   private lastNotificationDate: Date;
-  private _recentNotifications: Notification[];
+  private _recentNotifications: NotificationModel[];
 
   get currentUser() {
-    return this.authService.currentUser;
+    return this.authEndpointService.currentUser;
   }
 
   get recentNotifications() {
     return this._recentNotifications;
   }
 
-  set recentNotifications(notifications: Notification[]) {
+  set recentNotifications(notifications: NotificationModel[]) {
     this._recentNotifications = notifications;
   }
 
 
 
-  constructor(private notificationEndpoint: NotificationEndpoint, private authService: AuthService) {
+  constructor(private notificationMockService: NotificationMockService, private authEndpointService: AuthEndpointService) {
 
   }
 
 
   getNotification(notificationId?: number) {
 
-    return this.notificationEndpoint.getNotificationEndpoint(notificationId).pipe(
-      map(response => Notification.Create(response)));
+    return this.notificationMockService.getNotificationEndpoint(notificationId).pipe(
+      map(response => NotificationModel.Create(response)));
   }
 
 
   getNotifications(page: number, pageSize: number) {
 
-    return this.notificationEndpoint.getNotificationsEndpoint(page, pageSize).pipe(
+    return this.notificationMockService.getNotificationsEndpoint(page, pageSize).pipe(
       map(response => {
         return this.getNotificationsFromResponse(response);
       }));
@@ -54,13 +49,13 @@ export class NotificationService {
 
   getUnreadNotifications(userId?: string) {
 
-    return this.notificationEndpoint.getUnreadNotificationsEndpoint(userId).pipe(
+    return this.notificationMockService.getUnreadNotificationsEndpoint(userId).pipe(
       map(response => this.getNotificationsFromResponse(response)));
   }
 
 
   getNewNotifications() {
-    return this.notificationEndpoint.getNewNotificationsEndpoint(this.lastNotificationDate).pipe(
+    return this.notificationMockService.getNewNotificationsEndpoint(this.lastNotificationDate).pipe(
       map(response => this.processNewNotificationsFromResponse(response)));
   }
 
@@ -69,7 +64,7 @@ export class NotificationService {
     return interval(10000).pipe(
       startWith(0),
       flatMap(() => {
-        return this.notificationEndpoint.getNewNotificationsEndpoint(this.lastNotificationDate).pipe(
+        return this.notificationMockService.getNewNotificationsEndpoint(this.lastNotificationDate).pipe(
           map(response => this.processNewNotificationsFromResponse(response)));
       }));
   }
@@ -77,10 +72,10 @@ export class NotificationService {
 
 
 
-  pinUnpinNotification(notificationOrNotificationId: number | Notification, isPinned?: boolean): Observable<any> {
+  pinUnpinNotification(notificationOrNotificationId: number | NotificationModel, isPinned?: boolean): Observable<any> {
 
     if (typeof notificationOrNotificationId === 'number' || notificationOrNotificationId instanceof Number) {
-      return this.notificationEndpoint.getPinUnpinNotificationEndpoint(notificationOrNotificationId as number, isPinned);
+      return this.notificationMockService.getPinUnpinNotificationEndpoint(notificationOrNotificationId as number, isPinned);
     } else {
       return this.pinUnpinNotification(notificationOrNotificationId.id);
     }
@@ -89,19 +84,19 @@ export class NotificationService {
 
   readUnreadNotification(notificationIds: number[], isRead: boolean): Observable<any> {
 
-    return this.notificationEndpoint.getReadUnreadNotificationEndpoint(notificationIds, isRead);
+    return this.notificationMockService.getReadUnreadNotificationEndpoint(notificationIds, isRead);
   }
 
 
 
 
-  deleteNotification(notificationOrNotificationId: number | Notification): Observable<Notification> {
+  deleteNotification(notificationOrNotificationId: number | NotificationModel): Observable<NotificationModel> {
 
     if (typeof notificationOrNotificationId === 'number' || notificationOrNotificationId instanceof Number) { // Todo: Test me if its check is valid
-      return this.notificationEndpoint.getDeleteNotificationEndpoint(notificationOrNotificationId as number).pipe(
+      return this.notificationMockService.getDeleteNotificationEndpoint(notificationOrNotificationId as number).pipe(
         map(response => {
           this.recentNotifications = this.recentNotifications.filter(n => n.id != notificationOrNotificationId);
-          return Notification.Create(response);
+          return NotificationModel.Create(response);
         }));
     } else {
       return this.deleteNotification(notificationOrNotificationId.id);
@@ -125,10 +120,10 @@ export class NotificationService {
 
 
   private getNotificationsFromResponse(response) {
-    const notifications: Notification[] = [];
+    const notifications: NotificationModel[] = [];
 
     for (const i in response) {
-      notifications[i] = Notification.Create(response[i]);
+      notifications[i] = NotificationModel.Create(response[i]);
     }
 
     notifications.sort((a, b) => b.date.valueOf() - a.date.valueOf());

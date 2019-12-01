@@ -1,18 +1,10 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, OnDestroy, Input, TemplateRef, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
-import { AuthService } from '../../services/auth.service';
+import { AuthEndpointService } from '../../services/endpoint.services';
 import { AlertService, MessageSeverity, DialogType } from '../../services/alert.service';
 import { AppTranslationService } from '../../services/app-translation.service';
-import { LocalStoreManager } from '../../services/local-store-manager.service';
-import { Utilities } from '../../services/utilities';
-
-
+import { LocalStorageService} from '../../services/local-storage.service';
+import { Utilities } from '../../helpers/utilities';
 
 @Component({
   selector: 'todo-demo',
@@ -35,8 +27,8 @@ export class TodoDemoComponent implements OnInit, OnDestroy {
 
 
   get currentUserId() {
-    if (this.authService.currentUser) {
-      this._currentUserId = this.authService.currentUser.id;
+    if (this.authEndpointService.currentUser) {
+      this._currentUserId = this.authEndpointService.currentUser.id;
     }
 
     return this._currentUserId;
@@ -83,7 +75,7 @@ export class TodoDemoComponent implements OnInit, OnDestroy {
   editorModal: ModalDirective;
 
 
-  constructor(private alertService: AlertService, private translationService: AppTranslationService, private localStorage: LocalStoreManager, private authService: AuthService) {
+  constructor(private alertService: AlertService, private translationService: AppTranslationService, private localStorage: LocalStorageService, private authEndpointService: AuthEndpointService) {
   }
 
 

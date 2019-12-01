@@ -1,15 +1,10 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { AlertService, MessageSeverity, DialogType } from '../../services/alert.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthEndpointService } from '../../services/endpoint.services';
 import { ConfigurationService } from '../../services/configuration.service';
-import { Utilities } from '../../services/utilities';
-import { UserLogin } from '../../models/user-login.model';
+import { Utilities } from '../../helpers/utilities';
+import { UserLoginModel } from '../../models/user-login.model';
 
 @Component({
   selector: 'app-login',
@@ -19,7 +14,7 @@ import { UserLogin } from '../../models/user-login.model';
 
 export class LoginComponent implements OnInit, OnDestroy {
 
-  userLogin = new UserLogin();
+  userLogin = new UserLoginModel();
   isLoading = false;
   formResetToggle = true;
   modalClosedCallback: () => void;
@@ -29,21 +24,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   isModal = false;
 
 
-  constructor(private alertService: AlertService, private authService: AuthService, private configurations: ConfigurationService) {
+  constructor(private alertService: AlertService, private authEndpointService: AuthEndpointService, private configurations: ConfigurationService) {
 
   }
 
 
   ngOnInit() {
 
-    this.userLogin.rememberMe = this.authService.rememberMe;
+    this.userLogin.rememberMe = this.authEndpointService.rememberMe;
 
     if (this.getShouldRedirect()) {
-      this.authService.redirectLoginUser();
+      this.authEndpointService.redirectLoginUser();
     } else {
-      this.loginStatusSubscription = this.authService.getLoginStatusEvent().subscribe(isLoggedIn => {
+      this.loginStatusSubscription = this.authEndpointService.getLoginStatusEvent().subscribe(isLoggedIn => {
         if (this.getShouldRedirect()) {
-          this.authService.redirectLoginUser();
+          this.authEndpointService.redirectLoginUser();
         }
       });
     }
@@ -58,7 +53,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   getShouldRedirect() {
-    return !this.isModal && this.authService.isLoggedIn && !this.authService.isSessionExpired;
+    return !this.isModal && this.authEndpointService.isLoggedIn && !this.authEndpointService.isSessionExpired;
   }
 
 
@@ -77,7 +72,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.alertService.startLoadingMessage('', 'Attempting login...');
 
-    this.authService.login(this.userLogin.userName, this.userLogin.password, this.userLogin.rememberMe)
+    this.authEndpointService.login(this.userLogin.userName, this.userLogin.password, this.userLogin.rememberMe)
       .subscribe(
         user => {
           setTimeout(() => {
@@ -123,7 +118,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   offerAlternateHost() {
 
-    if (Utilities.checkIsLocalHost(location.origin) && Utilities.checkIsLocalHost(this.configurations.baseUrl)) {
+      if (Utilities.checkIsLocalHost(location.origin) && Utilities.checkIsLocalHost(this.configurations.baseUrl)) {
       this.alertService.showDialog('Dear Developer!\nIt appears your backend Web API service is not running...\n' +
         'Would you want to temporarily switch to the online Demo API below?(Or specify another)',
         DialogType.prompt,

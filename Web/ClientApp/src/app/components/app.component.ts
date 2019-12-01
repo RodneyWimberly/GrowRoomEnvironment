@@ -1,22 +1,15 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, ViewEncapsulation, OnInit, OnDestroy, ViewChildren, AfterViewInit, QueryList, ElementRef } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
 import { ToastaService, ToastaConfig, ToastOptions, ToastData } from 'ngx-toasta';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
 import { AlertService, AlertDialog, DialogType, AlertCommand, AlertMessage, MessageSeverity } from '../services/alert.service';
 import { NotificationService } from '../services/notification.service';
 import { AppTranslationService } from '../services/app-translation.service';
-import { AccountService } from '../services/account.service';
-import { LocalStoreManager } from '../services/local-store-manager.service';
+import { AccountService } from "../services/account.service";
+import {LocalStorageService } from '../services/local-storage.service';
 import { AppTitleService } from '../services/app-title.service';
-import { AuthService } from '../services/auth.service';
 import { ConfigurationService } from '../services/configuration.service';
-import { Permission } from '../models/permission.model';
+import { AuthEndpointService, PermissionValues } from '../services/endpoint.services';
 import { LoginComponent } from '../components/login/login.component';
 
 const alertify: any = require('../assets/scripts/alertify.js');
@@ -60,14 +53,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    storageManager: LocalStoreManager,
+    storageManager: LocalStorageService,
     private toastaService: ToastaService,
     private toastaConfig: ToastaConfig,
-    private accountService: AccountService,
+    private accountClient: AccountService,
     private alertService: AlertService,
     private notificationService: NotificationService,
     private appTitleService: AppTitleService,
-    private authService: AuthService,
+    private authEndpointService: AuthEndpointService,
     private translationService: AppTranslationService,
     public configurations: ConfigurationService,
     public router: Router) {
@@ -112,7 +105,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.loginControl.reset();
     this.shouldShowLoginModal = false;
 
-    if (this.authService.isSessionExpired) {
+    if (this.authEndpointService.isSessionExpired) {
       this.alertService.showStickyMessage('Session Expired', 'Your Session has expired. Please log in again to renew your session', MessageSeverity.warn);
     }
   }
@@ -124,7 +117,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   ngOnInit() {
-    this.isUserLoggedIn = this.authService.isLoggedIn;
+    this.isUserLoggedIn = this.authEndpointService.isLoggedIn;
 
     // 0.5 extra sec to display preboot/loader information. Preboot screen is removed 0.5 sec later
     setTimeout(() => this.isAppLoaded = true, 500);
@@ -145,9 +138,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.alertService.getDialogEvent().subscribe(alert => this.showDialog(alert));
     this.alertService.getMessageEvent().subscribe(message => this.showToast(message));
 
-    this.authService.reLoginDelegate = () => this.shouldShowLoginModal = true;
+    this.authEndpointService.reLoginDelegate = () => this.shouldShowLoginModal = true;
 
-    this.authService.getLoginStatusEvent().subscribe(isLoggedIn => {
+    this.authEndpointService.getLoginStatusEvent().subscribe(isLoggedIn => {
       this.isUserLoggedIn = isLoggedIn;
 
 
@@ -321,8 +314,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   logout() {
-    this.authService.logout();
-    this.authService.redirectLogoutUser();
+    this.authEndpointService.logout();
+    this.authEndpointService.redirectLogoutUser();
   }
 
 
@@ -332,22 +325,22 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
   get userName(): string {
-    return this.authService.currentUser ? this.authService.currentUser.userName : '';
+    return this.authEndpointService.currentUser ? this.authEndpointService.currentUser.userName : '';
   }
 
 
   get fullName(): string {
-    return this.authService.currentUser ? this.authService.currentUser.fullName : '';
+    return this.authEndpointService.currentUser ? this.authEndpointService.currentUser.fullName : '';
   }
 
 
 
-  get canViewCustomers() {
-    return this.accountService.userHasPermission(Permission.viewUsersPermission); // eg. viewCustomersPermission
+    get canViewCustomers() {
+        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewCustomersPermission
   }
 
   get canViewProducts() {
-    return this.accountService.userHasPermission(Permission.viewUsersPermission); // eg. viewProductsPermission
+      return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewProductsPermission
   }
 
   get canViewOrders() {

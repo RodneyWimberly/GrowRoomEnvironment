@@ -1,20 +1,12 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, AfterViewInit, TemplateRef, ViewChild, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { AppTranslationService } from '../../services/app-translation.service';
-import { AccountService } from '../../services/account.service';
-import { Utilities } from '../../services/utilities';
-import { User } from '../../models/user.model';
-import { Role } from '../../models/role.model';
-import { Permission } from '../../models/permission.model';
-import { UserEdit } from '../../models/user-edit.model';
+import { AccountService } from "../../services/account.service";
+import { Utilities } from '../../helpers/utilities';
 import { UserInfoComponent } from './user-info.component';
+import { RoleViewModel, UserViewModel, UserEditViewModel, PermissionValues } from '../../services/endpoint.services';
 
 
 @Component({
@@ -24,14 +16,14 @@ import { UserInfoComponent } from './user-info.component';
 })
 export class UsersManagementComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
-    rows: User[] = [];
-    rowsCache: User[] = [];
-    editedUser: UserEdit;
-    sourceUser: UserEdit;
+    rows: UserViewModel[] = [];
+    rowsCache: UserViewModel[] = [];
+    editedUser: UserEditViewModel;
+    sourceUser: UserEditViewModel;
     editingUserName: { name: string };
     loadingIndicator: boolean;
 
-    allRoles: Role[] = [];
+    allRoles: RoleViewModel[] = [];
 
 
     @ViewChild('indexTemplate', { static: true })
@@ -52,7 +44,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     @ViewChild('userEditor', { static: true })
     userEditor: UserInfoComponent;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountService: AccountService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountClient: AccountService) {
     }
 
 
@@ -110,7 +102,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
             this.editedUser = null;
             this.sourceUser = null;
         } else {
-            const user = new User();
+            const user = new UserViewModel();
             Object.assign(user, this.editedUser);
             this.editedUser = null;
 
@@ -135,14 +127,14 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
         this.loadingIndicator = true;
 
         if (this.canViewRoles) {
-            this.accountService.getUsersAndRoles().subscribe(results => this.onDataLoadSuccessful(results[0], results[1]), error => this.onDataLoadFailed(error));
+            this.accountClient.getUsersAndRoles().subscribe(results => this.onDataLoadSuccessful(results[0], results[1]), error => this.onDataLoadFailed(error));
         } else {
-            this.accountService.getUsers().subscribe(users => this.onDataLoadSuccessful(users, this.accountService.currentUser.roles.map(x => new Role(x))), error => this.onDataLoadFailed(error));
+            this.accountClient.getUsers().subscribe(users => this.onDataLoadSuccessful(users, this.accountClient.currentUser.roles.map(x => { let r = new RoleViewModel(); r.name = x; return r; })), error => this.onDataLoadFailed(error));
         }
     }
 
 
-    onDataLoadSuccessful(users: User[], roles: Role[]) {
+    onDataLoadSuccessful(users: UserViewModel[], roles: RoleViewModel[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -184,7 +176,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    editUser(row: UserEdit) {
+    editUser(row: UserEditViewModel) {
         this.editingUserName = { name: row.userName };
         this.sourceUser = row;
         this.editedUser = this.userEditor.editUser(row, this.allRoles);
@@ -192,17 +184,17 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    deleteUser(row: UserEdit) {
+    deleteUser(row: UserEditViewModel) {
         this.alertService.showDialog('Are you sure you want to delete \"' + row.userName + '\"?', DialogType.confirm, () => this.deleteUserHelper(row));
     }
 
 
-    deleteUserHelper(row: UserEdit) {
+    deleteUserHelper(row: UserEditViewModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
 
-        this.accountService.deleteUser(row)
+        this.accountClient.deleteUser(row)
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
@@ -222,14 +214,14 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
 
 
     get canAssignRoles() {
-        return this.accountService.userHasPermission(Permission.assignRolesPermission);
+        return this.accountClient.userHasPermission(PermissionValues.AssignRoles);
     }
 
     get canViewRoles() {
-        return this.accountService.userHasPermission(Permission.viewRolesPermission);
+        return this.accountClient.userHasPermission(PermissionValues.ViewRoles);
     }
 
     get canManageUsers() {
-        return this.accountService.userHasPermission(Permission.manageUsersPermission);
+        return this.accountClient.userHasPermission(PermissionValues.ManageUsers);
     }
 }

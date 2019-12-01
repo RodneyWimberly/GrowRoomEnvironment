@@ -1,13 +1,6 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { Observable, Subject, of } from 'rxjs';
-
-
 
 @Injectable()
 export class AppTranslationService {

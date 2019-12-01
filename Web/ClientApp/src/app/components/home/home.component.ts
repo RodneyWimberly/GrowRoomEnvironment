@@ -1,10 +1,5 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component } from '@angular/core';
-import { fadeInOut } from '../../services/animations';
+import { fadeInOut } from '../../helpers/animations';
 import { ConfigurationService } from '../../services/configuration.service';
 
 

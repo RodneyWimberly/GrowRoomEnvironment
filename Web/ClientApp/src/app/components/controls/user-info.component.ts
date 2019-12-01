@@ -1,17 +1,9 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 
 import { AlertService, MessageSeverity } from '../../services/alert.service';
-import { AccountService } from '../../services/account.service';
-import { Utilities } from '../../services/utilities';
-import { User } from '../../models/user.model';
-import { UserEdit } from '../../models/user-edit.model';
-import { Role } from '../../models/role.model';
-import { Permission } from '../../models/permission.model';
+import { AccountService } from "../../services/account.service";
+import { Utilities } from '../../helpers/utilities';
+import { UserViewModel, UserEditViewModel, RoleViewModel, PermissionValues } from '../../services/endpoint.services';
 
 
 @Component({
@@ -27,10 +19,10 @@ export class UserInfoComponent implements OnInit {
   public isChangePassword = false;
   public isEditingSelf = false;
   public showValidationErrors = false;
-  public uniqueId: string = Utilities.uniqueId();
-  public user: User = new User();
-  public userEdit: UserEdit;
-  public allRoles: Role[] = [];
+    public uniqueId: string = Utilities.uniqueId();
+    public user: UserViewModel = new UserViewModel();
+  public userEdit: UserEditViewModel;
+  public allRoles: RoleViewModel[] = [];
 
   public formResetToggle = true;
 
@@ -77,7 +69,7 @@ export class UserInfoComponent implements OnInit {
   public rolesSelector;
 
 
-  constructor(private alertService: AlertService, private accountService: AccountService) {
+  constructor(private alertService: AlertService, private accountClient: AccountService) {
   }
 
   ngOnInit() {
@@ -92,14 +84,14 @@ export class UserInfoComponent implements OnInit {
     this.alertService.startLoadingMessage();
 
     if (this.canViewAllRoles) {
-      this.accountService.getUserAndRoles().subscribe(results => this.onCurrentUserDataLoadSuccessful(results[0], results[1]), error => this.onCurrentUserDataLoadFailed(error));
+      this.accountClient.getUserAndRoles().subscribe(results => this.onCurrentUserDataLoadSuccessful(results[0], results[1]), error => this.onCurrentUserDataLoadFailed(error));
     } else {
-      this.accountService.getUser().subscribe(user => this.onCurrentUserDataLoadSuccessful(user, user.roles.map(x => new Role(x))), error => this.onCurrentUserDataLoadFailed(error));
+        this.accountClient.getUser().subscribe(user => this.onCurrentUserDataLoadSuccessful(user, user.roles.map(x => { let r = new RoleViewModel(); r.name = x; return r; })), error => this.onCurrentUserDataLoadFailed(error));
     }
   }
 
 
-  private onCurrentUserDataLoadSuccessful(user: User, roles: Role[]) {
+  private onCurrentUserDataLoadSuccessful(user: UserViewModel, roles: RoleViewModel[]) {
     this.alertService.stopLoadingMessage();
     this.user = user;
     this.allRoles = roles;
@@ -110,7 +102,7 @@ export class UserInfoComponent implements OnInit {
     this.alertService.showStickyMessage('Load Error', `Unable to retrieve user data from the server.\r\nErrors: "${Utilities.getHttpResponseMessages(error)}"`,
       MessageSeverity.error, error);
 
-    this.user = new User();
+    this.user = new UserViewModel();
   }
 
 
@@ -126,26 +118,25 @@ export class UserInfoComponent implements OnInit {
   }
 
 
-  deletePasswordFromUser(user: UserEdit | User) {
-    const userEdit = user as UserEdit;
+    deletePasswordFromUser(user: UserEditViewModel | UserViewModel) {
+    const userEdit = user as UserEditViewModel;
 
     delete userEdit.currentPassword;
     delete userEdit.newPassword;
-    delete userEdit.confirmPassword;
   }
 
 
   edit() {
     if (!this.isGeneralEditor) {
       this.isEditingSelf = true;
-      this.userEdit = new UserEdit();
+      this.userEdit = new UserEditViewModel();
       Object.assign(this.userEdit, this.user);
     } else {
       if (!this.userEdit) {
-        this.userEdit = new UserEdit();
+        this.userEdit = new UserEditViewModel();
       }
 
-      this.isEditingSelf = this.accountService.currentUser ? this.userEdit.id == this.accountService.currentUser.id : false;
+      this.isEditingSelf = this.accountClient.currentUser ? this.userEdit.id == this.accountClient.currentUser.id : false;
     }
 
     this.isEditMode = true;
@@ -159,14 +150,14 @@ export class UserInfoComponent implements OnInit {
     this.alertService.startLoadingMessage('Saving changes...');
 
     if (this.isNewUser) {
-      this.accountService.newUser(this.userEdit).subscribe(user => this.saveSuccessHelper(user), error => this.saveFailedHelper(error));
+      this.accountClient.newUser(this.userEdit).subscribe(user => this.saveSuccessHelper(user), error => this.saveFailedHelper(error));
     } else {
-      this.accountService.updateUser(this.userEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+      this.accountClient.updateUser(this.userEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
     }
   }
 
 
-  private saveSuccessHelper(user?: User) {
+  private saveSuccessHelper(user?: UserViewModel) {
     this.testIsRoleUserCountChanged(this.user, this.userEdit);
 
     if (user) {
@@ -180,7 +171,7 @@ export class UserInfoComponent implements OnInit {
 
     this.deletePasswordFromUser(this.userEdit);
     Object.assign(this.user, this.userEdit);
-    this.userEdit = new UserEdit();
+    this.userEdit = new UserEditViewModel();
     this.resetForm();
 
 
@@ -219,7 +210,7 @@ export class UserInfoComponent implements OnInit {
 
 
 
-  private testIsRoleUserCountChanged(currentUser: User, editedUser: User) {
+  private testIsRoleUserCountChanged(currentUser: UserViewModel, editedUser: UserViewModel) {
 
     const rolesAdded = this.isNewUser ? editedUser.roles : editedUser.roles.filter(role => currentUser.roles.indexOf(role) == -1);
     const rolesRemoved = this.isNewUser ? [] : currentUser.roles.filter(role => editedUser.roles.indexOf(role) == -1);
@@ -227,7 +218,7 @@ export class UserInfoComponent implements OnInit {
     const modifiedRoles = rolesAdded.concat(rolesRemoved);
 
     if (modifiedRoles.length) {
-      setTimeout(() => this.accountService.onRolesUserCountChanged(modifiedRoles));
+      setTimeout(() => this.accountClient.onRolesUserCountChanged(modifiedRoles));
     }
   }
 
@@ -235,9 +226,9 @@ export class UserInfoComponent implements OnInit {
 
   cancel() {
     if (this.isGeneralEditor) {
-      this.userEdit = this.user = new UserEdit();
+      this.userEdit = this.user = new UserEditViewModel();
     } else {
-      this.userEdit = new UserEdit();
+      this.userEdit = new UserEditViewModel();
     }
 
     this.showValidationErrors = false;
@@ -257,7 +248,7 @@ export class UserInfoComponent implements OnInit {
 
 
   close() {
-    this.userEdit = this.user = new UserEdit();
+    this.userEdit = this.user = new UserEditViewModel();
     this.showValidationErrors = false;
     this.resetForm();
     this.isEditMode = false;
@@ -270,7 +261,7 @@ export class UserInfoComponent implements OnInit {
 
 
   private refreshLoggedInUser() {
-    this.accountService.refreshLoggedInUser()
+    this.accountClient.refreshLoggedInUser()
       .subscribe(user => {
         this.loadCurrentUserData();
       },
@@ -291,10 +282,10 @@ export class UserInfoComponent implements OnInit {
     this.alertService.startLoadingMessage('Unblocking user...');
 
 
-    this.accountService.unblockUser(this.userEdit.id)
+    this.accountClient.unblockUser(this.userEdit.id)
       .subscribe(() => {
         this.isSaving = false;
-        this.userEdit.isLockedOut = false;
+        //this.userEdit.isLockedOut = false;
         this.alertService.stopLoadingMessage();
         this.alertService.showMessage('Success', 'User has been successfully unblocked', MessageSeverity.success);
       },
@@ -322,26 +313,26 @@ export class UserInfoComponent implements OnInit {
   }
 
 
-  newUser(allRoles: Role[]) {
+  newUser(allRoles: RoleViewModel[]) {
     this.isGeneralEditor = true;
     this.isNewUser = true;
 
     this.allRoles = [...allRoles];
-    this.user = this.userEdit = new UserEdit();
+    this.user = this.userEdit = new UserEditViewModel();
     this.userEdit.isEnabled = true;
     this.edit();
 
     return this.userEdit;
   }
 
-  editUser(user: User, allRoles: Role[]) {
+    editUser(user: UserViewModel, allRoles: RoleViewModel[]) {
     if (user) {
       this.isGeneralEditor = true;
       this.isNewUser = false;
 
       this.setRoles(user, allRoles);
-      this.user = new User();
-      this.userEdit = new UserEdit();
+      this.user = new UserViewModel();
+      this.userEdit = new UserEditViewModel();
       Object.assign(this.user, user);
       Object.assign(this.userEdit, user);
       this.edit();
@@ -353,9 +344,9 @@ export class UserInfoComponent implements OnInit {
   }
 
 
-  displayUser(user: User, allRoles?: Role[]) {
+    displayUser(user: UserViewModel, allRoles?: RoleViewModel[]) {
 
-    this.user = new User();
+    this.user = new UserViewModel();
     Object.assign(this.user, user);
     this.deletePasswordFromUser(this.user);
     this.setRoles(user, allRoles);
@@ -365,15 +356,18 @@ export class UserInfoComponent implements OnInit {
 
 
 
-  private setRoles(user: User, allRoles?: Role[]) {
+    private setRoles(user: UserViewModel, allRoles?: RoleViewModel[]) {
 
     this.allRoles = allRoles ? [...allRoles] : [];
 
     if (user.roles) {
-      for (const ur of user.roles) {
-        if (!this.allRoles.some(r => r.name == ur)) {
-          this.allRoles.unshift(new Role(ur));
-        }
+      for (let ur of user.roles) {
+          if (!this.allRoles.some(r => r.name == ur)) {
+              let rl = new RoleViewModel();
+              rl.name = ur;
+              this.allRoles.unshift(rl);
+          }
+        
       }
     }
 
@@ -389,10 +383,10 @@ export class UserInfoComponent implements OnInit {
 
 
   get canViewAllRoles() {
-    return this.accountService.userHasPermission(Permission.viewRolesPermission);
+      return this.accountClient.userHasPermission(PermissionValues.ViewRoles);
   }
 
   get canAssignRoles() {
-    return this.accountService.userHasPermission(Permission.assignRolesPermission);
+      return this.accountClient.userHasPermission(PermissionValues.AssignRoles);
   }
 }

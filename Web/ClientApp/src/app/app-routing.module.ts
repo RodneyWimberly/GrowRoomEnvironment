@@ -1,8 +1,3 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, DefaultUrlSerializer, UrlSerializer, UrlTree } from '@angular/router';
 
@@ -14,9 +9,9 @@ import { OrdersComponent } from './components/orders/orders.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { AuthService } from './services/auth.service';
-import { AuthGuard } from './services/auth-guard.service';
-import { Utilities } from './services/utilities';
+import { AuthEndpointService } from './services/endpoint.services';
+import { AuthGuardService} from './services/auth-guard.service';
+import { Utilities } from './helpers/utilities';
 
 
 
@@ -42,12 +37,12 @@ export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuard], data: { title: 'Home' } },
+  { path: '', component: HomeComponent, canActivate: [AuthGuardService], data: { title: 'Home' } },
   { path: 'login', component: LoginComponent, data: { title: 'Login' } },
-  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuard], data: { title: 'Customers' } },
-  { path: 'products', component: ProductsComponent, canActivate: [AuthGuard], data: { title: 'Products' } },
-  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuard], data: { title: 'Orders' } },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuard], data: { title: 'Settings' } },
+  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuardService], data: { title: 'Customers' } },
+  { path: 'products', component: ProductsComponent, canActivate: [AuthGuardService], data: { title: 'Products' } },
+  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuardService], data: { title: 'Orders' } },
+  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Settings' } },
   { path: 'about', component: AboutComponent, data: { title: 'About Us' } },
   { path: 'home', redirectTo: '/', pathMatch: 'full' },
   { path: '**', component: NotFoundComponent, data: { title: 'Page Not Found' } }
@@ -58,8 +53,8 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
   providers: [
-    AuthService,
-    AuthGuard,
+    AuthEndpointService,
+    AuthGuardService,
     { provide: UrlSerializer, useClass: LowerCaseUrlSerializer }]
 })
 export class AppRoutingModule { }

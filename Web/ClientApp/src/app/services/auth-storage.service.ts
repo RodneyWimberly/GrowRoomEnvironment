@@ -1,17 +1,11 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Injectable } from '@angular/core';
 import { OAuthStorage } from 'angular-oauth2-oidc';
-
-import { LocalStoreManager } from '../services/local-store-manager.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Injectable()
-export class AuthStorage implements OAuthStorage {
+export class AuthStorageService implements OAuthStorage {
 
-  constructor(private localStorage: LocalStoreManager) {
+  constructor(private localStorage: LocalStorageService) {
   }
 
   static RememberMe = false;
@@ -26,7 +20,7 @@ export class AuthStorage implements OAuthStorage {
   }
 
   setItem(key: string, data: string): void {
-    if (AuthStorage.RememberMe) {
+    if (AuthStorageService.RememberMe) {
       this.localStorage.savePermanentData(data, this.dbKeyPrefix + key);
     } else {
       this.localStorage.saveSyncedSessionData(data, this.dbKeyPrefix + key);

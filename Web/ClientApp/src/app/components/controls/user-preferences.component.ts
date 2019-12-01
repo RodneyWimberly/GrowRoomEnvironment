@@ -1,18 +1,13 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { ConfigurationService } from '../../services/configuration.service';
 import { AppTranslationService } from '../../services/app-translation.service';
 import { BootstrapSelectDirective } from '../../directives/bootstrap-select.directive';
-import { AccountService } from '../../services/account.service';
-import { ThemeManager } from '../../services/theme-manager';
-import { Utilities } from '../../services/utilities';
-import { Permission } from '../../models/permission.model';
+import { AccountService } from "../../services/account.service";
+import {AppThemeService } from '../../services/app-theme.service';
+import { Utilities } from '../../helpers/utilities';
+import { PermissionViewModel, PermissionValues } from '../../services/endpoint.services';
 
 
 @Component({
@@ -35,8 +30,8 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
     constructor(
         private alertService: AlertService,
         private translationService: AppTranslationService,
-        private accountService: AccountService,
-        public themeManager: ThemeManager,
+        private accountClient: AccountService,
+        public themeManager: AppThemeService,
         public configurations: ConfigurationService) {
     }
 
@@ -61,7 +56,7 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
     reloadFromServer() {
         this.alertService.startLoadingMessage();
 
-        this.accountService.getUserPreferences()
+        this.accountClient.getUserPreferences()
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
 
@@ -86,7 +81,7 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
     setAsDefaultHelper() {
         this.alertService.startLoadingMessage('', 'Saving new defaults');
 
-        this.accountService.updateUserPreferences(this.configurations.export())
+        this.accountClient.updateUserPreferences(this.configurations.export())
             .subscribe(response => {
                 this.alertService.stopLoadingMessage();
                 this.alertService.showMessage('New Defaults', 'Account defaults updated successfully', MessageSeverity.success);
@@ -110,7 +105,7 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
     resetDefaultHelper() {
         this.alertService.startLoadingMessage('', 'Resetting defaults');
 
-        this.accountService.updateUserPreferences(null)
+        this.accountClient.updateUserPreferences(null)
             .subscribe(response => {
                 this.alertService.stopLoadingMessage();
                 this.configurations.import(null);
@@ -126,11 +121,11 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
 
 
     get canViewCustomers() {
-        return this.accountService.userHasPermission(Permission.viewUsersPermission); // eg. viewCustomersPermission
+        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewCustomersPermission
     }
 
     get canViewProducts() {
-        return this.accountService.userHasPermission(Permission.viewUsersPermission); // eg. viewProductsPermission
+        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewProductsPermission
     }
 
     get canViewOrders() {

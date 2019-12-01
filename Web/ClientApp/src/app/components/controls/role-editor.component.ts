@@ -1,14 +1,8 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, ViewChild } from '@angular/core';
 
 import { AlertService, MessageSeverity } from '../../services/alert.service';
-import { AccountService } from '../../services/account.service';
-import { Role } from '../../models/role.model';
-import { Permission } from '../../models/permission.model';
+import { AccountService } from "../../services/account.service";
+import { RoleViewModel, PermissionViewModel, PermissionValues  } from '../../services/endpoint.services';
 
 
 @Component({
@@ -20,9 +14,9 @@ export class RoleEditorComponent {
 
   private isNewRole = false;
   public isSaving: boolean;
-  public showValidationErrors = true;
-  public roleEdit: Role = new Role();
-  public allPermissions: Permission[] = [];
+    public showValidationErrors = true;
+    public roleEdit: RoleViewModel = new RoleViewModel();
+    public allPermissions: PermissionViewModel[] = [];
   public selectedValues: { [key: string]: boolean; } = {};
   private editingRoleName: string;
 
@@ -38,7 +32,7 @@ export class RoleEditorComponent {
 
 
 
-  constructor(private alertService: AlertService, private accountService: AccountService) {
+  constructor(private alertService: AlertService, private accountClient: AccountService) {
   }
 
 
@@ -55,16 +49,16 @@ export class RoleEditorComponent {
     this.roleEdit.permissions = this.getSelectedPermissions();
 
     if (this.isNewRole) {
-      this.accountService.newRole(this.roleEdit).subscribe(role => this.saveSuccessHelper(role), error => this.saveFailedHelper(error));
+      this.accountClient.newRole(this.roleEdit).subscribe(role => this.saveSuccessHelper(role), error => this.saveFailedHelper(error));
     } else {
-      this.accountService.updateRole(this.roleEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
+      this.accountClient.updateRole(this.roleEdit).subscribe(response => this.saveSuccessHelper(), error => this.saveFailedHelper(error));
     }
   }
 
 
 
 
-  private saveSuccessHelper(role?: Role) {
+  private saveSuccessHelper(role?: RoleViewModel) {
     if (role) {
       Object.assign(this.roleEdit, role);
     }
@@ -80,11 +74,11 @@ export class RoleEditorComponent {
     }
 
 
-    this.roleEdit = new Role();
+    this.roleEdit = new RoleViewModel();
     this.resetForm();
 
 
-    if (!this.isNewRole && this.accountService.currentUser.roles.some(r => r == this.editingRoleName)) {
+    if (!this.isNewRole && this.accountClient.currentUser.roles.some(r => r == this.editingRoleName)) {
       this.refreshLoggedInUser();
     }
 
@@ -95,7 +89,7 @@ export class RoleEditorComponent {
 
 
   private refreshLoggedInUser() {
-    this.accountService.refreshLoggedInUser()
+    this.accountClient.refreshLoggedInUser()
       .subscribe(user => { },
         error => {
           this.alertService.resetStickyMessage();
@@ -118,7 +112,7 @@ export class RoleEditorComponent {
 
 
   cancel() {
-    this.roleEdit = new Role();
+    this.roleEdit = new RoleViewModel();
 
     this.showValidationErrors = false;
     this.resetForm();
@@ -179,19 +173,19 @@ export class RoleEditorComponent {
   }
 
 
-  newRole(allPermissions: Permission[]) {
+    newRole(allPermissions: PermissionViewModel[]) {
     this.isNewRole = true;
     this.showValidationErrors = true;
 
     this.editingRoleName = null;
     this.allPermissions = allPermissions;
     this.selectedValues = {};
-    this.roleEdit = new Role();
+    this.roleEdit = new RoleViewModel();
 
     return this.roleEdit;
   }
 
-  editRole(role: Role, allPermissions: Permission[]) {
+    editRole(role: RoleViewModel, allPermissions: PermissionViewModel[]) {
     if (role) {
       this.isNewRole = false;
       this.showValidationErrors = true;
@@ -200,7 +194,7 @@ export class RoleEditorComponent {
       this.allPermissions = allPermissions;
       this.selectedValues = {};
       role.permissions.forEach(p => this.selectedValues[p.value] = true);
-      this.roleEdit = new Role();
+      this.roleEdit = new RoleViewModel();
       Object.assign(this.roleEdit, role);
 
       return this.roleEdit;
@@ -212,6 +206,6 @@ export class RoleEditorComponent {
 
 
   get canManageRoles() {
-    return this.accountService.userHasPermission(Permission.manageRolesPermission);
+      return this.accountClient.userHasPermission(PermissionValues.ManageRoles);
   }
 }

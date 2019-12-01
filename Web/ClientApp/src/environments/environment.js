@@ -1,18 +1,15 @@
-import { AppModule } from '../app/app.module';
-import { Injectable, Inject, InjectionToken } from '@angular/core';
-
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = require("@angular/core");
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
-export const environment = {
+exports.environment = {
     production: false,
-    baseUrl: null, // Change this to the address of your backend API if different from frontend address
-    tokenUrl: null, // For IdentityServer/Authorization Server API. You can set to null if same as baseUrl
+    baseUrl: new core_1.InjectionToken('BASE_URL'),
+    tokenUrl: '/connect/token',
     loginUrl: '/login'
 };
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
@@ -21,3 +18,4 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+//# sourceMappingURL=environment.js.map

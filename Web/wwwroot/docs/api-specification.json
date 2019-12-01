@@ -3,6 +3,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "GrowRoomEnvironment WebAPI",
+    "description": "GrowRoomEnvironment WebAPI Documentation",
     "version": "1.0.0"
   },
   "paths": {
@@ -78,10 +79,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocumentOfUserPatchViewModel"
               }
             }
           },
@@ -243,10 +241,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Operation"
-                }
+                "$ref": "#/components/schemas/JsonPatchDocumentOfUserPatchViewModel"
               }
             }
           },
@@ -1090,6 +1085,30 @@
                 }
               }
             }
+          }
+        ]
+      },
+      "JsonPatchDocumentOfUserPatchViewModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operations": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/OperationOfUserPatchViewModel"
+            }
+          }
+        }
+      },
+      "OperationOfUserPatchViewModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Operation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
           }
         ]
       },

@@ -1,16 +1,11 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
 
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 
-
-import { fadeInOut } from '../../services/animations';
+import { fadeInOut } from '../../helpers/animations';
 import { BootstrapTabDirective } from '../../directives/bootstrap-tab.directive';
 import { AccountService } from '../../services/account.service';
-import { Permission } from '../../models/permission.model';
+import { PermissionViewModel, PermissionValues } from '../../services/endpoint.services';
 
 
 @Component({
@@ -38,7 +33,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   tab: BootstrapTabDirective;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private accountService: AccountService) {
+  constructor(private router: Router, private route: ActivatedRoute, private accountClient: AccountService) {
   }
 
 
@@ -92,10 +87,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
   get canViewUsers() {
-    return this.accountService.userHasPermission(Permission.viewUsersPermission);
+      return this.accountClient.userHasPermission(PermissionValues.ViewUsers);
   }
 
   get canViewRoles() {
-    return this.accountService.userHasPermission(Permission.viewRolesPermission);
+      return this.accountClient.userHasPermission(PermissionValues.ViewRoles);
   }
 }

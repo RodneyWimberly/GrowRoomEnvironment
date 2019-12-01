@@ -1,19 +1,11 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { Component, OnInit, AfterViewInit, TemplateRef, ViewChild, Input } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-
 import { AlertService, DialogType, MessageSeverity } from '../../services/alert.service';
 import { AppTranslationService } from '../../services/app-translation.service';
-import { AccountService } from '../../services/account.service';
-import { Utilities } from '../../services/utilities';
-import { Role } from '../../models/role.model';
-import { Permission } from '../../models/permission.model';
+import { AccountService } from "../../services/account.service";
+import { Utilities } from '../../helpers/utilities';
 import { RoleEditorComponent } from './role-editor.component';
-
+import { PermissionValues, RoleViewModel, PermissionViewModel } from '../../services/endpoint.services';
 
 @Component({
     selector: 'roles-management',
@@ -22,11 +14,11 @@ import { RoleEditorComponent } from './role-editor.component';
 })
 export class RolesManagementComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
-    rows: Role[] = [];
-    rowsCache: Role[] = [];
-    allPermissions: Permission[] = [];
-    editedRole: Role;
-    sourceRole: Role;
+    rows: RoleViewModel[] = [];
+    rowsCache: RoleViewModel[] = [];
+    allPermissions: PermissionViewModel[] = [];
+    editedRole: RoleViewModel;
+    sourceRole: RoleViewModel;
     editingRoleName: { name: string };
     loadingIndicator: boolean;
 
@@ -44,7 +36,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
     @ViewChild('roleEditor', { static: true })
     roleEditor: RoleEditorComponent;
 
-    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountService: AccountService) {
+    constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountClient: AccountService) {
     }
 
 
@@ -99,7 +91,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
             this.editedRole = null;
             this.sourceRole = null;
         } else {
-            const role = new Role();
+            const role = new RoleViewModel();
             Object.assign(role, this.editedRole);
             this.editedRole = null;
 
@@ -125,7 +117,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
         this.alertService.startLoadingMessage();
         this.loadingIndicator = true;
 
-        this.accountService.getRolesAndPermissions()
+        this.accountClient.getRolesAndPermissions()
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
@@ -172,24 +164,24 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    editRole(row: Role) {
+    editRole(row: RoleViewModel) {
         this.editingRoleName = { name: row.name };
         this.sourceRole = row;
         this.editedRole = this.roleEditor.editRole(row, this.allPermissions);
         this.editorModal.show();
     }
 
-    deleteRole(row: Role) {
+    deleteRole(row: RoleViewModel) {
         this.alertService.showDialog('Are you sure you want to delete the \"' + row.name + '\" role?', DialogType.confirm, () => this.deleteRoleHelper(row));
     }
 
 
-    deleteRoleHelper(row: Role) {
+    deleteRoleHelper(row: RoleViewModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
 
-        this.accountService.deleteRole(row)
+        this.accountClient.deleteRole(row)
             .subscribe(results => {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
@@ -208,7 +200,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
 
 
     get canManageRoles() {
-        return this.accountService.userHasPermission(Permission.manageRolesPermission);
+        return this.accountClient.userHasPermission(PermissionValues.ManageRoles);
     }
 
 }

@@ -1,8 +1,3 @@
-// =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
-// =============================
-
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -26,15 +21,15 @@ import { AppTitleService } from './services/app-title.service';
 import { AppTranslationService, TranslateLanguageLoader } from './services/app-translation.service';
 import { ConfigurationService } from './services/configuration.service';
 import { AlertService } from './services/alert.service';
-import { ThemeManager } from './services/theme-manager';
-import { LocalStoreManager } from './services/local-store-manager.service';
-import { AuthStorage } from './services/auth-storage';
+import { AppThemeService } from './services/app-theme.service';
+import { LocalStorageService } from './services/local-storage.service';
+import { AuthStorageService } from './services/auth-storage.service';
 import { NotificationService } from './services/notification.service';
-import { NotificationEndpoint } from './services/notification-endpoint.service';
-import { AccountService } from './services/account.service';
-import { AccountEndpoint } from './services/account-endpoint.service';
+import { NotificationMockService } from './services/notification-mock.service';
+import { AccountService } from "./services/account.service";
+import { AccountEndpointService } from './services/endpoint.services';
 
-import { EqualValidator } from './directives/equal-validator.directive';
+import { EqualValidatorDirective } from './directives/equal-validator.directive';
 import { LastElementDirective } from './directives/last-element.directive';
 import { AutofocusDirective } from './directives/autofocus.directive';
 import { BootstrapTabDirective } from './directives/bootstrap-tab.directive';
@@ -103,7 +98,7 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
     NotificationsViewerComponent,
     SearchBoxComponent,
     StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
-    EqualValidator,
+    EqualValidatorDirective,
     LastElementDirective,
     AutofocusDirective,
     BootstrapTabDirective,
@@ -114,17 +109,17 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: OAuthStorage, useClass: AuthStorage },
+    { provide: OAuthStorage, useClass: AuthStorageService },
     AlertService,
-    ThemeManager,
+    AppThemeService,
     ConfigurationService,
     AppTitleService,
     AppTranslationService,
     NotificationService,
-    NotificationEndpoint,
+    NotificationMockService,
     AccountService,
-    AccountEndpoint,
-    LocalStoreManager
+    AccountEndpointService,
+    LocalStorageService
   ],
   bootstrap: [AppComponent]
 })
