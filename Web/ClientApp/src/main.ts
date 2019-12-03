@@ -12,9 +12,10 @@ const providers = [
   { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
 ];
 
+
 if (environment.production) {
   enableProdMode();
 }
 
 platformBrowserDynamic(providers).bootstrapModule(AppModule)
-  .catch(err => console.log(err));
+  .catch(err => console.error(err));

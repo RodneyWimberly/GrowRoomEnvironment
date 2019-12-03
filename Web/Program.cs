@@ -1,6 +1,9 @@
+using GrowRoomEnvironment.DataAccess;
+using GrowRoomEnvironment.DataAccess.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using ZNetCS.AspNetCore.Logging.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -13,8 +16,12 @@ namespace GrowRoomEnvironment.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-               // .ConfigureLogging((hostingContext, builder) => builder.AddFile("Logs/GrowRoomEnvironment-{Date}.txt"))
-                .UseStartup<Startup>()
-                .UseUrls("http://*:5001/");
+              .ConfigureLogging((hostingContext, logging) =>
+              {
+                  logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                  logging.AddEntityFramework<ApplicationDbContext, ExtendedLog>();
+              })
+            .UseStartup<Startup>()
+            .UseUrls("http://*:5001/");
     }
 }

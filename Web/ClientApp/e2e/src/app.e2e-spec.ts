@@ -1,14 +1,20 @@
-import { AppPage } from './app.po';
+// =============================
+// Email: info@wimberlytech.com
+// www.wimberlytech.com/templates
+// =============================
 
-describe('App', () => {
+import { AppPage } from './app.po';
+import { browser, logging } from 'protractor';
+
+describe('workspace-project App', () => {
   let page: AppPage;
 
   beforeEach(() => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
+  it('should display application title: GrowRoomEnvironment', () => {
     page.navigateTo();
-    expect(page.getMainHeading()).toEqual('Hello, world!');
+    expect(page.getAppTitle()).toEqual('GrowRoomEnvironment');
   });
 });

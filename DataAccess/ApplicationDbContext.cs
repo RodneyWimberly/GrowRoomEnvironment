@@ -6,24 +6,44 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ZNetCS.AspNetCore.Logging.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public string CurrentUserId { get; set; }
-       // public DbSet<ElevatorStatusHistory> ElevatorStatusHistories { get; set; }
+
+        public DbSet<ExtendedLog> Logs { get; set; }
+
+        // public DbSet<ElevatorStatusHistory> ElevatorStatusHistories { get; set; }
         public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<EnumLookup> EnumLookups { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)  { }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=./GrowRoomEnvironment-Dev.db");
+       protected override void OnConfiguring(DbContextOptionsBuilder options)
+          => options.UseSqlite("Data Source=./GrowRoomEnvironment.db");
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            // build default model.
+            LogModelBuilderHelper.Build(builder.Entity<ExtendedLog>());
+
+            // real relation database can map table:
+            builder.Entity<ExtendedLog>().Property(r => r.Id).ValueGeneratedOnAdd();
+            builder.Entity<ExtendedLog>().HasIndex(r => r.TimeStamp).HasName("IX_Log_TimeStamp");
+            builder.Entity<ExtendedLog>().HasIndex(r => r.EventId).HasName("IX_Log_EventId");
+            builder.Entity<ExtendedLog>().HasIndex(r => r.Level).HasName("IX_Log_Level");
+            builder.Entity<ExtendedLog>().Property(u => u.Name).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.Browser).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.User).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.Host).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.Path).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().ToTable($"App{nameof(this.Logs)}");
+
             builder.Entity<ApplicationUser>().HasMany(u => u.Claims).WithOne().HasForeignKey(c => c.UserId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ApplicationUser>().HasMany(u => u.Roles).WithOne().HasForeignKey(r => r.UserId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 

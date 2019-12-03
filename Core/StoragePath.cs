@@ -32,7 +32,7 @@ namespace GrowRoomEnvironment.Core
         public static string EmailTemplatesPath { get; private set; }
         public static string DbFile { get; private set; }
         public static string LogFile { get; set; }
-        public static void QuickLog(string text)
+        public static void AppendLogFile(string text)
         {
             string dirPath = Path.GetDirectoryName(LogFile);
 

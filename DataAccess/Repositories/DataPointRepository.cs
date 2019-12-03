@@ -9,6 +9,5 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
     {
         public DataPointRepository(DbContext context) : base(context)
         { }
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }

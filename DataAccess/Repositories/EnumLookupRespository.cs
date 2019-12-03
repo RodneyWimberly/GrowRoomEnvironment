@@ -8,6 +8,5 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
     {
         public EnumLookupRespository(DbContext context) : base(context)
         { }
-        private ApplicationDbContext _appContext => (ApplicationDbContext)_context;
     }
 }
