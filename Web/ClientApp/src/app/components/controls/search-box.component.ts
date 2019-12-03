@@ -1,8 +1,3 @@
-// =============================
-// Email: info@wimberlytech.com
-// www.wimberlytech.com/templates
-// =============================
-
 import { Component, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({

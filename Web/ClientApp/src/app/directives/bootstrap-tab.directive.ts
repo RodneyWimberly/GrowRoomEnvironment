@@ -1,8 +1,3 @@
-// =============================
-// Email: info@wimberlytech.com
-// www.wimberlytech.com/templates
-// =============================
-
 import { Directive, ElementRef, Output, EventEmitter, OnDestroy, NgZone } from '@angular/core';
 import { Observable, Subscription, fromEvent } from 'rxjs';
 

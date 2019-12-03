@@ -1,8 +1,3 @@
-// =============================
-// Email: info@wimberlytech.com
-// www.wimberlytech.com/templates
-// =============================
-
 /**
  * alertify
  * An unobtrusive customizable JavaScript notification system

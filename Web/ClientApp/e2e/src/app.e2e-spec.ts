@@ -1,8 +1,3 @@
-// =============================
-// Email: info@wimberlytech.com
-// www.wimberlytech.com/templates
-// =============================
-
 import { AppPage } from './app.po';
 import { browser, logging } from 'protractor';
 

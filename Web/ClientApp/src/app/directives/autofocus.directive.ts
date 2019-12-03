@@ -1,8 +1,3 @@
-// =============================
-// Email: info@wimberlytech.com
-// www.wimberlytech.com/templates
-// =============================
-
 import { Directive, ElementRef, OnInit } from '@angular/core';
 
 
