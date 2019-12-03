@@ -5,18 +5,13 @@
         "New": "New"
     },
     "mainMenu": {
-        "Appointments": "Appointments",
-        "Customers": "Customers",
-        "Products": "Products",
-        "Orders": "Orders",
+        "Logs": "Logs",
         "About": "About",
         "Logout": "Logout"
     },
     "pageHeader": {
         "Dashboard": "Dashboard",
-        "Customers": "Customers",
-        "Products": "Products",
-        "Orders": "Orders",
+        "Logs": "Logs",
         "NotFound": "Not-Found",
         "About": "About",
         "Settings": "Settings"
@@ -41,7 +36,6 @@
         "header": {
             "UserProfile": "User Profile",
             "UserPreferences": "User Preferences",
-            "UserDepartments": "User Departments",
             "UsersManagements": "Users Managements",
             "RolesManagement": "Roles Management"
         }
@@ -59,9 +53,6 @@
         "LanguageHint": "Select the preferred language for your account",
         "HomePage": "Home Page:",
         "Dashboard": "Dashboard",
-        "Customers": "Customers",
-        "Products": "Products",
-        "Orders": "Orders",
         "About": "About",
         "Settings": "Settings",
         "HomePageHint": "Select the default page to navigate to on login",

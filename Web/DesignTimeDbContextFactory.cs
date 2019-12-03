@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using GrowRoomEnvironment.DataAccess;
 using System.IO;
 
-namespace AngularIot.Web
+namespace GrowRoomEnvironment.Web
 {
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
     {

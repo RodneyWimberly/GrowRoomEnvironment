@@ -5,7 +5,7 @@ import { AppTranslationService } from '../../services/app-translation.service';
 import { AccountService } from "../../services/account.service";
 import { Utilities } from '../../helpers/utilities';
 import { RoleEditorComponent } from './role-editor.component';
-import { PermissionValues, RoleViewModel, PermissionViewModel } from '../../services/endpoint.services';
+import * as generated from '../../services/endpoint.services';
 
 @Component({
     selector: 'roles-management',
@@ -14,11 +14,11 @@ import { PermissionValues, RoleViewModel, PermissionViewModel } from '../../serv
 })
 export class RolesManagementComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
-    rows: RoleViewModel[] = [];
-    rowsCache: RoleViewModel[] = [];
-    allPermissions: PermissionViewModel[] = [];
-    editedRole: RoleViewModel;
-    sourceRole: RoleViewModel;
+    rows: generated.RoleViewModel[] = [];
+    rowsCache: generated.RoleViewModel[] = [];
+    allPermissions: generated.PermissionViewModel[] = [];
+    editedRole: generated.RoleViewModel;
+    sourceRole: generated.RoleViewModel;
     editingRoleName: { name: string };
     loadingIndicator: boolean;
 
@@ -91,7 +91,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
             this.editedRole = null;
             this.sourceRole = null;
         } else {
-            const role = new RoleViewModel();
+            const role = new generated.RoleViewModel();
             Object.assign(role, this.editedRole);
             this.editedRole = null;
 
@@ -164,19 +164,19 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    editRole(row: RoleViewModel) {
+    editRole(row: generated.RoleViewModel) {
         this.editingRoleName = { name: row.name };
         this.sourceRole = row;
         this.editedRole = this.roleEditor.editRole(row, this.allPermissions);
         this.editorModal.show();
     }
 
-    deleteRole(row: RoleViewModel) {
+    deleteRole(row: generated.RoleViewModel) {
         this.alertService.showDialog('Are you sure you want to delete the \"' + row.name + '\" role?', DialogType.confirm, () => this.deleteRoleHelper(row));
     }
 
 
-    deleteRoleHelper(row: RoleViewModel) {
+    deleteRoleHelper(row: generated.RoleViewModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
@@ -200,7 +200,7 @@ export class RolesManagementComponent implements OnInit, AfterViewInit {
 
 
     get canManageRoles() {
-        return this.accountClient.userHasPermission(PermissionValues.ManageRoles);
+        return this.accountClient.userHasPermission(generated.PermissionValues.ManageRoles);
     }
 
 }

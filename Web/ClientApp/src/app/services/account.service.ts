@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, forkJoin } from 'rxjs';
 import { mergeMap, tap } from 'rxjs/operators';
-import { AuthEndpointService, AccountEndpointService, UserEditViewModel, UserViewModel, RoleViewModel, PermissionValue } from './endpoint.services';
+import * as generated from './endpoint.services';
 
 export type RolesChangedOperation = 'add' | 'delete' | 'modify';
-export interface RolesChangedEventArg { roles: RoleViewModel[] | string[]; operation: RolesChangedOperation; }
+export interface RolesChangedEventArg { roles: generated.RoleViewModel[] | string[]; operation: RolesChangedOperation; }
 
 @Injectable()
 export class AccountService {
@@ -13,7 +13,7 @@ export class AccountService {
     public static readonly roleModifiedOperation: RolesChangedOperation = 'modify';
     private _rolesChanged = new Subject<RolesChangedEventArg>();
 
-    constructor(private authEndpointService: AuthEndpointService, private accountEndpointService: AccountEndpointService) {
+    constructor(private authEndpointService: generated.AuthEndpointService, private accountEndpointService: generated.AccountEndpointService) {
     }
     getUser(userId?: string) {
         return userId ? this.accountEndpointService.getUserById(userId) : this.accountEndpointService.getCurrentUser();
@@ -27,7 +27,7 @@ export class AccountService {
     getUsersAndRoles(page?: number, pageSize?: number) {
         return forkJoin(this.getUsers(page, pageSize), this.accountEndpointService.getRolesAll());
     }
-    updateUser(user: UserEditViewModel) {
+    updateUser(user: generated.UserEditViewModel) {
         if (user.id) {
             return this.accountEndpointService.updateUser(user.id, user);
         }
@@ -38,7 +38,7 @@ export class AccountService {
             }));
         }
     }
-    newUser(user: UserEditViewModel) {
+    newUser(user: generated.UserEditViewModel) {
         return this.accountEndpointService.register(user);
     }
     getUserPreferences() {
@@ -47,23 +47,23 @@ export class AccountService {
     updateUserPreferences(configuration: string) {
         return this.accountEndpointService.userPreferences2(configuration);
     }
-    deleteUser(userOrUserId: string | UserViewModel): Observable<UserViewModel> {
+    deleteUser(userOrUserId: string | generated.UserViewModel): Observable<generated.UserViewModel> {
         if (typeof userOrUserId === 'string' || userOrUserId instanceof String) {
-            return this.accountEndpointService.deleteUser(userOrUserId as string).pipe<UserViewModel>(tap(data => this.onRolesUserCountChanged(data.roles)));
+            return this.accountEndpointService.deleteUser(userOrUserId as string).pipe<generated.UserViewModel>(tap(data => this.onRolesUserCountChanged(data.roles)));
         }
         else {
             if (userOrUserId.id) {
                 return this.deleteUser(userOrUserId.id);
             }
             else {
-                return this.accountEndpointService.getUserByUserName(userOrUserId.userName).pipe<UserViewModel>(tap(user => this.deleteUser(user.id)));
+                return this.accountEndpointService.getUserByUserName(userOrUserId.userName).pipe<generated.UserViewModel>(tap(user => this.deleteUser(user.id)));
             }
         }
     }
     unblockUser(userId: string) {
         return this.accountEndpointService.unblockUser(userId);
     }
-    userHasPermission(permissionValue: PermissionValue): boolean {
+    userHasPermission(permissionValue: generated.PermissionValue): boolean {
         return this.permissions.some(p => p == permissionValue);
     }
     refreshLoggedInUser() {
@@ -75,7 +75,7 @@ export class AccountService {
     getRolesAndPermissions(page?: number, pageSize?: number) {
         return forkJoin(this.getRoles(page, pageSize), this.accountEndpointService.getAllPermissions());
     }
-    updateRole(role: RoleViewModel) {
+    updateRole(role: generated.RoleViewModel) {
         if (role.id) {
             return this.accountEndpointService.updateRole(role.id, role).pipe(tap(data => this.onRolesChanged([role], AccountService.roleModifiedOperation)));
         }
@@ -86,35 +86,35 @@ export class AccountService {
             }), tap(data => this.onRolesChanged([role], AccountService.roleModifiedOperation)));
         }
     }
-    newRole(role: RoleViewModel) {
-        return this.accountEndpointService.createRole(role).pipe<RoleViewModel>(tap(data => this.onRolesChanged([role], AccountService.roleAddedOperation)));
+    newRole(role: generated.RoleViewModel) {
+        return this.accountEndpointService.createRole(role).pipe<generated.RoleViewModel>(tap(data => this.onRolesChanged([role], AccountService.roleAddedOperation)));
     }
-    deleteRole(roleOrRoleId: string | RoleViewModel): Observable<RoleViewModel> {
+    deleteRole(roleOrRoleId: string | generated.RoleViewModel): Observable<generated.RoleViewModel> {
         if (typeof roleOrRoleId === 'string' || roleOrRoleId instanceof String) {
-            return this.accountEndpointService.deleteRole(roleOrRoleId as string).pipe<RoleViewModel>(tap(data => this.onRolesChanged([data], AccountService.roleDeletedOperation)));
+            return this.accountEndpointService.deleteRole(roleOrRoleId as string).pipe<generated.RoleViewModel>(tap(data => this.onRolesChanged([data], AccountService.roleDeletedOperation)));
         }
         else {
             if (roleOrRoleId.id) {
                 return this.deleteRole(roleOrRoleId.id);
             }
             else {
-                return this.accountEndpointService.getRoleByName(roleOrRoleId.name).pipe<RoleViewModel>(tap(role => this.deleteRole(role.id)));
+                return this.accountEndpointService.getRoleByName(roleOrRoleId.name).pipe<generated.RoleViewModel>(tap(role => this.deleteRole(role.id)));
             }
         }
     }
     getPermissions() {
         return this.accountEndpointService.getAllPermissions();
     }
-    private onRolesChanged(roles: RoleViewModel[] | string[], op: RolesChangedOperation) {
+    private onRolesChanged(roles: generated.RoleViewModel[] | string[], op: RolesChangedOperation) {
         this._rolesChanged.next({ roles, operation: op });
     }
-    onRolesUserCountChanged(roles: RoleViewModel[] | string[]) {
+    onRolesUserCountChanged(roles: generated.RoleViewModel[] | string[]) {
         return this.onRolesChanged(roles, AccountService.roleModifiedOperation);
     }
     getRolesChangedEvent(): Observable<RolesChangedEventArg> {
         return this._rolesChanged.asObservable();
     }
-    get permissions(): PermissionValue[] {
+    get permissions(): generated.PermissionValue[] {
         return this.authEndpointService.userPermissions;
     }
     get currentUser() {

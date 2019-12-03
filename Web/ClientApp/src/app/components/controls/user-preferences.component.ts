@@ -7,8 +7,7 @@ import { BootstrapSelectDirective } from '../../directives/bootstrap-select.dire
 import { AccountService } from "../../services/account.service";
 import {AppThemeService } from '../../services/app-theme.service';
 import { Utilities } from '../../helpers/utilities';
-import { PermissionViewModel, PermissionValues } from '../../services/endpoint.services';
-
+import * as generated from '../../services/endpoint.services';
 
 @Component({
     selector: 'user-preferences',
@@ -121,11 +120,11 @@ export class UserPreferencesComponent implements OnInit, OnDestroy {
 
 
     get canViewCustomers() {
-        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewCustomersPermission
+        return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewCustomersPermission
     }
 
     get canViewProducts() {
-        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewProductsPermission
+        return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewProductsPermission
     }
 
     get canViewOrders() {

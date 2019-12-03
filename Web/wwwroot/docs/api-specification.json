@@ -933,12 +933,12 @@
         }
       }
     },
-    "/WeatherForecast": {
+    "/api/ExtendedLog": {
       "get": {
         "tags": [
-          "WeatherForecast"
+          "ExtendedLog"
         ],
-        "operationId": "WeatherForecast_Get",
+        "operationId": "ExtendedLog_GetAll",
         "responses": {
           "200": {
             "description": "",
@@ -947,8 +947,356 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WeatherForecast"
+                    "$ref": "#/components/schemas/ExtendedLogViewModel"
                   }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_DeleteAll",
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_Post",
+        "requestBody": {
+          "x-name": "extendedLogVM",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtendedLogViewModel"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtendedLogViewModel"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExtendedLog/{pageNumber}/{pageSize}": {
+      "get": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_GetExtendedLogs",
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtendedLogViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExtendedLog/level/{level}": {
+      "get": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_GetAllByLevel",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtendedLogViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExtendedLog/level/{level}/{pageNumber}/{pageSize}": {
+      "get": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_GetExtendedLogsByLevel",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExtendedLogViewModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExtendedLog/{id}": {
+      "get": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_GetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtendedLogViewModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_Delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtendedLogViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_Put",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "extendedLogVM",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExtendedLogViewModel"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ExtendedLog"
+        ],
+        "operationId": "ExtendedLog_Patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "patch",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonPatchDocumentOfExtendedLogViewModel"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -1201,27 +1549,75 @@
           }
         }
       },
-      "WeatherForecast": {
+      "ExtendedLogViewModel": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "temperatureC": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "temperatureF": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "summary": {
+          "browser": {
             "type": "string",
             "nullable": true
+          },
+          "host": {
+            "type": "string",
+            "nullable": true
+          },
+          "path": {
+            "type": "string",
+            "nullable": true
+          },
+          "user": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "level": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeStamp": {
+            "type": "string",
+            "format": "date-time"
           }
         }
+      },
+      "JsonPatchDocumentOfExtendedLogViewModel": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "operations": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/OperationOfExtendedLogViewModel"
+            }
+          }
+        }
+      },
+      "OperationOfExtendedLogViewModel": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Operation"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false
+          }
+        ]
       }
     }
   }

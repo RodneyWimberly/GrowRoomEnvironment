@@ -3,13 +3,11 @@ import { Routes, RouterModule, DefaultUrlSerializer, UrlSerializer, UrlTree } fr
 
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { CustomersComponent } from './components/customers/customers.component';
-import { ProductsComponent } from './components/products/products.component';
-import { OrdersComponent } from './components/orders/orders.component';
+import { ExtendedLogComponent } from './components/extended-log/extended-log.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { AuthEndpointService } from './services/endpoint.services';
+import * as generated from './services/endpoint.services';
 import { AuthGuardService} from './services/auth-guard.service';
 import { Utilities } from './helpers/utilities';
 
@@ -37,15 +35,13 @@ export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
 
 
 const routes: Routes = [
-  { path: '', component: HomeComponent, canActivate: [AuthGuardService], data: { title: 'Home' } },
-  { path: 'login', component: LoginComponent, data: { title: 'Login' } },
-  { path: 'customers', component: CustomersComponent, canActivate: [AuthGuardService], data: { title: 'Customers' } },
-  { path: 'products', component: ProductsComponent, canActivate: [AuthGuardService], data: { title: 'Products' } },
-  { path: 'orders', component: OrdersComponent, canActivate: [AuthGuardService], data: { title: 'Orders' } },
-  { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Settings' } },
-  { path: 'about', component: AboutComponent, data: { title: 'About Us' } },
-  { path: 'home', redirectTo: '/', pathMatch: 'full' },
-  { path: '**', component: NotFoundComponent, data: { title: 'Page Not Found' } }
+    { path: '', component: HomeComponent, canActivate: [AuthGuardService], data: { title: 'Home' } },
+    { path: 'login', component: LoginComponent, data: { title: 'Login' } },
+    { path: 'logs', component: ExtendedLogComponent, canActivate: [AuthGuardService], data: { title: 'Logs' } },
+    { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Settings' } },
+    { path: 'about', component: AboutComponent, data: { title: 'About Us' } },
+    { path: 'home', redirectTo: '/', pathMatch: 'full' },
+    { path: '**', component: NotFoundComponent, data: { title: 'Page Not Found' } }
 ];
 
 
@@ -53,7 +49,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
   providers: [
-    AuthEndpointService,
+    generated.AuthEndpointService,
     AuthGuardService,
     { provide: UrlSerializer, useClass: LowerCaseUrlSerializer }]
 })

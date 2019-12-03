@@ -1,6 +1,6 @@
 // =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
+// Email: info@wimberlytech.com
+// www.wimberlytech.com/templates
 // =============================
 
 // Karma configuration file, see link for more information
@@ -21,7 +21,7 @@ module.exports = function (config) {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
-      dir: require('path').join(__dirname, './coverage/quickapp'),
+      dir: require('path').join(__dirname, './coverage/growroomenvironment'),
       reports: ['html', 'lcovonly', 'text-summary'],
       fixWebpackSourcePaths: true
     },

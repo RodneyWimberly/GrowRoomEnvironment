@@ -1,6 +1,6 @@
 // =============================
-// Email: info@ebenmonney.com
-// www.ebenmonney.com/templates
+// Email: info@wimberlytech.com
+// www.wimberlytech.com/templates
 // =============================
 
 import { browser, by, element } from 'protractor';

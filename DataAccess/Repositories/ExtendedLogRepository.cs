@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class EnumLookupRespository : Repository<EnumLookup>, IEnumLookupRespository
+    public class ExtendedLogRepository : Repository<ExtendedLog>, IExtendedLogRepository
     {
-        public EnumLookupRespository(DbContext context) : base(context)
+        public ExtendedLogRepository(DbContext context) : base(context)
         { }
     }
 }

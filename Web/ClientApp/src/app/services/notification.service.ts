@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { map, flatMap, startWith } from 'rxjs/operators';
 
-import { AuthEndpointService } from './endpoint.services';
+import * as generated from './endpoint.services';
 import { NotificationMockService } from './notification-mock.service';
 import { NotificationModel } from '../models/notification.model';
 
@@ -26,7 +26,7 @@ export class NotificationService {
 
 
 
-  constructor(private notificationMockService: NotificationMockService, private authEndpointService: AuthEndpointService) {
+  constructor(private notificationMockService: NotificationMockService, private authEndpointService: generated.AuthEndpointService) {
 
   }
 

@@ -41,7 +41,13 @@ namespace GrowRoomEnvironment.Web.ViewModels
 
             CreateMap<IdentityRoleClaim<string>, PermissionViewModel>()
                 .ConvertUsing(s => (PermissionViewModel)ApplicationPermissions.GetPermissionByValue(s.ClaimValue));
-          
+
+            CreateMap<ExtendedLog, ExtendedLogViewModel>();
+            CreateMap<ExtendedLogViewModel, ExtendedLog>()
+                .ForMember(e => e.Browser, map => map.Ignore())
+                .ForMember(e => e.Host, map => map.Ignore())
+                .ForMember(e => e.Path, map => map.Ignore())
+                .ForMember(e => e.User, map => map.Ignore());
         }
     }
 }

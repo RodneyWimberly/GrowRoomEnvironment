@@ -3,7 +3,7 @@ import { AlertService, DialogType, MessageSeverity } from '../../services/alert.
 import { AppTranslationService } from '../../services/app-translation.service';
 import { NotificationService } from '../../services/notification.service';
 import { AccountService } from "../../services/account.service";
-import { PermissionValues } from '../../services/endpoint.services';
+import * as generated from '../../services/endpoint.services';
 import { Utilities } from '../../helpers/utilities';
 import { NotificationModel } from '../../models/notification.model';
 
@@ -194,7 +194,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
 
 
     get canManageNotifications() {
-        return this.accountClient.userHasPermission(PermissionValues.ManageRoles); // Todo: Consider creating separate permission for notifications
+        return this.accountClient.userHasPermission(generated.PermissionValues.ManageRoles); // Todo: Consider creating separate permission for notifications
     }
 
 }

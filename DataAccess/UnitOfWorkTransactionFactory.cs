@@ -3,6 +3,7 @@ using GrowRoomEnvironment.DataAccess.Repositories;
 using GrowRoomEnvironment.DataAccess.Repositories.Interfaces;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.DataAccess
 {
@@ -36,11 +37,28 @@ namespace GrowRoomEnvironment.DataAccess
             }
         }
 
+        public IExtendedLogRepository ExtendedLogs
+        {
+            get
+            {
+                IExtendedLogRepository repository = new ExtendedLogRepository(CreateDbContext());
+                return repository;
+            }
+        }
+
+
         public int SaveChanges()
         {
-            int returnValue = 0;
             CreateDbContext();
-            returnValue = DbContext.SaveChanges();
+            int returnValue = DbContext.SaveChanges();
+            DisposeDbContext();
+            return returnValue;
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            CreateDbContext();
+            int returnValue = await DbContext.SaveChangesAsync();
             DisposeDbContext();
             return returnValue;
         }

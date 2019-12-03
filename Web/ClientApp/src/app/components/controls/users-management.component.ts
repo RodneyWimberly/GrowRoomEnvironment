@@ -6,8 +6,7 @@ import { AppTranslationService } from '../../services/app-translation.service';
 import { AccountService } from "../../services/account.service";
 import { Utilities } from '../../helpers/utilities';
 import { UserInfoComponent } from './user-info.component';
-import { RoleViewModel, UserViewModel, UserEditViewModel, PermissionValues } from '../../services/endpoint.services';
-
+import * as generated from '../../services/endpoint.services';
 
 @Component({
     selector: 'users-management',
@@ -16,14 +15,14 @@ import { RoleViewModel, UserViewModel, UserEditViewModel, PermissionValues } fro
 })
 export class UsersManagementComponent implements OnInit, AfterViewInit {
     columns: any[] = [];
-    rows: UserViewModel[] = [];
-    rowsCache: UserViewModel[] = [];
-    editedUser: UserEditViewModel;
-    sourceUser: UserEditViewModel;
+    rows: generated.UserViewModel[] = [];
+    rowsCache: generated.UserViewModel[] = [];
+    editedUser: generated.UserEditViewModel;
+    sourceUser: generated.UserEditViewModel;
     editingUserName: { name: string };
     loadingIndicator: boolean;
 
-    allRoles: RoleViewModel[] = [];
+    allRoles: generated.RoleViewModel[] = [];
 
 
     @ViewChild('indexTemplate', { static: true })
@@ -102,7 +101,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
             this.editedUser = null;
             this.sourceUser = null;
         } else {
-            const user = new UserViewModel();
+            const user = new generated.UserViewModel();
             Object.assign(user, this.editedUser);
             this.editedUser = null;
 
@@ -129,12 +128,12 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
         if (this.canViewRoles) {
             this.accountClient.getUsersAndRoles().subscribe(results => this.onDataLoadSuccessful(results[0], results[1]), error => this.onDataLoadFailed(error));
         } else {
-            this.accountClient.getUsers().subscribe(users => this.onDataLoadSuccessful(users, this.accountClient.currentUser.roles.map(x => { let r = new RoleViewModel(); r.name = x; return r; })), error => this.onDataLoadFailed(error));
+            this.accountClient.getUsers().subscribe(users => this.onDataLoadSuccessful(users, this.accountClient.currentUser.roles.map(x => { let r = new generated.RoleViewModel(); r.name = x; return r; })), error => this.onDataLoadFailed(error));
         }
     }
 
 
-    onDataLoadSuccessful(users: UserViewModel[], roles: RoleViewModel[]) {
+    onDataLoadSuccessful(users: generated.UserViewModel[], roles: generated.RoleViewModel[]) {
         this.alertService.stopLoadingMessage();
         this.loadingIndicator = false;
 
@@ -176,7 +175,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    editUser(row: UserEditViewModel) {
+    editUser(row: generated.UserEditViewModel) {
         this.editingUserName = { name: row.userName };
         this.sourceUser = row;
         this.editedUser = this.userEditor.editUser(row, this.allRoles);
@@ -184,12 +183,12 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     }
 
 
-    deleteUser(row: UserEditViewModel) {
+    deleteUser(row: generated.UserEditViewModel) {
         this.alertService.showDialog('Are you sure you want to delete \"' + row.userName + '\"?', DialogType.confirm, () => this.deleteUserHelper(row));
     }
 
 
-    deleteUserHelper(row: UserEditViewModel) {
+    deleteUserHelper(row: generated.UserEditViewModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
@@ -202,26 +201,26 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
                 this.rowsCache = this.rowsCache.filter(item => item !== row);
                 this.rows = this.rows.filter(item => item !== row);
             },
-            error => {
-                this.alertService.stopLoadingMessage();
-                this.loadingIndicator = false;
+                error => {
+                    this.alertService.stopLoadingMessage();
+                    this.loadingIndicator = false;
 
-                this.alertService.showStickyMessage('Delete Error', `An error occured whilst deleting the user.\r\nError: "${Utilities.getHttpResponseMessages(error)}"`,
-                    MessageSeverity.error, error);
-            });
+                    this.alertService.showStickyMessage('Delete Error', `An error occured whilst deleting the user.\r\nError: "${Utilities.getHttpResponseMessages(error)}"`,
+                        MessageSeverity.error, error);
+                });
     }
 
 
 
     get canAssignRoles() {
-        return this.accountClient.userHasPermission(PermissionValues.AssignRoles);
+        return this.accountClient.userHasPermission(generated.PermissionValues.AssignRoles);
     }
 
     get canViewRoles() {
-        return this.accountClient.userHasPermission(PermissionValues.ViewRoles);
+        return this.accountClient.userHasPermission(generated.PermissionValues.ViewRoles);
     }
 
     get canManageUsers() {
-        return this.accountClient.userHasPermission(PermissionValues.ManageUsers);
+        return this.accountClient.userHasPermission(generated.PermissionValues.ManageUsers);
     }
 }

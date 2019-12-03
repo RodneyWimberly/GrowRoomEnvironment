@@ -27,7 +27,8 @@ import { AuthStorageService } from './services/auth-storage.service';
 import { NotificationService } from './services/notification.service';
 import { NotificationMockService } from './services/notification-mock.service';
 import { AccountService } from "./services/account.service";
-import { AccountEndpointService } from './services/endpoint.services';
+import { ExtendedLogService } from "./services/extended-log.service";
+import * as generated from './services/endpoint.services';
 
 import { EqualValidatorDirective } from './directives/equal-validator.directive';
 import { LastElementDirective } from './directives/last-element.directive';
@@ -41,16 +42,12 @@ import { GroupByPipe } from './pipes/group-by.pipe';
 import { AppComponent } from './components/app.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { CustomersComponent } from './components/customers/customers.component';
-import { ProductsComponent } from './components/products/products.component';
-import { OrdersComponent } from './components/orders/orders.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ExtendedLogComponent } from './components/extended-log/extended-log.component';
 
-import { BannerDemoComponent } from './components/controls/banner-demo.component';
-import { TodoDemoComponent } from './components/controls/todo-demo.component';
-import { StatisticsDemoComponent } from './components/controls/statistics-demo.component';
+import { ExtendedLogManagementComponent } from './components/controls/extended-log-management.component';
 import { NotificationsViewerComponent } from './components/controls/notifications-viewer.component';
 import { SearchBoxComponent } from './components/controls/search-box.component';
 import { UserInfoComponent } from './components/controls/user-info.component';
@@ -61,67 +58,65 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
 
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    FormsModule,
-    AppRoutingModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useClass: TranslateLanguageLoader
-      }
-    }),
-    NgxDatatableModule,
-    OAuthModule.forRoot(),
-    ToastaModule.forRoot(),
-    TooltipModule.forRoot(),
-    PopoverModule.forRoot(),
-    BsDropdownModule.forRoot(),
-    CarouselModule.forRoot(),
-    ModalModule.forRoot(),
-    ChartsModule
-  ],
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    HomeComponent,
-    CustomersComponent,
-    ProductsComponent,
-    OrdersComponent,
-    SettingsComponent,
-    UsersManagementComponent, UserInfoComponent, UserPreferencesComponent,
-    RolesManagementComponent, RoleEditorComponent,
-    AboutComponent,
-    NotFoundComponent,
-    NotificationsViewerComponent,
-    SearchBoxComponent,
-    StatisticsDemoComponent, TodoDemoComponent, BannerDemoComponent,
-    EqualValidatorDirective,
-    LastElementDirective,
-    AutofocusDirective,
-    BootstrapTabDirective,
-    BootstrapToggleDirective,
-    BootstrapSelectDirective,
-    BootstrapDatepickerDirective,
-    GroupByPipe
-  ],
-  providers: [
-    { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: OAuthStorage, useClass: AuthStorageService },
-    AlertService,
-    AppThemeService,
-    ConfigurationService,
-    AppTitleService,
-    AppTranslationService,
-    NotificationService,
-    NotificationMockService,
-    AccountService,
-    AccountEndpointService,
-    LocalStorageService
-  ],
-  bootstrap: [AppComponent]
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        FormsModule,
+        AppRoutingModule,
+        TranslateModule.forRoot({
+            loader: {
+                provide: TranslateLoader,
+                useClass: TranslateLanguageLoader
+            }
+        }),
+        NgxDatatableModule,
+        OAuthModule.forRoot(),
+        ToastaModule.forRoot(),
+        TooltipModule.forRoot(),
+        PopoverModule.forRoot(),
+        BsDropdownModule.forRoot(),
+        CarouselModule.forRoot(),
+        ModalModule.forRoot(),
+        ChartsModule
+    ],
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        HomeComponent,
+        ExtendedLogComponent, ExtendedLogManagementComponent,
+        SettingsComponent,
+        UsersManagementComponent, UserInfoComponent, UserPreferencesComponent,
+        RolesManagementComponent, RoleEditorComponent,
+        AboutComponent,
+        NotFoundComponent,
+        NotificationsViewerComponent,
+        SearchBoxComponent,
+        EqualValidatorDirective,
+        LastElementDirective,
+        AutofocusDirective,
+        BootstrapTabDirective,
+        BootstrapToggleDirective,
+        BootstrapSelectDirective,
+        BootstrapDatepickerDirective,
+        GroupByPipe
+    ],
+    providers: [
+        { provide: ErrorHandler, useClass: AppErrorHandler },
+        { provide: OAuthStorage, useClass: AuthStorageService },
+        AlertService,
+        AppThemeService,
+        ConfigurationService,
+        AppTitleService,
+        AppTranslationService,
+        NotificationService,
+        NotificationMockService,
+        AccountService,
+        ExtendedLogService,
+        generated.AccountEndpointService, generated.ExtendedLogEndpointService,
+        LocalStorageService
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

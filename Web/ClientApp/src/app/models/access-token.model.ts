@@ -1,4 +1,4 @@
-import { PermissionValue } from '../services/endpoint.services';
+import * as generated from '../services/endpoint.services';
 
 
 export interface AccessTokenModel {
@@ -11,7 +11,7 @@ export interface AccessTokenModel {
   auth_time: number;
   idp: string;
   role: string | string[];
-  permission: PermissionValue | PermissionValue[];
+  permission: generated.PermissionValue | generated.PermissionValue[];
   name: string;
   email: string;
   phone_number: string;

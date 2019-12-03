@@ -28,6 +28,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -81,11 +82,11 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
   </Target>
 
-  <Target Name="NSwag" AfterTargets="Build">
+ <!-- <Target Name="NSwag" AfterTargets="Build">
     <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
     <Exec Command="$(NSwagExe_Core30) run /variables:Configuration=$(Configuration)" />
     <RemoveDir Directories="$(OutDir)References" />
-  </Target>
+  </Target> -->
   
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

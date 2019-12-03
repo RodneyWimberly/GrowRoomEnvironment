@@ -9,7 +9,7 @@ import { AccountService } from "../services/account.service";
 import {LocalStorageService } from '../services/local-storage.service';
 import { AppTitleService } from '../services/app-title.service';
 import { ConfigurationService } from '../services/configuration.service';
-import { AuthEndpointService, PermissionValues } from '../services/endpoint.services';
+import * as generated from '../services/endpoint.services';
 import { LoginComponent } from '../components/login/login.component';
 
 const alertify: any = require('../assets/scripts/alertify.js');
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   shouldShowLoginModal: boolean;
   removePrebootScreen: boolean;
   newNotificationCount = 0;
-  appTitle = 'GrowRoomEnvironment';
+  appTitle = 'Grow Room Environment';
   appLogo = require('../assets/images/logo-white.png');
 
   stickyToasties: number[] = [];
@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private alertService: AlertService,
     private notificationService: NotificationService,
     private appTitleService: AppTitleService,
-    private authEndpointService: AuthEndpointService,
+    private authEndpointService: generated.AuthEndpointService,
     private translationService: AppTranslationService,
     public configurations: ConfigurationService,
     public router: Router) {
@@ -336,11 +336,11 @@ export class AppComponent implements OnInit, AfterViewInit {
 
 
     get canViewCustomers() {
-        return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewCustomersPermission
+        return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewCustomersPermission
   }
 
   get canViewProducts() {
-      return this.accountClient.userHasPermission(PermissionValues.ViewUsers); // eg. viewProductsPermission
+      return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewProductsPermission
   }
 
   get canViewOrders() {

@@ -250,32 +250,29 @@ export class BaseEndpointService {
         return this.authEndpointService.baseUrl;
     }
 
-    protected transformOptions(options) {
+    protected transformOptions(options: any): Promise<any> {
         options.headers = new HttpHeaders({
             Authorization: 'Bearer ' + this.authEndpointService.accessToken,
             'Content-Type': 'application/json',
             Accept: 'application/json, text/plain, */*'
         });
-         var promise = new Promise(function (resolve) {
-            resolve(options);
-        });
-        return promise;
+        return Promise.resolve(options);
     }
 
-    protected transformResult(url, response, processResponse: (r: HttpResponseBase) => Observable<any>) {
+    protected transformResult(url: string, response: any, processResponse: (r: HttpResponseBase) => Observable<any>): Observable<any> {
         return from(processResponse(response)).pipe(catchError(error => {
             return this.handleError(error, () => processResponse(response));
         }));
     }
 
-    public refreshLogin() {
+    public refreshLogin(): Observable<any> {
         return this.authEndpointService.refreshLogin().pipe(
             catchError(error => {
                 return this.handleError(error, () => this.refreshLogin());
             }));
     }
 
-    private handleError(error, continuation: () => Observable<any>) {
+    private handleError(error: any, continuation: () => Observable<any>): Observable<any> {
         if (error.status == 401) {
             if (this.isRefreshingLogin) {
                 return this.pauseTask(continuation);
@@ -312,7 +309,7 @@ export class BaseEndpointService {
         }
     }
 
-    private pauseTask(continuation: () => Observable<any>) {
+    private pauseTask(continuation: () => Observable<any>): Observable<any> {
         if (!this.taskPauser) {
             this.taskPauser = new Subject();
         }
@@ -322,7 +319,7 @@ export class BaseEndpointService {
         }));
     }
 
-    private resumeTasks(continueOp: boolean) {
+    private resumeTasks(continueOp: boolean): void {
         setTimeout(() => {
             if (this.taskPauser) {
                 this.taskPauser.next(continueOp);

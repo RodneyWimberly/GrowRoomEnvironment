@@ -1,4 +1,5 @@
 ﻿using GrowRoomEnvironment.DataAccess.Repositories.Interfaces;
+using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.DataAccess.Core.Interfaces
 {
@@ -9,6 +10,9 @@ namespace GrowRoomEnvironment.DataAccess.Core.Interfaces
 
         IDataPointRepository DataPoints { get; }
 
+        IExtendedLogRepository ExtendedLogs { get; }
+
         int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

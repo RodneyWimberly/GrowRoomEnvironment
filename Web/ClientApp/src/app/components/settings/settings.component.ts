@@ -5,7 +5,7 @@ import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { fadeInOut } from '../../helpers/animations';
 import { BootstrapTabDirective } from '../../directives/bootstrap-tab.directive';
 import { AccountService } from '../../services/account.service';
-import { PermissionViewModel, PermissionValues } from '../../services/endpoint.services';
+import * as generated from '../../services/endpoint.services';
 
 
 @Component({
@@ -87,10 +87,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
   get canViewUsers() {
-      return this.accountClient.userHasPermission(PermissionValues.ViewUsers);
+      return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers);
   }
 
   get canViewRoles() {
-      return this.accountClient.userHasPermission(PermissionValues.ViewRoles);
+      return this.accountClient.userHasPermission(generated.PermissionValues.ViewRoles);
   }
 }

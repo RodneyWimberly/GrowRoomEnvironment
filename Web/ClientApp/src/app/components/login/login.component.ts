@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { AlertService, MessageSeverity, DialogType } from '../../services/alert.service';
-import { AuthEndpointService } from '../../services/endpoint.services';
+import * as generated from '../../services/endpoint.services';
 import { ConfigurationService } from '../../services/configuration.service';
 import { Utilities } from '../../helpers/utilities';
 import { UserLoginModel } from '../../models/user-login.model';
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   isModal = false;
 
 
-  constructor(private alertService: AlertService, private authEndpointService: AuthEndpointService, private configurations: ConfigurationService) {
+  constructor(private alertService: AlertService, private authEndpointService: generated.AuthEndpointService, private configurations: ConfigurationService) {
 
   }
 
