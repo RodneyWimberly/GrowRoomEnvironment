@@ -20,4 +20,8 @@ export class ExtendedLogService {
         return pageNumber && pageSize ? this.extendedLogEndpointService.getExtendedLogsByLevel(level, pageNumber, pageSize) :
             this.extendedLogEndpointService.getAllByLevel(level);
     }
+
+    clearExtendedLogs() {
+        return this.extendedLogEndpointService.deleteAll();
+    }
 }

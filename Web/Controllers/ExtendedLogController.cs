@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using GrowRoomEnvironment.DataAccess.Core.Enums;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
@@ -48,7 +49,7 @@ namespace GrowRoomEnvironment.Web.Controllers
             return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
         }
 
-        [HttpGet("level/{level:int}")]
+        [HttpGet("level/{level}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
         public async Task<IActionResult> GetAllByLevel(int level)
@@ -56,7 +57,7 @@ namespace GrowRoomEnvironment.Web.Controllers
             return await GetExtendedLogsByLevel(level, -1, -1);
         }
 
-        [HttpGet("level/{level:int}/{pageNumber:int}/{pageSize:int}")]
+        [HttpGet("level/{level}/{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
         public async Task<IActionResult> GetExtendedLogsByLevel(int level, int pageNumber, int pageSize)
@@ -78,7 +79,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> DeleteAll()
         {
-            _unitOfWork.ExtendedLogs.RemoveRange(await _unitOfWork.ExtendedLogs.GetAllAsync());
+            await _unitOfWork.ExtendedLogs.ClearAllAsync();
             await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }

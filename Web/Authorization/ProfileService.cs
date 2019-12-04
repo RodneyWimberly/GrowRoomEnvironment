@@ -34,8 +34,8 @@ namespace GrowRoomEnvironment.Web.Authorization
             if (user.JobTitle != null)
                 claims.Add(new Claim(Properties.JobTitle, user.JobTitle));
 
-            if (user.FullName != null)
-                claims.Add(new Claim(Properties.FullName, user.FullName));
+            if (user.FriendlyName != null)
+                claims.Add(new Claim(Properties.FullName, user.FriendlyName));
 
             if (user.Configuration != null)
                 claims.Add(new Claim(Properties.Configuration, user.Configuration));

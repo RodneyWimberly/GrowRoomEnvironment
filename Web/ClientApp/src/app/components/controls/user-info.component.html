@@ -45,7 +45,7 @@
                [(ngModel)]="userEdit.userName" #userName="ngModel" required minlength="2" maxlength="200" />
         <i *ngIf="showValidationErrors && f.submitted" class="fa form-control-feedback" [ngClass]="{'fa-check': userName.valid, 'fa-times' : !userName.valid}" aria-hidden="true"></i>
         <span *ngIf="showValidationErrors && f.submitted && !userName.valid" class="invalid-feedback">
-          {{'users.editor.UserNameRequired' | translate}}
+          {{'users.editor.UserNameRequired' | translate}}                                    
         </span>
       </div>
     </div>
