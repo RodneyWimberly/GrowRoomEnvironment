@@ -12,13 +12,16 @@ namespace GrowRoomEnvironment.DataAccess
         IEnumLookupRespository _enumLookups;
         IDataPointRepository _dataPoints;
         IExtendedLogRepository _extendedLogs;
+        IActionDeviceRepository _actionDevices;
+        IEventRepository _events;
+        IEventConditionRepository _eventConditions;
+        INotificationRepository _notifications;
 
         public UnitOfWork(ApplicationDbContext context)
         {
             _context = context;
         }
 
-               
         public IEnumLookupRespository EnumLookups
         {
             get
@@ -51,6 +54,51 @@ namespace GrowRoomEnvironment.DataAccess
                 return _extendedLogs;
             }
         }
+
+        public IActionDeviceRepository ActionDevices
+        {
+            get
+            {
+                if (_actionDevices == null)
+                    _actionDevices = new ActionDeviceRepository(_context);
+
+                return _actionDevices;
+            }
+        }
+
+        public IEventRepository Events
+        {
+            get
+            {
+                if (_events == null)
+                    _events = new EventRepository(_context);
+
+                return _events;
+            }
+        }
+
+        public IEventConditionRepository EventConditions
+        {
+            get
+            {
+                if (_eventConditions == null)
+                    _eventConditions = new EventConditionRepository(_context);
+
+                return _eventConditions;
+            }
+        }
+
+        public INotificationRepository Notifications
+        {
+            get
+            {
+                if (_notifications == null)
+                    _notifications = new NotificationRepository(_context);
+
+                return _notifications;
+            }
+        }
+
         public int SaveChanges()
         {
             return _context.SaveChanges();

@@ -16,7 +16,9 @@ namespace GrowRoomEnvironment.DataAccess
 
         public DbSet<ExtendedLog> Logs { get; set; }
 
-        // public DbSet<ElevatorStatusHistory> ElevatorStatusHistories { get; set; }
+        public DbSet<ActionDevice> ActionDevices { get; set; }
+        public DbSet<Event> Events { get; set; }
+        public DbSet<EventCondition> EventConditions { get; set; }
         public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<EnumLookup> EnumLookups { get; set; }
 
@@ -50,26 +52,71 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<ApplicationRole>().HasMany(r => r.Claims).WithOne().HasForeignKey(c => c.RoleId).IsRequired().OnDelete(DeleteBehavior.Cascade);
             builder.Entity<ApplicationRole>().HasMany(r => r.Users).WithOne().HasForeignKey(r => r.RoleId).IsRequired().OnDelete(DeleteBehavior.Cascade);
 
-           /* builder.Entity<ElevatorStatusHistory>().Property(e => e.Id).IsRequired().HasColumnType("int");
-            builder.Entity<ElevatorStatusHistory>().HasIndex(e => e.Id);
-            builder.Entity<ElevatorStatusHistory>().HasKey(e => e.Id);
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.ElevatorId).IsRequired().HasColumnType("smallint");
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.CurrentFloor).IsRequired().HasColumnType("smallint");
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.OriginFloor).IsRequired().HasColumnType("smallint");
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.DestinationFloor).IsRequired().HasColumnType("smallint");
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.TimeStamp).IsRequired().HasColumnType("datetime");
-            builder.Entity<ElevatorStatusHistory>().Property(e => e.OperationState).IsRequired().HasColumnType("smallint");
-            builder.Entity<ElevatorStatusHistory>().ToTable($"App{nameof(this.ElevatorStatusHistories)}");
-            */
-            builder.Entity<DataPoint>().Property(e => e.Id).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<DataPoint>().HasIndex(e => e.Id);
-            builder.Entity<DataPoint>().HasKey(e => e.Id);
+            builder.Entity<ActionDevice>().Property(e => e.ActionDeviceId).IsRequired().HasColumnType("INTEGER");
+            builder.Entity<ActionDevice>().HasIndex(e => e.ActionDeviceId);
+            builder.Entity<ActionDevice>().HasKey(e => e.ActionDeviceId);
+            builder.Entity<ActionDevice>().Property(e => e.Type).IsRequired();
+            builder.Entity<ActionDevice>().Property(e => e.Name).IsRequired().HasMaxLength(100);
+            builder.Entity<ActionDevice>().Property(e => e.Parameters).IsRequired().HasMaxLength(200);
+            builder.Entity<ActionDevice>().ToTable($"App{nameof(this.ActionDevices)}");
+            builder.Entity<ActionDevice>().HasMany(e => e.Events)
+                .WithOne(e => e.ActionDevice)
+                .HasForeignKey(e => e.EventId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<DataPoint>().Property(e => e.DataPointId).IsRequired().HasColumnType("INTEGER");
+            builder.Entity<DataPoint>().HasIndex(e => e.DataPointId);
+            builder.Entity<DataPoint>().HasKey(e => e.DataPointId);
             builder.Entity<DataPoint>().Property(e => e.Caption).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().Property(e => e.Icon).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().Property(e => e.Template).IsRequired().HasMaxLength(100);
-            builder.Entity<DataPoint>().Property(e => e.ShowInUI ).IsRequired().HasColumnType("INTEGER");
+            builder.Entity<DataPoint>().Property(e => e.ShowInUI ).IsRequired().HasColumnType("INTEGER");         
+            builder.Entity<DataPoint>().Property(e => e.Template).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().ToTable($"App{nameof(this.DataPoints)}");
-            
+            builder.Entity<DataPoint>().HasMany(e => e.EventConditions)
+                .WithOne(e => e.DataPoint)
+                .HasPrincipalKey(e => e.DataPointId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Event>().Property(e => e.EventId).IsRequired().HasColumnType("INTEGER");
+            builder.Entity<Event>().HasIndex(e => e.EventId);
+            builder.Entity<Event>().HasKey(e => e.EventId);
+            builder.Entity<Event>().Property(e => e.State).IsRequired();
+            builder.Entity<Event>().Property(e => e.Name).IsRequired().HasMaxLength(100);
+            builder.Entity<Event>().Property(e => e.ActionDeviceId).IsRequired();
+            builder.Entity<Event>().ToTable($"App{nameof(this.Events)}");
+            builder.Entity<Event>().HasMany(e => e.EventConditions)
+                .WithOne(e => e.Event)
+                .HasPrincipalKey(e => e.EventId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Event>().HasOne(e => e.ActionDevice)
+                .WithMany(e => e.Events)
+                .HasForeignKey(e => e.ActionDeviceId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.Entity<EventCondition>().Property(e => e.EventConditionId).IsRequired().HasColumnType("INTEGER");
+            builder.Entity<EventCondition>().HasIndex(e => e.EventConditionId);
+            builder.Entity<EventCondition>().HasKey(e => e.EventConditionId);
+            builder.Entity<EventCondition>().Property(e => e.EventId).IsRequired();
+            builder.Entity<EventCondition>().Property(e => e.DataPointId).IsRequired();;
+            builder.Entity<EventCondition>().Property(e => e.Operator).IsRequired();
+            builder.Entity<EventCondition>().Property(e => e.Value).IsRequired().HasMaxLength(100);
+            builder.Entity<EventCondition>().ToTable($"App{nameof(this.EventConditions)}");
+            builder.Entity<EventCondition>().HasOne(e => e.Event)
+               .WithMany(e => e.EventConditions)
+               .HasForeignKey(e => e.EventConditionId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.SetNull);
+            builder.Entity<EventCondition>().HasOne(e => e.DataPoint)
+               .WithMany(e => e.EventConditions)
+               .HasForeignKey(e => e.DataPointId)
+               .IsRequired()
+               .OnDelete(DeleteBehavior.SetNull);
+
             builder.Entity<EnumLookup>().Property(e => e.Id).IsRequired().HasColumnType("INTEGER");
             builder.Entity<EnumLookup>().HasIndex(e => e.Id);
             builder.Entity<EnumLookup>().HasKey(e => e.Id);

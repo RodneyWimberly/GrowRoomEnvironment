@@ -48,6 +48,21 @@ namespace GrowRoomEnvironment.Web.ViewModels
                 .ForMember(e => e.Host, map => map.Ignore())
                 .ForMember(e => e.Path, map => map.Ignore())
                 .ForMember(e => e.User, map => map.Ignore());
+
+            CreateMap<ActionDevice, ActionDeviceViewModel>()
+                .ReverseMap();
+
+            CreateMap<Event, EventViewModel>()
+                .ReverseMap();
+
+            CreateMap<EventCondition, EventConditionViewModel>()
+                .ReverseMap();
+
+            CreateMap<DataPoint, DataPointViewModel>()
+                .ReverseMap();
+
+            CreateMap<Notification, NotificationViewModel>()
+               .ReverseMap();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                 name: "AppDataPoints",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    DataPointId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CreatedBy = table.Column<string>(maxLength: 256, nullable: true),
                     UpdatedBy = table.Column<string>(maxLength: 256, nullable: true),
@@ -24,7 +24,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppDataPoints", x => x.Id);
+                    table.PrimaryKey("PK_AppDataPoints", x => x.DataPointId);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,7 +229,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
             migrationBuilder.CreateIndex(
                 name: "IX_AppDataPoints_Id",
                 table: "AppDataPoints",
-                column: "Id");
+                column: "DataPointId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppEnumLookups_EnumName",

@@ -10,10 +10,12 @@ namespace GrowRoomEnvironment.DataAccess.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
-        public int Id { get; set; }
+        public int DataPointId { get; set; }
         public string Caption { get; set; }
         public string Icon { get; set; }
         public string Template { get; set; }
         public bool ShowInUI { get; set; }
+
+        public ICollection<EventCondition> EventConditions { get; set; }
     }
 }

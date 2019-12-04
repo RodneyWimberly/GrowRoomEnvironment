@@ -23,8 +23,7 @@ namespace GrowRoomEnvironment.DataAccess
         {
             get
             {
-                IEnumLookupRespository repository = new EnumLookupRespository(CreateDbContext());
-                return repository;
+                return new EnumLookupRespository(CreateDbContext());
             }
         }          
         
@@ -32,8 +31,7 @@ namespace GrowRoomEnvironment.DataAccess
         {
             get
             {
-                IDataPointRepository repository = new DataPointRepository(CreateDbContext());
-                return repository;
+                return new DataPointRepository(CreateDbContext());
             }
         }
 
@@ -46,6 +44,37 @@ namespace GrowRoomEnvironment.DataAccess
             }
         }
 
+        public IActionDeviceRepository ActionDevices
+        {
+            get
+            {
+                return new ActionDeviceRepository(CreateDbContext());
+            }
+        }
+
+        public IEventRepository Events
+        {
+            get
+            {
+                return new EventRepository(CreateDbContext());
+            }
+        }
+
+        public IEventConditionRepository EventConditions
+        {
+            get
+            {
+                return new EventConditionRepository(CreateDbContext());
+            }
+        }
+
+        public INotificationRepository Notifications
+        {
+            get
+            {
+                return new NotificationRepository(CreateDbContext());
+            }
+        }
 
         public int SaveChanges()
         {

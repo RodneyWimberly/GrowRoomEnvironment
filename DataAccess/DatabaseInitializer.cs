@@ -32,7 +32,7 @@ namespace GrowRoomEnvironment.DataAccess
             // Users and Roles
             if (!await _applicationDbContext.Users.AnyAsync())
             {
-                _logger.LogInformation("Generating inbuilt accounts");
+                _logger.LogInformation("Generating sample accounts");
 
                 const string adminRoleName = "administrator";
                 const string userRoleName = "user";
@@ -40,10 +40,10 @@ namespace GrowRoomEnvironment.DataAccess
                 await EnsureRoleAsync(adminRoleName, "Default administrator", ApplicationPermissions.GetAllPermissionValues());
                 await EnsureRoleAsync(userRoleName, "Default user", new string[] { });
 
-                await CreateUserAsync("admin", "P@55w0rd", "Inbuilt Administrator", "admin@elevatormanagement.com", "+1 (123) 000-0000", new string[] { adminRoleName });
-                await CreateUserAsync("user", "P@55w0rd", "Inbuilt Standard User", "user@elevatormanagement.com", "+1 (123) 000-0001", new string[] { userRoleName });
+                await CreateUserAsync("Manager", "admin", "P@55w0rd", "Sample Administrator User", "admin@wimberlytech.com", "+1 (123) 555-1212", new string[] { adminRoleName });
+                await CreateUserAsync("Worker", "user", "P@55w0rd", "Sample Standard User", "user@wimberlytech.com", "+1 (123) 555-1212", new string[] { userRoleName });
 
-                _logger.LogInformation("Inbuilt account generation completed");
+                _logger.LogInformation("Sample account generation completed");
             }
         
             // DataPoints
@@ -53,7 +53,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_1 = new DataPoint
                 {
-                    Id = 1,
+                    DataPointId = 1,
                     Caption = "Air Temperature",
                     Icon = "thermostat.jpg",
                     Template = "OffOnValueTemplate",
@@ -64,7 +64,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_2 = new DataPoint
                 {
-                    Id = 2,
+                    DataPointId = 2,
                     Caption = "Air Humidity",
                     Icon = "Humidity.png",
                     Template = "OffOnValueTemplate",
@@ -75,7 +75,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_3 = new DataPoint
                 {
-                    Id = 3,
+                    DataPointId = 3,
                     Caption = "CO2 Parts per million",
                     Icon = "CO2.png",
                     Template = "PPMValueTemplate",
@@ -86,7 +86,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_4 = new DataPoint
                 {
-                    Id = 4,
+                    DataPointId = 4,
                     Caption = "Time",
                     Icon = "Time.png",
                     Template = "OffOnDateTimeTemplate",
@@ -97,7 +97,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_5 = new DataPoint
                 {
-                    Id = 5,
+                    DataPointId = 5,
                     Caption = "Lights currently one",
                     Icon = "LightOn.png",
                     Template = "OffOnValueTemplate",
@@ -108,7 +108,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_6 = new DataPoint
                 {
-                    Id = 6,
+                    DataPointId = 6,
                     Caption = "Plant Growth Medium Moisture Level",
                     Icon = "Moisture.png",
                     Template = "LevelTemplate",
@@ -119,7 +119,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_7 = new DataPoint
                 {
-                    Id = 7,
+                    DataPointId = 7,
                     Caption = "Nutrient pH",
                     Icon = "ph.png",
                     Template = "LevelTemplate",
@@ -130,7 +130,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_8 = new DataPoint
                 {
-                    Id = 8,
+                    DataPointId = 8,
                     Caption = "Nutrient Parts per million",
                     Icon = "tds.png",
                     Template = "LevelTemplate",
@@ -141,7 +141,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_9 = new DataPoint
                 {
-                    Id = 9,
+                    DataPointId = 9,
                     Caption = "Nutrient Temperature",
                     Icon = "Temperature.png",
                     Template = "LevelTemplate",
@@ -152,7 +152,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 DataPoint dp_10 = new DataPoint
                 {
-                    Id = 10,
+                    DataPointId = 10,
                     Caption = "Nutrient Volume",
                     Icon = "volume.jpg",
                     Template = "LevelTemplate",
@@ -176,68 +176,152 @@ namespace GrowRoomEnvironment.DataAccess
                 _logger.LogInformation("Seeding DataPoints completed");
             }
 
-            /*
-            //ElevatorConfigurations
-            if (!await _context.ElevatorConfigurations.AnyAsync())
-            {
-                _logger.LogInformation("Generating ElevatorConfigurations");
+            // Notifications
+           // if (!await _applicationDbContext.EnumLookups.AnyAsync())
+            //{
+            //    _logger.LogInformation("Generating Notifications");
 
-                ElevatorConfiguration elevatorConfiguration = new ElevatorConfiguration
-                {
-                    NumberOfElevators = 4,
-                    NumberOfFloors = 6,
-                    TravelTimePerFloor = 5,
-                    DestinationWaitTime = 2,
-                    RestFloorType = RestFloorTypes.MostUsedOriginFloor,
-                    DateCreated = DateTime.UtcNow,
-                    DateModified = DateTime.UtcNow
-                };
-                _context.ElevatorConfigurations.Add(elevatorConfiguration);
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Seeding ElevatorConfigurations completed");
-            }
-            */
+                
 
+            //    await _applicationDbContext.SaveChangesAsync();
+            //    _logger.LogInformation("Seeding Notifications completed");
+            //}
+            
             // EnumLook
             if (!await _applicationDbContext.EnumLookups.AnyAsync())
             {
                 _logger.LogInformation("Generating EnumLookups");
 
-    
-                EnumLookup el1 = new EnumLookup
+                // ActionDeviceStates
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
                 {
-                    Table = "Customer",
-                    EnumName = "Gender",
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceStates",
                     EnumValue = 0,
-                    EnumDescription = "None",
-                    CreatedDate  = DateTime.UtcNow,
+                    EnumDescription = "Off",
+                    CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                };
-
-                EnumLookup el2 = new EnumLookup
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
                 {
-                    Table = "Customer",
-                    EnumName = "Gender",
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceStates",
                     EnumValue = 1,
-                    EnumDescription = "Female",
+                    EnumDescription = "On",
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                };
+                });
 
-                EnumLookup el3 = new EnumLookup
+                // ActionDeviceTypes
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
                 {
-                    Table = "Customer",
-                    EnumName = "Gender",
-                    EnumValue = 4,
-                    EnumDescription = "Male",
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 0,
+                    EnumDescription = "X10",
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                };
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 1,
+                    EnumDescription = "ZWave",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 2,
+                    EnumDescription = "ZeeBee",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppActionDevice",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 3,
+                    EnumDescription = "WiFi",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
 
-                _applicationDbContext.EnumLookups.Add(el1);
-                _applicationDbContext.EnumLookups.Add(el2);
-                _applicationDbContext.EnumLookups.Add(el3);
+                // ErrorLevels
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppLogs",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 1,
+                    EnumDescription = "Debug",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppLogs",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 2,
+                    EnumDescription = "Information",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppLogs",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 3,
+                    EnumDescription = "Warning",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppLogs",
+                    EnumName = "ActionDeviceTypes",
+                    EnumValue = 4,
+                    EnumDescription = "Error",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
 
+                // Operators
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppEventConditions",
+                    EnumName = "Operators",
+                    EnumValue = 0,
+                    EnumDescription = "Equal",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppEventConditions",
+                    EnumName = "Operators",
+                    EnumValue = 1,
+                    EnumDescription = "NotEqual",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppEventConditions",
+                    EnumName = "Operators",
+                    EnumValue = 2,
+                    EnumDescription = "GreaterThan",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
+                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                {
+                    Table = "AppEventConditions",
+                    EnumName = "Operators",
+                    EnumValue = 3,
+                    EnumDescription = "LessThan",
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
+                });
                 await _applicationDbContext.SaveChangesAsync();
                 _logger.LogInformation("Seeding EnumLookups completed");
             }
@@ -256,10 +340,11 @@ namespace GrowRoomEnvironment.DataAccess
             }
         }
 
-        private async Task<ApplicationUser> CreateUserAsync(string userName, string password, string fullName, string email, string phoneNumber, string[] roles)
+        private async Task<ApplicationUser> CreateUserAsync(string jobTitle, string userName, string password, string fullName, string email, string phoneNumber, string[] roles)
         {
             ApplicationUser applicationUser = new ApplicationUser
             {
+                JobTitle = jobTitle,
                 UserName = userName,
                 FullName = fullName,
                 Email = email,

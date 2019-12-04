@@ -196,7 +196,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const recentNotifications = this.notificationService.recentNotifications;
 
     if (recentNotifications.length) {
-      this.notificationService.readUnreadNotification(recentNotifications.map(n => n.id), true)
+      this.notificationService.readUnreadNotification(recentNotifications.map(n => n.notificationId), true)
         .subscribe(response => {
           for (const n of recentNotifications) {
             n.isRead = true;

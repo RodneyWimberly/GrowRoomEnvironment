@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class RoleViewModel
+    public class RoleViewModel : AuditableViewModelBase
     {
         public string Id { get; set; }
 
@@ -14,6 +15,6 @@ namespace GrowRoomEnvironment.Web.ViewModels
 
         public int UsersCount { get; set; }
 
-        public PermissionViewModel[] Permissions { get; set; }
+        public ICollection<PermissionViewModel> Permissions { get; set; }
     }
 }

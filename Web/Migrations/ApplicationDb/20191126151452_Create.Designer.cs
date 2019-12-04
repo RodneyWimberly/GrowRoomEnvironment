@@ -149,7 +149,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
 
             modelBuilder.Entity("GrowRoomEnvironment.DataAccess.Models.DataPoint", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("DataPointId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
@@ -185,9 +185,9 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("DataPointId");
 
-                    b.HasIndex("Id");
+                    b.HasIndex("DataPointId");
 
                     b.ToTable("AppDataPoints");
                 });

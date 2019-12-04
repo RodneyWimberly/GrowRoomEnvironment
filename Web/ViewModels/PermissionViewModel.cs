@@ -2,7 +2,7 @@
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class PermissionViewModel
+    public class PermissionViewModel : AuditableViewModelBase
     {
         public string Name { get; set; }
         public string Value { get; set; }

@@ -5,7 +5,6 @@ import { NotificationService } from '../../services/notification.service';
 import { AccountService } from "../../services/account.service";
 import * as generated from '../../services/endpoint.services';
 import { Utilities } from '../../helpers/utilities';
-import { NotificationModel } from '../../models/notification.model';
 
 
 @Component({
@@ -15,7 +14,7 @@ import { NotificationModel } from '../../models/notification.model';
 })
 export class NotificationsViewerComponent implements OnInit, OnDestroy {
     columns: any[] = [];
-    rows: NotificationModel[] = [];
+    rows: generated.NotificationViewModel[] = [];
     loadingIndicator: boolean;
 
     dataLoadingConsecutiveFailurs = 0;
@@ -121,7 +120,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    private processResults(notifications: NotificationModel[]) {
+    private processResults(notifications: generated.NotificationViewModel[]) {
 
         if (this.isViewOnly) {
             notifications.sort((a, b) => {
@@ -141,12 +140,12 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    deleteNotification(row: NotificationModel) {
+    deleteNotification(row: generated.NotificationViewModel) {
         this.alertService.showDialog('Are you sure you want to delete the notification \"' + row.header + '\"?', DialogType.confirm, () => this.deleteNotificationHelper(row));
     }
 
 
-    deleteNotificationHelper(row: NotificationModel) {
+    deleteNotificationHelper(row: generated.NotificationViewModel) {
 
         this.alertService.startLoadingMessage('Deleting...');
         this.loadingIndicator = true;
@@ -156,7 +155,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
                 this.alertService.stopLoadingMessage();
                 this.loadingIndicator = false;
 
-                this.rows = this.rows.filter(item => item.id != row.id);
+                this.rows = this.rows.filter(item => item.notificationId != row.notificationId);
             },
             error => {
                 this.alertService.stopLoadingMessage();
@@ -168,7 +167,7 @@ export class NotificationsViewerComponent implements OnInit, OnDestroy {
     }
 
 
-    togglePin(row: NotificationModel) {
+    togglePin(row: generated.NotificationViewModel) {
 
         const pin = !row.isPinned;
         const opText = pin ? 'Pinning' : 'Unpinning';

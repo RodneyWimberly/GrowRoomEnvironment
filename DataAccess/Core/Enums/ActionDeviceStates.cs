@@ -1,9 +1,8 @@
 ﻿namespace GrowRoomEnvironment.DataAccess.Core.Enums
 {
-    public enum Genders
+    public enum ActionDeviceStates
     {
-        None,
-        Female,
-        Male
+        Off,
+        On
     }
 }

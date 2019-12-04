@@ -2,7 +2,7 @@
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class ExtendedLogViewModel
+    public class ExtendedLogViewModel : AuditableViewModelBase
     {
         public string Browser { get; set; }
         public string Host { get; set; }
