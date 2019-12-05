@@ -162,38 +162,63 @@ namespace GrowRoomEnvironment.DataAccess
                 };
 
 
-                _applicationDbContext.DataPoints.Add(dp_1);
-                _applicationDbContext.DataPoints.Add(dp_2);
-                _applicationDbContext.DataPoints.Add(dp_3);
-                _applicationDbContext.DataPoints.Add(dp_4);
-                _applicationDbContext.DataPoints.Add(dp_5);
-                _applicationDbContext.DataPoints.Add(dp_6);
-                _applicationDbContext.DataPoints.Add(dp_7);
-                _applicationDbContext.DataPoints.Add(dp_8);
-                _applicationDbContext.DataPoints.Add(dp_9);
-                _applicationDbContext.DataPoints.Add(dp_10);
+                await _applicationDbContext.DataPoints.AddAsync(dp_1);
+                await _applicationDbContext.DataPoints.AddAsync(dp_2);
+                await _applicationDbContext.DataPoints.AddAsync(dp_3);
+                await _applicationDbContext.DataPoints.AddAsync(dp_4);
+                await _applicationDbContext.DataPoints.AddAsync(dp_5);
+                await _applicationDbContext.DataPoints.AddAsync(dp_6);
+                await _applicationDbContext.DataPoints.AddAsync(dp_7);
+                await _applicationDbContext.DataPoints.AddAsync(dp_8);
+                await _applicationDbContext.DataPoints.AddAsync(dp_9);
+                await _applicationDbContext.DataPoints.AddAsync(dp_10);
                 await _applicationDbContext.SaveChangesAsync();
                 _logger.LogInformation("Seeding DataPoints completed");
             }
 
             // Notifications
-           // if (!await _applicationDbContext.EnumLookups.AnyAsync())
-            //{
-            //    _logger.LogInformation("Generating Notifications");
+            if (!await _applicationDbContext.Notifications.AnyAsync())
+            {
+                _logger.LogInformation("Generating Notifications");
 
-                
+                await _applicationDbContext.Notifications.AddAsync(new Notification
+                {
+                    Header = "Action Failure",
+                    Body = "The light failed to turn on at the scheduled time",
+                    IsPinned = false,
+                    IsRead = false,
+                    Date = DateTime.UtcNow
+                });
 
-            //    await _applicationDbContext.SaveChangesAsync();
-            //    _logger.LogInformation("Seeding Notifications completed");
-            //}
+                await _applicationDbContext.Notifications.AddAsync(new Notification
+                {
+                    Header = "Sensor Read Failure",
+                    Body = "Failed to read the air temperature sensor",
+                    IsPinned = false,
+                    IsRead = false,
+                    Date = DateTime.UtcNow
+                });
+
+                await _applicationDbContext.Notifications.AddAsync(new Notification
+                {
+                    Header = "Sensor Read Failure",
+                    Body = "Failed to read the CO2 PPM sensor",
+                    IsPinned = false,
+                    IsRead = true,
+                    Date = DateTime.UtcNow
+                });
+
+                await _applicationDbContext.SaveChangesAsync();
+                _logger.LogInformation("Seeding Notifications completed");
+            }
             
-            // EnumLook
+            // EnumLooks
             if (!await _applicationDbContext.EnumLookups.AnyAsync())
             {
                 _logger.LogInformation("Generating EnumLookups");
 
                 // ActionDeviceStates
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceStates",
@@ -202,7 +227,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceStates",
@@ -213,7 +238,7 @@ namespace GrowRoomEnvironment.DataAccess
                 });
 
                 // ActionDeviceTypes
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceTypes",
@@ -222,7 +247,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceTypes",
@@ -230,7 +255,8 @@ namespace GrowRoomEnvironment.DataAccess
                     EnumDescription = "ZWave",
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                });
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceTypes",
@@ -239,7 +265,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppActionDevice",
                     EnumName = "ActionDeviceTypes",
@@ -250,7 +276,7 @@ namespace GrowRoomEnvironment.DataAccess
                 });
 
                 // ErrorLevels
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppLogs",
                     EnumName = "ActionDeviceTypes",
@@ -259,7 +285,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppLogs",
                     EnumName = "ActionDeviceTypes",
@@ -267,7 +293,8 @@ namespace GrowRoomEnvironment.DataAccess
                     EnumDescription = "Information",
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                });
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppLogs",
                     EnumName = "ActionDeviceTypes",
@@ -276,7 +303,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppLogs",
                     EnumName = "ActionDeviceTypes",
@@ -287,7 +314,7 @@ namespace GrowRoomEnvironment.DataAccess
                 });
 
                 // Operators
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppEventConditions",
                     EnumName = "Operators",
@@ -296,7 +323,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppEventConditions",
                     EnumName = "Operators",
@@ -304,7 +331,8 @@ namespace GrowRoomEnvironment.DataAccess
                     EnumDescription = "NotEqual",
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
-                }); _applicationDbContext.EnumLookups.Add(new EnumLookup
+                });
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppEventConditions",
                     EnumName = "Operators",
@@ -313,7 +341,7 @@ namespace GrowRoomEnvironment.DataAccess
                     CreatedDate = DateTime.UtcNow,
                     UpdatedDate = DateTime.UtcNow
                 });
-                _applicationDbContext.EnumLookups.Add(new EnumLookup
+                await _applicationDbContext.EnumLookups.AddAsync(new EnumLookup
                 {
                     Table = "AppEventConditions",
                     EnumName = "Operators",
@@ -324,6 +352,32 @@ namespace GrowRoomEnvironment.DataAccess
                 });
                 await _applicationDbContext.SaveChangesAsync();
                 _logger.LogInformation("Seeding EnumLookups completed");
+            }
+
+            // ActionDevices
+            if (!await _applicationDbContext.ActionDevices.AnyAsync())
+            {
+                _logger.LogInformation("Generating ActionDevices");
+                await _applicationDbContext.ActionDevices.AddAsync(new ActionDevice
+                {
+                    Name = "Light",
+                    Type = Core.Enums.ActionDeviceTypes.X10,
+                    Parameters = "A1"
+                });
+                await _applicationDbContext.ActionDevices.AddAsync(new ActionDevice
+                {
+                    Name = "CO2",
+                    Type = Core.Enums.ActionDeviceTypes.X10,
+                    Parameters = "A2"
+                });
+                await _applicationDbContext.ActionDevices.AddAsync(new ActionDevice
+                {
+                    Name = "Exhaust",
+                    Type = Core.Enums.ActionDeviceTypes.X10,
+                    Parameters = "A3"
+                });
+                await _applicationDbContext.SaveChangesAsync();
+                _logger.LogInformation("Seeding ActionDevice completed");
             }
         }
 

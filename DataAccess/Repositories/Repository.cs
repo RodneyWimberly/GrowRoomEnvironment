@@ -1,6 +1,7 @@
 ﻿using GrowRoomEnvironment.Contracts.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,70 +12,72 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        protected readonly DbContext _context;
-        protected readonly DbSet<TEntity> _entities;
+        protected readonly DbContext Context;
+        protected readonly DbSet<TEntity> Entity;
+        protected readonly DatabaseFacade Database;
 
-        public Repository(DbContext context)
+       public Repository(DbContext context)
         {
-            _context = context;
-            _entities = context.Set<TEntity>();
+            Context = context;
+            Entity = context.Set<TEntity>();
+            Database = Context.Database;
         }
 
         public virtual EntityEntry<TEntity> Add(TEntity entity)
         {
-            return _entities.Add(entity);
+            return Entity.Add(entity);
         }
 
         public async virtual Task<EntityEntry<TEntity>> AddAsync(TEntity entity)
         {
-           return  await _entities.AddAsync(entity);
+           return  await Entity.AddAsync(entity);
         }
 
 
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
-            _entities.AddRange(entities);
+            Entity.AddRange(entities);
         }
 
         public async virtual Task AddRangeAsync(IEnumerable<TEntity> entities)
         {
-           await _entities.AddRangeAsync(entities);
+           await Entity.AddRangeAsync(entities);
         }
 
         public virtual void Update(TEntity entity)
         {
-            _entities.Update(entity);
+            Entity.Update(entity);
         }
 
         public virtual void UpdateRange(IEnumerable<TEntity> entities)
         {
-            _entities.UpdateRange(entities);
+            Entity.UpdateRange(entities);
         }
 
         public virtual void Remove(TEntity entity)
         {
-            _entities.Remove(entity);
+            Entity.Remove(entity);
         }
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
-            _entities.RemoveRange(entities);
+            Entity.RemoveRange(entities);
         }
 
 
         public virtual int Count()
         {
-            return _entities.Count();
+            return Entity.Count();
         }
 
         public async virtual Task<int> CountAsync()
         {
-            return await _entities.CountAsync();
+            return await Entity.CountAsync();
         }
 
         public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
         {
-            IQueryable<TEntity> query = _entities.Where(predicate);
+            IQueryable<TEntity> query = Entity.Where(predicate);
 
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -84,7 +87,7 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
 
         public async virtual Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
         {
-            IQueryable<TEntity> query = _entities.Where(predicate);
+            IQueryable<TEntity> query = Entity.Where(predicate);
             
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -94,27 +97,27 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
 
         public virtual TEntity GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _entities.SingleOrDefault(predicate);
+            return Entity.SingleOrDefault(predicate);
         }
 
         public async virtual Task<TEntity> GetSingleOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
         {
-            return await _entities.SingleOrDefaultAsync(predicate);
+            return await Entity.SingleOrDefaultAsync(predicate);
         }
 
         public virtual TEntity Get(int id)
         {
-            return _entities.Find(id);
+            return Entity.Find(id);
         }
 
         public async virtual Task<TEntity> GetAsync(int id)
         {
-            return await _entities.FindAsync(id);
+            return await Entity.FindAsync(id);
         }
 
         public virtual IEnumerable<TEntity> GetAll(int pageNumber = -1, int pageSize = -1)
         {
-            IQueryable<TEntity> query = _entities;
+            IQueryable<TEntity> query = Entity;
 
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
@@ -124,7 +127,7 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
 
         public async virtual Task<IEnumerable<TEntity>> GetAllAsync(int pageNumber = -1, int pageSize = -1)
         {
-            IQueryable<TEntity> query = _entities;
+            IQueryable<TEntity> query = Entity;
 
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);

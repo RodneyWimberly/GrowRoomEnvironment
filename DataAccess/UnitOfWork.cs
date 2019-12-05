@@ -7,7 +7,7 @@ namespace GrowRoomEnvironment.DataAccess
 {
     public class UnitOfWork : IUnitOfWork
     {
-        readonly ApplicationDbContext _context;
+        protected readonly ApplicationDbContext Context;
 
         IEnumLookupRespository _enumLookups;
         IDataPointRepository _dataPoints;
@@ -19,7 +19,7 @@ namespace GrowRoomEnvironment.DataAccess
 
         public UnitOfWork(ApplicationDbContext context)
         {
-            _context = context;
+            Context = context;
         }
 
         public IEnumLookupRespository EnumLookups
@@ -27,7 +27,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_enumLookups == null)
-                    _enumLookups = new EnumLookupRespository(_context);
+                    _enumLookups = new EnumLookupRespository(Context);
 
                 return _enumLookups;
             }
@@ -38,7 +38,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_dataPoints == null)
-                    _dataPoints = new DataPointRepository(_context);
+                    _dataPoints = new DataPointRepository(Context);
 
                 return _dataPoints;
             }
@@ -49,7 +49,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_extendedLogs == null)
-                    _extendedLogs = new ExtendedLogRepository(_context);
+                    _extendedLogs = new ExtendedLogRepository(Context);
 
                 return _extendedLogs;
             }
@@ -60,7 +60,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_actionDevices == null)
-                    _actionDevices = new ActionDeviceRepository(_context);
+                    _actionDevices = new ActionDeviceRepository(Context);
 
                 return _actionDevices;
             }
@@ -71,7 +71,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_events == null)
-                    _events = new EventRepository(_context);
+                    _events = new EventRepository(Context);
 
                 return _events;
             }
@@ -82,7 +82,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_eventConditions == null)
-                    _eventConditions = new EventConditionRepository(_context);
+                    _eventConditions = new EventConditionRepository(Context);
 
                 return _eventConditions;
             }
@@ -93,7 +93,7 @@ namespace GrowRoomEnvironment.DataAccess
             get
             {
                 if (_notifications == null)
-                    _notifications = new NotificationRepository(_context);
+                    _notifications = new NotificationRepository(Context);
 
                 return _notifications;
             }
@@ -101,12 +101,12 @@ namespace GrowRoomEnvironment.DataAccess
 
         public int SaveChanges()
         {
-            return _context.SaveChanges();
+            return Context.SaveChanges();
         }
 
         public async Task<int> SaveChangesAsync()
         {
-            return await _context.SaveChangesAsync();
+            return await Context.SaveChangesAsync();
         }
     }
 }

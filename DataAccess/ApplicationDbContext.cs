@@ -13,14 +13,13 @@ namespace GrowRoomEnvironment.DataAccess
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public string CurrentUserId { get; set; }
-
         public DbSet<ExtendedLog> Logs { get; set; }
-
         public DbSet<ActionDevice> ActionDevices { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<EventCondition> EventConditions { get; set; }
         public DbSet<DataPoint> DataPoints { get; set; }
         public DbSet<EnumLookup> EnumLookups { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)  { }
 
@@ -31,10 +30,8 @@ namespace GrowRoomEnvironment.DataAccess
         {
             base.OnModelCreating(builder);
 
-            // build default model.
+            // ExtendedLog
             LogModelBuilderHelper.Build(builder.Entity<ExtendedLog>());
-
-            // real relation database can map table:
             builder.Entity<ExtendedLog>().Property(r => r.Id).ValueGeneratedOnAdd();
             builder.Entity<ExtendedLog>().HasIndex(r => r.TimeStamp).HasName("IX_Log_TimeStamp");
             builder.Entity<ExtendedLog>().HasIndex(r => r.EventId).HasName("IX_Log_EventId");
@@ -46,16 +43,38 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<ExtendedLog>().Property(u => u.Path).HasMaxLength(255);
             builder.Entity<ExtendedLog>().ToTable($"App{nameof(this.Logs)}");
 
-            builder.Entity<ApplicationUser>().HasMany(u => u.Claims).WithOne().HasForeignKey(c => c.UserId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<ApplicationUser>().HasMany(u => u.Roles).WithOne().HasForeignKey(r => r.UserId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            // ApplicationUser
+            builder.Entity<ApplicationUser>().HasMany(u => u.Claims)
+                .WithOne()
+                .HasForeignKey(c => c.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<ApplicationUser>().HasMany(u => u.Roles)
+                .WithOne()
+                .HasForeignKey(r => r.UserId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ApplicationRole>().HasMany(r => r.Claims).WithOne().HasForeignKey(c => c.RoleId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.Entity<ApplicationRole>().HasMany(r => r.Users).WithOne().HasForeignKey(r => r.RoleId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            // ApplicationRole
+            builder.Entity<ApplicationRole>()
+                .HasMany(r => r.Claims)
+                .WithOne()
+                .HasForeignKey(c => c.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<ApplicationRole>()
+                .HasMany(r => r.Users)
+                .WithOne()
+                .HasForeignKey(r => r.RoleId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<ActionDevice>().Property(e => e.ActionDeviceId).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<ActionDevice>().HasIndex(e => e.ActionDeviceId);
+            // ActionDevice
+            builder.Entity<ActionDevice>().Property(e => e.ActionDeviceId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<ActionDevice>().HasIndex(e => e.ActionDeviceId).IsUnique();
             builder.Entity<ActionDevice>().HasKey(e => e.ActionDeviceId);
             builder.Entity<ActionDevice>().Property(e => e.Type).IsRequired();
+            builder.Entity<ActionDevice>().HasIndex(e => e.Type);
             builder.Entity<ActionDevice>().Property(e => e.Name).IsRequired().HasMaxLength(100);
             builder.Entity<ActionDevice>().Property(e => e.Parameters).IsRequired().HasMaxLength(200);
             builder.Entity<ActionDevice>().ToTable($"App{nameof(this.ActionDevices)}");
@@ -63,10 +82,11 @@ namespace GrowRoomEnvironment.DataAccess
                 .WithOne(e => e.ActionDevice)
                 .HasForeignKey(e => e.EventId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<DataPoint>().Property(e => e.DataPointId).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<DataPoint>().HasIndex(e => e.DataPointId);
+            // DataPoint
+            builder.Entity<DataPoint>().Property(e => e.DataPointId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<DataPoint>().HasIndex(e => e.DataPointId).IsUnique();
             builder.Entity<DataPoint>().HasKey(e => e.DataPointId);
             builder.Entity<DataPoint>().Property(e => e.Caption).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().Property(e => e.Icon).IsRequired().HasMaxLength(100);
@@ -76,16 +96,19 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<DataPoint>().ToTable($"App{nameof(this.DataPoints)}");
             builder.Entity<DataPoint>().HasMany(e => e.EventConditions)
                 .WithOne(e => e.DataPoint)
-                .HasPrincipalKey(e => e.DataPointId)
+                .HasForeignKey(e => e.EventConditionId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Event>().Property(e => e.EventId).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<Event>().HasIndex(e => e.EventId);
+            // Event
+            builder.Entity<Event>().Property(e => e.EventId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<Event>().HasIndex(e => e.EventId).IsUnique();
             builder.Entity<Event>().HasKey(e => e.EventId);
             builder.Entity<Event>().Property(e => e.State).IsRequired();
+            builder.Entity<Event>().HasIndex(e => e.State);
             builder.Entity<Event>().Property(e => e.Name).IsRequired().HasMaxLength(100);
             builder.Entity<Event>().Property(e => e.ActionDeviceId).IsRequired();
+            builder.Entity<Event>().HasIndex(e => e.ActionDeviceId);
             builder.Entity<Event>().ToTable($"App{nameof(this.Events)}");
             builder.Entity<Event>().HasMany(e => e.EventConditions)
                 .WithOne(e => e.Event)
@@ -98,17 +121,20 @@ namespace GrowRoomEnvironment.DataAccess
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<EventCondition>().Property(e => e.EventConditionId).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<EventCondition>().HasIndex(e => e.EventConditionId);
+            // EventCondition
+            builder.Entity<EventCondition>().Property(e => e.EventConditionId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<EventCondition>().HasIndex(e => e.EventConditionId).IsUnique();
             builder.Entity<EventCondition>().HasKey(e => e.EventConditionId);
             builder.Entity<EventCondition>().Property(e => e.EventId).IsRequired();
-            builder.Entity<EventCondition>().Property(e => e.DataPointId).IsRequired();;
+            builder.Entity<EventCondition>().HasIndex(e => e.EventId);
+            builder.Entity<EventCondition>().Property(e => e.DataPointId).IsRequired();
+            builder.Entity<EventCondition>().HasIndex(e => e.DataPointId);
             builder.Entity<EventCondition>().Property(e => e.Operator).IsRequired();
             builder.Entity<EventCondition>().Property(e => e.Value).IsRequired().HasMaxLength(100);
             builder.Entity<EventCondition>().ToTable($"App{nameof(this.EventConditions)}");
             builder.Entity<EventCondition>().HasOne(e => e.Event)
                .WithMany(e => e.EventConditions)
-               .HasForeignKey(e => e.EventConditionId)
+               .HasForeignKey(e => e.EventId)
                .IsRequired()
                .OnDelete(DeleteBehavior.SetNull);
             builder.Entity<EventCondition>().HasOne(e => e.DataPoint)
@@ -117,8 +143,9 @@ namespace GrowRoomEnvironment.DataAccess
                .IsRequired()
                .OnDelete(DeleteBehavior.SetNull);
 
-            builder.Entity<EnumLookup>().Property(e => e.Id).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<EnumLookup>().HasIndex(e => e.Id);
+            // EnumLookup
+            builder.Entity<EnumLookup>().Property(e => e.Id).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<EnumLookup>().HasIndex(e => e.Id).IsUnique();
             builder.Entity<EnumLookup>().HasKey(e => e.Id);
             builder.Entity<EnumLookup>().Property(e => e.Table).IsRequired().HasMaxLength(100);
             builder.Entity<EnumLookup>().HasIndex(e => e.Table);
@@ -127,6 +154,17 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<EnumLookup>().Property(e => e.EnumValue).IsRequired().HasColumnType("INTEGER");
             builder.Entity<EnumLookup>().Property(e => e.EnumDescription).IsRequired().HasMaxLength(250);
             builder.Entity<EnumLookup>().ToTable($"App{nameof(this.EnumLookups)}");
+
+            // Notification
+            builder.Entity<Notification>().Property(e => e.NotificationId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
+            builder.Entity<Notification>().HasIndex(e => e.NotificationId).IsUnique();
+            builder.Entity<Notification>().HasKey(e => e.NotificationId);
+            builder.Entity<Notification>().Property(e => e.Header).IsRequired().HasMaxLength(100);
+            builder.Entity<Notification>().Property(e => e.Body).IsRequired().HasMaxLength(250);
+            builder.Entity<Notification>().Property(e => e.IsRead);
+            builder.Entity<Notification>().Property(e => e.IsPinned);
+            builder.Entity<Notification>().Property(e => e.Date);
+            builder.Entity<Notification>().ToTable($"App{nameof(this.Notifications)}");
         }
                      
         public override int SaveChanges()
