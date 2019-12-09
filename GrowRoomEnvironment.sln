@@ -9,7 +9,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrowRoomEnvironment.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrowRoomEnvironment.Contracts", "Contracts\GrowRoomEnvironment.Contracts.csproj", "{066A5EAA-9968-4E1D-800F-4244EE13E26B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GrowRoomEnvironment.DataAccess", "DataAccess\GrowRoomEnvironment.DataAccess.csproj", "{08FF5034-6F82-478D-9843-3195010BF419}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GrowRoomEnvironment.DataAccess", "DataAccess\GrowRoomEnvironment.DataAccess.csproj", "{08FF5034-6F82-478D-9843-3195010BF419}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A96DAE2C-0B70-49BC-BDB0-B4D105E7372F}"
+	ProjectSection(SolutionItems) = preProject
+		StartAngularServer.ps1 = StartAngularServer.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

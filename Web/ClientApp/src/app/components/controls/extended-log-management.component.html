@@ -25,12 +25,13 @@
                  [columns]="columns"
                  [scrollbarV]="true"
                  [scrollbarH]="true"
-                 [columnMode]="'force'">
+                 [columnMode]="'force'"
+                  (activate)="onActivate($event)">
   </ngx-datatable>
 
   <ng-template #indexTemplate let-value="value">
     <strong>{{value}}</strong>
-  </ng-template>
+</ng-template>
 
 
   <ng-template #actionsTemplate let-row="row" let-value="value" let-i="index">

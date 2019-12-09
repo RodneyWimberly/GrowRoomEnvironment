@@ -6,11 +6,11 @@ import { Utilities } from '../../helpers/utilities';
 import * as generated from '../../services/endpoint.services';
 
 @Component({
-    selector: 'user-info',
-    templateUrl: './user-info.component.html',
-    styleUrls: ['./user-info.component.scss']
+    selector: 'user-editor',
+    templateUrl: './user-editor.component.html',
+    styleUrls: ['./user-editor.component.scss']
 })
-export class UserInfoComponent implements OnInit {
+export class UserEditorComponent implements OnInit {
 
     public isEditMode = false;
     public isNewUser = false;

@@ -51,8 +51,7 @@ export class ExtendedLogManagementComponent implements OnInit, AfterViewInit {
             { prop: 'host', name: gT('logs.management.Host'), width: 100 },
             { prop: 'path', name: gT('logs.management.Path'), width: 100 },
             { prop: 'user', name: gT('logs.management.User'), width: 100 },
-            { prop: 'timeStamp', name: gT('logs.management.TimeStamp'), width: 180 },
-            { name: '', width: 100, cellTemplate: this.actionsTemplate, resizeable: false, canAutoResize: false, sortable: false, draggable: false }
+            { prop: 'timeStamp', name: gT('logs.management.TimeStamp'), width: 180 }
         ];
 
         this.loadData();
@@ -62,6 +61,12 @@ export class ExtendedLogManagementComponent implements OnInit, AfterViewInit {
        this.logEditor.changesCancelledCallback = () => {
             this.editorModal.hide();
         };
+    }
+
+    onActivate(event) {
+        if (event.type == 'click') {
+            this.editLog(event.row);
+        }
     }
 
     loadData() {

@@ -227,7 +227,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppDataPoints_Id",
+                name: "IX_AppDataPoints_DataPointId",
                 table: "AppDataPoints",
                 column: "DataPointId");
 

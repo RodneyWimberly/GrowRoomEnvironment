@@ -106,6 +106,6 @@
     </ItemGroup>
   </Target>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" clientapp_4dist_4main-es2015_1js_1map__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

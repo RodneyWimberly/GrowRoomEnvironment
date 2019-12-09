@@ -51,7 +51,7 @@ import { ExtendedLogManagementComponent } from './components/controls/extended-l
 import { ExtendedLogEditorComponent } from './components/controls/extended-log-editor.component';
 import { NotificationsViewerComponent } from './components/controls/notifications-viewer.component';
 import { SearchBoxComponent } from './components/controls/search-box.component';
-import { UserInfoComponent } from './components/controls/user-info.component';
+import { UserEditorComponent } from './components/controls/user-editor.component';
 import { UserPreferencesComponent } from './components/controls/user-preferences.component';
 import { UsersManagementComponent } from './components/controls/users-management.component';
 import { RolesManagementComponent } from './components/controls/roles-management.component';
@@ -87,7 +87,7 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
         HomeComponent,
         ExtendedLogComponent, ExtendedLogManagementComponent, ExtendedLogEditorComponent,
         SettingsComponent,
-        UsersManagementComponent, UserInfoComponent, UserPreferencesComponent,
+        UsersManagementComponent, UserEditorComponent, UserPreferencesComponent,
         RolesManagementComponent, RoleEditorComponent,
         AboutComponent,
         NotFoundComponent,

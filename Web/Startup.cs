@@ -98,7 +98,7 @@ namespace GrowRoomEnvironment.Web
                     options.Authority = applicationUrl;
                     options.SupportedTokens = SupportedTokens.Jwt;
                     options.RequireHttpsMetadata = false; // Note: Set to true in production
-                    options.ApiName = IdentityServerConfigurationExtensions.ApiName;
+                    options.ApiName = IdentityServerValues.ApiId;
                 });
 
             services.AddAuthorization(options =>
@@ -147,14 +147,11 @@ namespace GrowRoomEnvironment.Web
             services.AddSingleton<IAuthorizationHandler, ViewRoleAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AssignRolesAuthorizationHandler>();
 
-            // DB Creation and Seeding
-            services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger, IDatabaseInitializer databaseInitializer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger)
         {
             IdentityModelEventSource.ShowPII = true;
 
@@ -175,8 +172,7 @@ namespace GrowRoomEnvironment.Web
 
             try
             {
-                app.InitializeIdentityServerDatabase();
-                databaseInitializer.SeedAsync().Wait();
+                app.InitializeDatabase();
             }
             catch (Exception ex)
             {
@@ -202,7 +198,7 @@ namespace GrowRoomEnvironment.Web
 
             app.UseSwaggerUi3(settings =>
             {
-                settings.OAuth2Client = new OAuth2ClientSettings { ClientId = IdentityServerConfigurationExtensions.SwaggerClientID, ClientSecret = "no_password" };
+                settings.OAuth2Client = new OAuth2ClientSettings { ClientId = IdentityServerValues.DocumentationClientId, ClientSecret = IdentityServerValues.DocumentationClientSecret };
                 settings.Path = "/docs";
                 settings.DocumentPath = "/docs/api-specification.json";
             });

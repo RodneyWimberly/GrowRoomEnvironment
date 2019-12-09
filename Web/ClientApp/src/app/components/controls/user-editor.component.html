@@ -173,7 +173,7 @@
     </div>
 
     <div *ngIf="!isEditMode || canAssignRoles" class="form-group row has-feedback-icon">
-      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="roles-user-info">{{'users.editor.Roles' | translate}}</label>
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="roles-user-editor">{{'users.editor.Roles' | translate}}</label>
       <div *ngIf="!isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
         <p ngPreserveWhitespaces class="form-control-plaintext">
           <span *ngFor="let role of user.roles">
@@ -182,7 +182,7 @@
         </p>
       </div>
       <div *ngIf="isEditMode && canAssignRoles" [ngClass]="{'is-valid': f.submitted && roles.valid, 'is-invalid' : f.submitted && !roles.valid}" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
-        <select id="roles-user-info" name="roles" [(ngModel)]="userEdit.roles" #roles="ngModel" #rolesSelector="bootstrap-select"
+        <select id="roles-user-editor" name="roles" [(ngModel)]="userEdit.roles" #roles="ngModel" #rolesSelector="bootstrap-select"
                 class="selectpicker form-control left-status" bootstrapSelect required multiple data-live-search="true" data-actions-box="false" data-live-search-placeholder="Search..." title="Select Roles">
           <option *ngFor="let role of allRoles" attr.data-content="<span title='{{role.description}}' class='badge badge-pill badge-secondary'>{{role.name}}</span>" attr.value="{{role.name}}">
             {{role.name}}
