@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GrowRoomEnvironment.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class EventConditionController : ControllerBase
@@ -32,15 +35,15 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
-        public async Task<IActionResult> GetAllEventConditions()
+        public async Task<IActionResult> GetAll()
         {
-            return await GetEventConditions(-1, -1);
+            return await GetAllPaged(-1, -1);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
-        public async Task<IActionResult> GetEventConditions(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
             IEnumerable<EventCondition> eventConditions = await _unitOfWork.EventConditions.GetAllAsync(pageNumber, pageSize);
             return Ok(_mapper.Map<IEnumerable<EventConditionViewModel>>(eventConditions));
@@ -49,12 +52,59 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet("{eventConditionId:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(EventConditionViewModel))]
-        public async Task<IActionResult> GetByEventConditionId(int eventConditionId)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int eventConditionId)
         {
             EventCondition eventCondition = await _unitOfWork.EventConditions.GetAsync(eventConditionId);
-            return Ok(_mapper.Map<EventConditionViewModel>(eventCondition));
+            if (eventCondition == null)
+                return NotFound(eventConditionId);
+            else
+                return Ok(_mapper.Map<EventConditionViewModel>(eventCondition));
         }
 
+        [HttpGet("{eventId:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByEventId(int eventId)
+        {
+            return await GetByEventIdPaged(eventId, -1, -1);
+        }
+
+        [HttpGet("{eventId:int}/{pageNumber:int}/{pageSize:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByEventIdPaged(int eventId, int pageNumber, int pageSize)
+        {
+            List<EventCondition> eventConditions = (await _unitOfWork.EventConditions.FindAsync(e => e.EventId == eventId, pageNumber, pageSize)).ToList();
+            if (eventConditions?.Count > 0)
+                return Ok(_mapper.Map<IEnumerable<EventConditionViewModel>>(eventConditions));
+            else
+                return NotFound(eventId);
+        }
+
+        [HttpGet("{dataPointId:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByDataPointId(int dataPointId)
+        {
+            return await GetByDataPointIdPaged(dataPointId, -1, -1);
+        }
+
+        [HttpGet("{dataPointId:int}/{pageNumber:int}/{pageSize:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventConditionViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByDataPointIdPaged(int dataPointId, int pageNumber, int pageSize)
+        {
+            List<EventCondition> eventConditions = (await _unitOfWork.EventConditions.FindAsync(e => e.DataPointId == dataPointId, pageNumber, pageSize)).ToList();
+            if (eventConditions?.Count > 0)
+                return Ok(_mapper.Map<IEnumerable<EventConditionViewModel>>(eventConditions));
+            else
+                return NotFound(dataPointId);
+        }
 
         [HttpDelete("{eventConditionId:int}")]
         [ProducesResponseType(200, Type = typeof(EventConditionViewModel))]
@@ -64,9 +114,10 @@ namespace GrowRoomEnvironment.Web.Controllers
             EventCondition eventCondition = _unitOfWork.EventConditions.Get(eventConditionId);
             if (eventCondition == null)
                 return NotFound(eventConditionId);
-            EventConditionViewModel eventConditionVM = _mapper.Map<EventConditionViewModel>(eventCondition);
-            _unitOfWork.EventConditions.Remove(eventCondition);
+         
+            EntityEntry<EventCondition> removedEventCondition = _unitOfWork.EventConditions.Remove(eventCondition);
             await _unitOfWork.SaveChangesAsync();
+            EventConditionViewModel eventConditionVM = _mapper.Map<EventConditionViewModel>(removedEventCondition.Entity);
             return Ok(eventConditionVM);
         }
 
@@ -80,6 +131,10 @@ namespace GrowRoomEnvironment.Web.Controllers
             {
                 if (eventConditionVM == null)
                     return BadRequest($"{nameof(eventConditionVM)} cannot be null");
+                if (eventConditionVM?.DataPoint?.DataPointId > 0)
+                    eventConditionVM.DataPoint = null;
+                if (eventConditionVM.Event != null)
+                    eventConditionVM.Event = null;
                 EventCondition eventCondition = _mapper.Map<EventCondition>(eventConditionVM);
                 EntityEntry<EventCondition> addedEventCondition = await _unitOfWork.EventConditions.AddAsync(eventCondition);
                 await _unitOfWork.SaveChangesAsync();
@@ -91,7 +146,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         }
 
         [HttpPut("{eventConditionId:int}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(EventConditionViewModel))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Put(int eventConditionId, [FromBody]EventConditionViewModel eventConditionVM)
         {
@@ -102,16 +157,18 @@ namespace GrowRoomEnvironment.Web.Controllers
 
                 if (eventConditionId != eventConditionVM.EventConditionId)
                     return BadRequest("Conflicting EventCondition EventConditionId in parameter and model data");
-                _unitOfWork.EventConditions.Update(_mapper.Map<EventCondition>(eventConditionVM));
+
+                EntityEntry<EventCondition> updatedEventCondition = _unitOfWork.EventConditions.Update(_mapper.Map<EventCondition>(eventConditionVM));
                 await _unitOfWork.SaveChangesAsync();
-                return NoContent();
+                eventConditionVM = _mapper.Map<EventConditionViewModel>(updatedEventCondition.Entity);
+                return Ok(eventConditionVM);
             }
             else
                 return BadRequest(ModelState);
         }
 
         [HttpPatch("{eventConditionId:int}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(EventConditionViewModel))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Patch(int eventConditionId, [FromBody]JsonPatchDocument<EventConditionViewModel> patch)
         {
@@ -124,9 +181,10 @@ namespace GrowRoomEnvironment.Web.Controllers
                 patch.ApplyTo(eventConditionVM, e => ModelState.AddModelError("", e.ErrorMessage));
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.EventConditions.Update(_mapper.Map<EventCondition>(eventConditionVM));
+                    EntityEntry<EventCondition> updatedEventCondition = _unitOfWork.EventConditions.Update(_mapper.Map<EventCondition>(eventConditionVM));
                     await _unitOfWork.SaveChangesAsync();
-                    return NoContent();
+                    eventConditionVM = _mapper.Map<EventConditionViewModel>(updatedEventCondition.Entity);
+                    return Ok(eventConditionVM);
                 }
             }
 

@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GrowRoomEnvironment.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class EventController : ControllerBase
@@ -28,31 +31,59 @@ namespace GrowRoomEnvironment.Web.Controllers
             _logger = logger;
             _authorizationService = authorizationService;
         }
+        
 
         [HttpGet]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventViewModel>))]
-        public async Task<IActionResult> GetAllEvents()
+        public async Task<IActionResult> GetAll()
         {
-            return await GetEvents(-1, -1);
+            return await GetAllPaged(-1, -1);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<EventViewModel>))]
-        public async Task<IActionResult> GetEvents(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
             IEnumerable<Event> events = await _unitOfWork.Events.GetAllAsync(pageNumber, pageSize);
             return Ok(_mapper.Map<IEnumerable<EventViewModel>>(events));
         }
 
+        [HttpGet("{actionDeviceId:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByActionDeviceId(int actionDeviceId)
+        {
+            return await GetByActionDeviceIdPaged(actionDeviceId, -1, -1);
+        }
+
+        [HttpGet("{actionDeviceId:int}/{pageNumber:int}/{pageSize:int}")]
+        //[Authorize(Authorization.Policies.)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<EventViewModel>))]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByActionDeviceIdPaged(int actionDeviceId, int pageNumber, int pageSize)
+        {
+            List<Event> events = (await _unitOfWork.Events.FindAsync(e => e.ActionDeviceId == actionDeviceId, pageNumber, pageSize)).ToList();
+            if (events?.Count > 0)
+                return Ok(_mapper.Map<IEnumerable<EventViewModel>>(events));
+            else
+                return NotFound(actionDeviceId);
+        }
+
+
         [HttpGet("{eventId:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(EventViewModel))]
-        public async Task<IActionResult> GetByEventId(int eventId)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int eventId)
         {
             Event @event = await _unitOfWork.Events.GetAsync(eventId);
-            return Ok(_mapper.Map<EventViewModel>(@event));
+            if (@event == null)
+                return NotFound(eventId);
+            else
+                return Ok(_mapper.Map<EventViewModel>(@event));
         }
 
 
@@ -91,7 +122,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         }
 
         [HttpPut("{eventId:int}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(EventViewModel))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Put(int eventId, [FromBody]EventViewModel eventVM)
         {
@@ -102,16 +133,22 @@ namespace GrowRoomEnvironment.Web.Controllers
 
                 if (eventId != eventVM.EventId)
                     return BadRequest("Conflicting Event EventId in parameter and model data");
-                _unitOfWork.Events.Update(_mapper.Map<Event>(eventVM));
+
+                Event @event = await _unitOfWork.Events.GetAsync(eventId);
+                if (@event == null)
+                    return BadRequest($"Cannot find Event with EventId: {eventId}");
+
+               Event eventToUpdate = _mapper.Map(eventVM, @event);
+                EntityEntry<Event> updatedEvent = _unitOfWork.Events.Update(eventToUpdate);
                 await _unitOfWork.SaveChangesAsync();
-                return NoContent();
+                return Ok(_mapper.Map<EventViewModel>(updatedEvent.Entity));
             }
             else
                 return BadRequest(ModelState);
         }
 
         [HttpPatch("{eventId:int}")]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200, Type = typeof(EventViewModel))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> Patch(int eventId, [FromBody]JsonPatchDocument<EventViewModel> patch)
         {
@@ -120,13 +157,15 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (patch == null)
                     return BadRequest($"{nameof(patch)} cannot be null");
 
-                EventViewModel eventVM = _mapper.Map<EventViewModel>(await _unitOfWork.Events.GetAsync(eventId));
+                Event @event = await _unitOfWork.Events.GetAsync(eventId);
+                EventViewModel eventVM = _mapper.Map<EventViewModel>(@event);
                 patch.ApplyTo(eventVM, e => ModelState.AddModelError("", e.ErrorMessage));
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.Events.Update(_mapper.Map<Event>(eventVM));
+                    Event eventToUpdate = _mapper.Map(eventVM, @event);
+                    EntityEntry<Event> updatedEvent = _unitOfWork.Events.Update(eventToUpdate);
                     await _unitOfWork.SaveChangesAsync();
-                    return NoContent();
+                    return Ok(updatedEvent.Entity);
                 }
             }
 

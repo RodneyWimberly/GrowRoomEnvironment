@@ -3,3 +3,10 @@ export enum GenderEnumModel {
     Female,
     Male
 }
+
+export enum ViewModelStates {
+  New,
+  Edit,
+  View,
+  Delete
+}

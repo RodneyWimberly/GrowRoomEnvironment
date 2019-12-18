@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GrowRoomEnvironment.DataAccess.Models
 {
-    public class DataPoint : AuditableEntityBase
+    public class DataPoint : ApplicationEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
@@ -16,6 +16,20 @@ namespace GrowRoomEnvironment.DataAccess.Models
         public string Template { get; set; }
         public bool ShowInUI { get; set; }
 
-        public ICollection<EventCondition> EventConditions { get; set; }
+        public virtual ICollection<EventCondition> EventConditions { get; set; }
+
+        public DataPoint()
+        {
+
+        }
+
+        public DataPoint(int dataPointId, string caption, string icon, string template, bool showInUI)
+        {
+            DataPointId = dataPointId;
+            Caption = caption;
+            Icon = icon;
+            Template = template;
+            ShowInUI = showInUI;
+        }
     }
 }

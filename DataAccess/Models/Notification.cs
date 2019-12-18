@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GrowRoomEnvironment.DataAccess.Models
 {
-    public class Notification : AuditableEntityBase
+    public class Notification : ApplicationEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -14,5 +14,20 @@ namespace GrowRoomEnvironment.DataAccess.Models
         public bool IsRead { get; set; }
         public bool IsPinned { get; set; }
         public DateTime Date { get; set; }
+
+        public Notification()
+        {
+
+        }
+
+        public Notification(int notificationId, string header, string body, bool isRead, bool isPinned, DateTime date)
+        {
+            NotificationId = notificationId;
+            Header = header;
+            Body = body;
+            IsRead = isRead;
+            IsPinned = isPinned;
+            Date = date;
+        }
     }
 }

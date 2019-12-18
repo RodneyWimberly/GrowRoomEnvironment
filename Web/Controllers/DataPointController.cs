@@ -4,6 +4,7 @@ using AutoMapper;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GrowRoomEnvironment.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class DataPointController : ControllerBase
@@ -32,15 +34,15 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DataPointViewModel>))]
-        public async Task<IActionResult> GetAllDataPoints()
+        public async Task<IActionResult> GetAll()
         {
-            return await GetDataPoints(-1, -1);
+            return await GetAllPaged(-1, -1);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<DataPointViewModel>))]
-        public async Task<IActionResult> GetDataPoints(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
             IEnumerable<DataPoint> dataPoints = await _unitOfWork.DataPoints.GetAllAsync(pageNumber, pageSize);
             return Ok(_mapper.Map<IEnumerable<DataPointViewModel>>(dataPoints));
@@ -49,10 +51,14 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet("{dataPointId:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(DataPointViewModel))]
-        public async Task<IActionResult> GetByDataPointId(int dataPointId)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int dataPointId)
         {
             DataPoint dataPoint = await _unitOfWork.DataPoints.GetAsync(dataPointId);
-            return Ok(_mapper.Map<DataPointViewModel>(dataPoint));
+            if (dataPoint == null)
+                return NotFound(dataPointId);
+            else 
+                return Ok(_mapper.Map<DataPointViewModel>(dataPoint));
         }
 
 

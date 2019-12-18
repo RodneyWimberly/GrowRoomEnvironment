@@ -5,12 +5,14 @@
     "New": "New"
   },
   "mainMenu": {
+    "Events": "Events",
     "Logs": "Logs",
     "About": "About",
     "Logout": "Logout"
   },
   "pageHeader": {
     "Dashboard": "Dashboard",
+    "Events": "Events",
     "Logs": "Logs",
     "NotFound": "Not-Found",
     "About": "About",
@@ -21,14 +23,72 @@
     "NoWidgets2": "to configure available widgets",
     "StatisticsTitle": "Some Important Stuff"
   },
+  "events": {
+    "management": {
+      "Search": "Search for event...",
+      "NewEvent": "New Event",
+      "EditEvent": "Edit Event {{name}}",
+      "Edit": "Edit",
+      "Details": "Details",
+      "Delete": "Delete",
+      "EventDetails": "Event Details for {{eventId}}: {{name}}",
+      "EventId": "Id",
+      "Name": "Name",
+      "ActionDevice": "Device",
+      "State": "Action",
+      "EventConditions": "Conditions to match"
+    },
+    "editor": {
+      "ActionDevice": "Action Device",
+      "Cancel": "Cancel",
+      "Close": "Close",
+      "Edit": "Edit",
+      "EventConditions": "Conditions",
+      "EventId": "Id",
+      "Name": "Name",
+      "Save": "Save",
+      "Saving": "Saving...",
+      "State": "State"
+    }
+  },
+  "eventConditions": {
+    "management": {
+      "Search": "Search for condition...",
+      "NewEventCondition": "New Condition",
+      "EditEventCondition": "Edit Condition",
+      "Edit": "Edit",
+      "Details": "Details",
+      "Delete": "Delete",
+      "EventConditionDetails": "Event Condition Details for {{eventConditionId}}",
+      "EventConditionId": "Id",
+      "EventId": "EventId",
+      "DataPoint": "Data Point",
+      "Operator": "Operator",
+      "Value": "Value",
+      "Cancel": "Cancel",
+      "Save": "Save"
+    },
+    "editor": {
+      "EventConditionId": "Id",
+      "EventId": "EventId",
+      "DataPoint": "Data Point",
+      "Operator": "Operator",
+      "Value": "Value",
+      "Cancel": "Cancel",
+      "Close": "Close",
+      "Edit": "Edit",
+      "Save": "Save",
+      "Saving": "Saving..."
+    }
+  },
   "logs": {
     "management": {
       "Search": "Search for log...",
       "Edit": "Edit",
       "Details": "Details",
       "ClearLog": "Clear Logs",
-      "LogDetails": "Log Details for Id: {{id}}",
-      "EditLog": "Edit Log \"{{id}}\"",
+      "LogDetails": "Log Details",
+      "EditLog": "Edit Log",
       "Id": "Id",
       "EventId": "EventId",
       "Level": "Level",
@@ -38,6 +98,12 @@
       "Host": "Host",
       "Path": "Path",
       "User": "User",
+      "Method": "Method",
+      "StatusCode": "Status Code",
+      "ServerVariables": "Server Variables",
+      "Cookies": "Cookies",
+      "FormVariables": "Form Variables",
+      "QueryString": "Query String",
       "TimeStamp": "TimeStamp"
     },
     "editor": {
@@ -50,7 +116,13 @@
       "Host": "Host",
       "Path": "Path",
       "User": "User",
-      "TimeStamp": "TimeStamp",
+      "Method": "Method",
+      "StatusCode": "Status",
+      "ServerVariables": "Server Variables",
+      "Cookies": "Cookies",
+      "FormVariables": "Form Variables",
+      "QueryString": "Query String",
+      "TimeStamp": "Time",
       "SelectAll": "Select all",
       "SelectNone": "Select none",
       "Close": "Close",

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class ExtendedLogRepository : Repository<ExtendedLog>, IExtendedLogRepository
+    public class ExtendedLogRepository : ApplicationDbRepository<ExtendedLog>, IExtendedLogRepository
     {
-        public ExtendedLogRepository(DbContext context) : base(context)
+        public ExtendedLogRepository(ApplicationDbContext context) : base(context)
         { }
 
         public int ClearAll()

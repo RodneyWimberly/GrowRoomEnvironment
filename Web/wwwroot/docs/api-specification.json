@@ -1,5 +1,5 @@
 ﻿{
-  "x-generator": "NSwag v13.1.6.0 (NJsonSchema v10.0.28.0 (Newtonsoft.Json v12.0.0.0))",
+  "x-generator": "NSwag v13.1.7.0 (NJsonSchema v10.0.28.0 (Newtonsoft.Json v12.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "GrowRoomEnvironment WebAPI",
@@ -79,7 +79,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfUserPatchViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -241,7 +244,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfUserPatchViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -1001,7 +1007,7 @@
         "tags": [
           "ActionDevice"
         ],
-        "operationId": "ActionDevice_GetActionDevices",
+        "operationId": "ActionDevice_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -1046,7 +1052,7 @@
         "tags": [
           "ActionDevice"
         ],
-        "operationId": "ActionDevice_GetByActionDeviceId",
+        "operationId": "ActionDevice_Get",
         "parameters": [
           {
             "name": "actionDeviceId",
@@ -1066,6 +1072,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ActionDeviceViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -1179,7 +1195,57 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfActionDeviceViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ActionDevice/SetState/{actionDeviceId}": {
+      "put": {
+        "tags": [
+          "ActionDevice"
+        ],
+        "operationId": "ActionDevice_PutState",
+        "parameters": [
+          {
+            "name": "actionDeviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "state",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActionDeviceStates"
               }
             }
           },
@@ -1208,7 +1274,7 @@
         "tags": [
           "DataPoint"
         ],
-        "operationId": "DataPoint_GetAllDataPoints",
+        "operationId": "DataPoint_GetAll",
         "responses": {
           "200": {
             "description": "",
@@ -1271,7 +1337,7 @@
         "tags": [
           "DataPoint"
         ],
-        "operationId": "DataPoint_GetDataPoints",
+        "operationId": "DataPoint_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -1316,7 +1382,7 @@
         "tags": [
           "DataPoint"
         ],
-        "operationId": "DataPoint_GetByDataPointId",
+        "operationId": "DataPoint_Get",
         "parameters": [
           {
             "name": "dataPointId",
@@ -1336,6 +1402,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DataPointViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -1449,7 +1525,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfDataPointViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -1478,7 +1557,7 @@
         "tags": [
           "EventCondition"
         ],
-        "operationId": "EventCondition_GetAllEventConditions",
+        "operationId": "EventCondition_GetAll",
         "responses": {
           "200": {
             "description": "",
@@ -1541,7 +1620,7 @@
         "tags": [
           "EventCondition"
         ],
-        "operationId": "EventCondition_GetEventConditions",
+        "operationId": "EventCondition_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -1586,7 +1665,7 @@
         "tags": [
           "EventCondition"
         ],
-        "operationId": "EventCondition_GetByEventConditionId",
+        "operationId": "EventCondition_Get",
         "parameters": [
           {
             "name": "eventConditionId",
@@ -1606,6 +1685,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EventConditionViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -1682,8 +1771,15 @@
           "x-position": 2
         },
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventConditionViewModel"
+                }
+              }
+            }
           },
           "400": {
             "description": "",
@@ -1719,7 +1815,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfEventConditionViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -1727,10 +1826,237 @@
           "x-position": 2
         },
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventConditionViewModel"
+                }
+              }
+            }
           },
           "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventCondition/{eventId}": {
+      "get": {
+        "tags": [
+          "EventCondition"
+        ],
+        "operationId": "EventCondition_GetByEventId",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventConditionViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventCondition/{eventId}/{pageNumber}/{pageSize}": {
+      "get": {
+        "tags": [
+          "EventCondition"
+        ],
+        "operationId": "EventCondition_GetByEventIdPaged",
+        "parameters": [
+          {
+            "name": "eventId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventConditionViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventCondition/{dataPointId}": {
+      "get": {
+        "tags": [
+          "EventCondition"
+        ],
+        "operationId": "EventCondition_GetByDataPointId",
+        "parameters": [
+          {
+            "name": "dataPointId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventConditionViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EventCondition/{dataPointId}/{pageNumber}/{pageSize}": {
+      "get": {
+        "tags": [
+          "EventCondition"
+        ],
+        "operationId": "EventCondition_GetByDataPointIdPaged",
+        "parameters": [
+          {
+            "name": "dataPointId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventConditionViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
             "description": "",
             "content": {
               "application/json": {
@@ -1748,7 +2074,7 @@
         "tags": [
           "Event"
         ],
-        "operationId": "Event_GetAllEvents",
+        "operationId": "Event_GetAll",
         "responses": {
           "200": {
             "description": "",
@@ -1811,7 +2137,7 @@
         "tags": [
           "Event"
         ],
-        "operationId": "Event_GetEvents",
+        "operationId": "Event_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -1851,12 +2177,122 @@
         }
       }
     },
+    "/api/Event/{actionDeviceId}": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "operationId": "Event_GetByActionDeviceId",
+        "parameters": [
+          {
+            "name": "actionDeviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Event/{actionDeviceId}/{pageNumber}/{pageSize}": {
+      "get": {
+        "tags": [
+          "Event"
+        ],
+        "operationId": "Event_GetByActionDeviceIdPaged",
+        "parameters": [
+          {
+            "name": "actionDeviceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "pageNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "pageSize",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventViewModel"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Event/{eventId}": {
       "get": {
         "tags": [
           "Event"
         ],
-        "operationId": "Event_GetByEventId",
+        "operationId": "Event_Get",
         "parameters": [
           {
             "name": "eventId",
@@ -1876,6 +2312,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EventViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -1952,8 +2398,15 @@
           "x-position": 2
         },
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventViewModel"
+                }
+              }
+            }
           },
           "400": {
             "description": "",
@@ -1989,7 +2442,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfEventViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -1997,8 +2453,15 @@
           "x-position": 2
         },
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventViewModel"
+                }
+              }
+            }
           },
           "400": {
             "description": "",
@@ -2092,7 +2555,7 @@
         "tags": [
           "ExtendedLog"
         ],
-        "operationId": "ExtendedLog_GetExtendedLogs",
+        "operationId": "ExtendedLog_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -2137,7 +2600,7 @@
         "tags": [
           "ExtendedLog"
         ],
-        "operationId": "ExtendedLog_GetAllByLevel",
+        "operationId": "ExtendedLog_GetByLevel",
         "parameters": [
           {
             "name": "level",
@@ -2163,6 +2626,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -2172,7 +2645,7 @@
         "tags": [
           "ExtendedLog"
         ],
-        "operationId": "ExtendedLog_GetExtendedLogsByLevel",
+        "operationId": "ExtendedLog_GetByLevelPaged",
         "parameters": [
           {
             "name": "level",
@@ -2218,6 +2691,16 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
           }
         }
       }
@@ -2227,7 +2710,7 @@
         "tags": [
           "ExtendedLog"
         ],
-        "operationId": "ExtendedLog_GetById",
+        "operationId": "ExtendedLog_Get",
         "parameters": [
           {
             "name": "id",
@@ -2247,6 +2730,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExtendedLogViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -2360,7 +2853,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfExtendedLogViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -2389,7 +2885,7 @@
         "tags": [
           "Notification"
         ],
-        "operationId": "Notification_GetAllNotifications",
+        "operationId": "Notification_GetAll",
         "responses": {
           "200": {
             "description": "",
@@ -2452,7 +2948,7 @@
         "tags": [
           "Notification"
         ],
-        "operationId": "Notification_GetNotifications",
+        "operationId": "Notification_GetAllPaged",
         "parameters": [
           {
             "name": "pageNumber",
@@ -2497,7 +2993,7 @@
         "tags": [
           "Notification"
         ],
-        "operationId": "Notification_GetByNotificationId",
+        "operationId": "Notification_Get",
         "parameters": [
           {
             "name": "notificationId",
@@ -2517,6 +3013,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/NotificationViewModel"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -2630,7 +3136,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/JsonPatchDocumentOfNotificationViewModel"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Operation"
+                }
               }
             }
           },
@@ -2683,7 +3192,7 @@
       "UserBaseViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -2725,7 +3234,7 @@
           }
         ]
       },
-      "AuditableViewModelBase": {
+      "ApplicationViewModelBase": {
         "type": "object",
         "x-abstract": true,
         "additionalProperties": false,
@@ -2747,6 +3256,10 @@
           "createdDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -2810,30 +3323,6 @@
           }
         ]
       },
-      "JsonPatchDocumentOfUserPatchViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfUserPatchViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfUserPatchViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
       "Operation": {
         "allOf": [
           {
@@ -2871,7 +3360,7 @@
       "RoleViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -2911,7 +3400,7 @@
       "PermissionViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -2940,7 +3429,7 @@
       "ActionDeviceViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -2956,6 +3445,10 @@
               },
               "type": {
                 "$ref": "#/components/schemas/ActionDeviceTypes"
+              },
+              "typeDescription": {
+                "type": "string",
+                "nullable": true
               },
               "parameters": {
                 "type": "string",
@@ -2974,24 +3467,26 @@
       },
       "ActionDeviceTypes": {
         "type": "integer",
-        "description": "",
+        "description": "0 = X10\n1 = ZWave\n2 = ZeeBee\n3 = iHome\n4 = WiFi",
         "x-enumNames": [
           "X10",
           "ZWave",
           "ZeeBee",
+          "iHome",
           "WiFi"
         ],
         "enum": [
           0,
           1,
           2,
-          3
+          3,
+          4
         ]
       },
       "EventViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -3020,6 +3515,10 @@
               "state": {
                 "$ref": "#/components/schemas/ActionDeviceStates"
               },
+              "stateDescription": {
+                "type": "string",
+                "nullable": true
+              },
               "eventConditions": {
                 "type": "array",
                 "nullable": true,
@@ -3033,7 +3532,7 @@
       },
       "ActionDeviceStates": {
         "type": "integer",
-        "description": "",
+        "description": "0 = Off\n1 = On",
         "x-enumNames": [
           "Off",
           "On"
@@ -3046,7 +3545,7 @@
       "EventConditionViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -3083,6 +3582,10 @@
               "operator": {
                 "$ref": "#/components/schemas/Operators"
               },
+              "operatorDescription": {
+                "type": "string",
+                "nullable": true
+              },
               "value": {
                 "type": "string",
                 "nullable": true
@@ -3094,7 +3597,7 @@
       "DataPointViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -3132,7 +3635,7 @@
       },
       "Operators": {
         "type": "integer",
-        "description": "",
+        "description": "0 = Equal\n1 = NotEqual\n2 = GreaterThan\n3 = LessThan",
         "x-enumNames": [
           "Equal",
           "NotEqual",
@@ -3146,106 +3649,10 @@
           3
         ]
       },
-      "JsonPatchDocumentOfActionDeviceViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfActionDeviceViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfActionDeviceViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "JsonPatchDocumentOfDataPointViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfDataPointViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfDataPointViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "JsonPatchDocumentOfEventConditionViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfEventConditionViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfEventConditionViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "JsonPatchDocumentOfEventViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfEventViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfEventViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
       "ExtendedLogViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -3279,11 +3686,39 @@
                 "type": "integer",
                 "format": "int32"
               },
+              "levelDescription": {
+                "type": "string",
+                "nullable": true
+              },
               "message": {
                 "type": "string",
                 "nullable": true
               },
               "name": {
+                "type": "string",
+                "nullable": true
+              },
+              "method": {
+                "type": "string",
+                "nullable": true
+              },
+              "statusCode": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "serverVariables": {
+                "type": "string",
+                "nullable": true
+              },
+              "cookies": {
+                "type": "string",
+                "nullable": true
+              },
+              "formVariables": {
+                "type": "string",
+                "nullable": true
+              },
+              "queryString": {
                 "type": "string",
                 "nullable": true
               },
@@ -3295,34 +3730,10 @@
           }
         ]
       },
-      "JsonPatchDocumentOfExtendedLogViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfExtendedLogViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfExtendedLogViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
       "NotificationViewModel": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/AuditableViewModelBase"
+            "$ref": "#/components/schemas/ApplicationViewModelBase"
           },
           {
             "type": "object",
@@ -3351,30 +3762,6 @@
                 "format": "date-time"
               }
             }
-          }
-        ]
-      },
-      "JsonPatchDocumentOfNotificationViewModel": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "operations": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/OperationOfNotificationViewModel"
-            }
-          }
-        }
-      },
-      "OperationOfNotificationViewModel": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Operation"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
           }
         ]
       }

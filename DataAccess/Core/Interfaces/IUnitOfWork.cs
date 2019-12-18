@@ -1,11 +1,12 @@
 ﻿using GrowRoomEnvironment.DataAccess.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.DataAccess.Core.Interfaces
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
-        IEnumLookupRespository EnumLookups { get; }
 
         IDataPointRepository DataPoints { get; }
 
@@ -19,6 +20,13 @@ namespace GrowRoomEnvironment.DataAccess.Core.Interfaces
 
         INotificationRepository Notifications { get; }
 
+        void DetachAll();
+
+        IDbContextTransaction BeginTransaction();
+
+        void CommitTransaction();
+
+        void RollbackTransaction();
         int SaveChanges();
 
         Task<int> SaveChangesAsync();

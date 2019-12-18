@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using GrowRoomEnvironment.DataAccess.Core.Enums;
@@ -14,7 +15,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GrowRoomEnvironment.Web.Controllers
 {
-    //[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ExtendedLogController : ControllerBase
@@ -37,13 +38,13 @@ namespace GrowRoomEnvironment.Web.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
         public async Task<IActionResult> GetAll()
         {
-            return await GetExtendedLogs(-1, -1);
+            return await GetAllPaged(-1, -1);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetExtendedLogs(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
             IEnumerable<ExtendedLog> extendedLogs = await _unitOfWork.ExtendedLogs.GetAllAsync(pageNumber, pageSize);
             return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
@@ -52,27 +53,36 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet("level/{level}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetAllByLevel(int level)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByLevel(int level)
         {
-            return await GetExtendedLogsByLevel(level, -1, -1);
+            return await GetByLevelPaged(level, -1, -1);
         }
 
         [HttpGet("level/{level}/{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetExtendedLogsByLevel(int level, int pageNumber, int pageSize)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByLevelPaged(int level, int pageNumber, int pageSize)
         {
-            IEnumerable<ExtendedLog> extendedLogs = await _unitOfWork.ExtendedLogs.FindAsync(l => l.Level == level, pageNumber, pageSize);
-            return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
+            List<ExtendedLog> extendedLogs = (await _unitOfWork.ExtendedLogs.FindAsync(l => l.Level == level, pageNumber, pageSize)).ToList();
+            if (extendedLogs?.Count > 0)
+                return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
+            else
+                return NotFound(level);
         }
 
         [HttpGet("{id:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(ExtendedLogViewModel))]
-        public async Task<IActionResult> GetById(int id)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int id)
         {
             ExtendedLog extendedLog = await _unitOfWork.ExtendedLogs.GetAsync(id);
-            return Ok(_mapper.Map<ExtendedLogViewModel>(extendedLog));
+            if (extendedLog == null)
+                return NotFound(id);
+            else
+                return Ok(_mapper.Map<ExtendedLogViewModel>(extendedLog));
         }
 
         [HttpDelete]

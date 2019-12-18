@@ -1,5 +1,6 @@
 ﻿using GrowRoomEnvironment.DataAccess.Core.Constants;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess
 {
@@ -7,7 +8,7 @@ namespace GrowRoomEnvironment.DataAccess
     {
         public HttpUnitOfWork(ApplicationDbContext context, IHttpContextAccessor httpAccessor) : base(context)
         {
-            context.CurrentUserId = httpAccessor.HttpContext.User.FindFirst(Claims.Subject)?.Value?.Trim();
+            Context.CurrentUserId = httpAccessor.HttpContext.User.FindFirst(Claims.Subject)?.Value?.Trim();
         }
     }
 }

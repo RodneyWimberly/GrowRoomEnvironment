@@ -1,17 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace GrowRoomEnvironment.Web.Controllers
 {
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationController : ControllerBase
@@ -32,15 +36,15 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<NotificationViewModel>))]
-        public async Task<IActionResult> GetAllNotifications()
+        public async Task<IActionResult> GetAll()
         {
-            return await GetNotifications(-1, -1);
+            return await GetAllPaged(-1, -1);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<NotificationViewModel>))]
-        public async Task<IActionResult> GetNotifications(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
             IEnumerable<Notification> notifications = await _unitOfWork.Notifications.GetAllAsync(pageNumber, pageSize);
             return Ok(_mapper.Map<IEnumerable<NotificationViewModel>>(notifications));
@@ -49,10 +53,14 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpGet("{notificationId:int}")]
         //[Authorize(Authorization.Policies.)]
         [ProducesResponseType(200, Type = typeof(NotificationViewModel))]
-        public async Task<IActionResult> GetByNotificationId(int notificationId)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int notificationId)
         {
             Notification notification = await _unitOfWork.Notifications.GetAsync(notificationId);
-            return Ok(_mapper.Map<NotificationViewModel>(notification));
+            if (notification == null)
+                return NotFound(notificationId);
+            else
+                return Ok(_mapper.Map<NotificationViewModel>(notification));
         }
 
 

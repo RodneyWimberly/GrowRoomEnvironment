@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 namespace GrowRoomEnvironment.DataAccess.Models
 
 {
-    public class ApplicationUser : IdentityUser, IAuditableEntity
+    public class ApplicationUser : IdentityUser, IAuditableEntity, IConcurrencyTrackingEntity
     {
         public virtual string FriendlyName
         {

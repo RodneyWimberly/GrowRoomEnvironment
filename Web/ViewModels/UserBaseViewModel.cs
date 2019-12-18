@@ -1,6 +1,6 @@
 ﻿namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public abstract class UserBaseViewModel : AuditableViewModelBase
+    public abstract class UserBaseViewModel : ApplicationViewModelBase
     {
         public string Id { get; set; }
 

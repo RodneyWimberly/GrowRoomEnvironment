@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class RoleViewModel : AuditableViewModelBase
+    public class RoleViewModel : ApplicationViewModelBase
     {
         public string Id { get; set; }
 

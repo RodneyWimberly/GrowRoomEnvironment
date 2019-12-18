@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class NotificationRepository : Repository<Notification>, INotificationRepository
+    public class NotificationRepository : ApplicationDbRepository<Notification>, INotificationRepository
     {
-        public NotificationRepository(DbContext context) : base(context)
+        public NotificationRepository(ApplicationDbContext context) : base(context)
         { }
     }
 }

@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class EventConditionRepository : Repository<EventCondition>, IEventConditionRepository
+    public class EventConditionRepository : ApplicationDbRepository<EventCondition>, IEventConditionRepository
     {
-        public EventConditionRepository(DbContext context) : base(context)
+        public EventConditionRepository(ApplicationDbContext context) : base(context)
         { }
     }
 }

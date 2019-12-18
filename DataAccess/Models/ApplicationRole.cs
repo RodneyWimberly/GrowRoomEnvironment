@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GrowRoomEnvironment.DataAccess.Models
 {
-    public class ApplicationRole : IdentityRole, IAuditableEntity
+    public class ApplicationRole : IdentityRole, IAuditableEntity, IConcurrencyTrackingEntity
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ApplicationRole"/>.

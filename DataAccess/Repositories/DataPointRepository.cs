@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class DataPointRepository : Repository<DataPoint>, IDataPointRepository
+    public class DataPointRepository : ApplicationDbRepository<DataPoint>, IDataPointRepository
     {
-        public DataPointRepository(DbContext context) : base(context)
+        public DataPointRepository(ApplicationDbContext context) : base(context)
         { }
     }
 }

@@ -56,7 +56,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     storageManager: LocalStorageService,
     private toastaService: ToastaService,
     private toastaConfig: ToastaConfig,
-    private accountClient: AccountService,
+    private accountService: AccountService,
     private alertService: AlertService,
     private notificationService: NotificationService,
     private appTitleService: AppTitleService,
@@ -334,16 +334,15 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
 
+  get canViewCustomers() {
+      return this.accountService.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewCustomersPermission
+}
 
-    get canViewCustomers() {
-        return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewCustomersPermission
+  get canViewEvents() {
+      return true;
   }
 
-  get canViewProducts() {
-      return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewProductsPermission
-  }
-
-  get canViewOrders() {
-    return true; // eg. viewOrdersPermission
+  get canViewLogs() {
+      return true;
   }
 }

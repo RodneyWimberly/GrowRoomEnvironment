@@ -1,8 +1,9 @@
 ﻿using GrowRoomEnvironment.DataAccess.Core.Enums;
+using System;
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class EventConditionViewModel : AuditableViewModelBase
+    public class EventConditionViewModel : ApplicationViewModelBase
     {
         public int EventConditionId { get; set; }
 
@@ -13,6 +14,7 @@ namespace GrowRoomEnvironment.Web.ViewModels
         public DataPointViewModel DataPoint { get; set; }
 
         public Operators Operator { get; set; }
+        public string OperatorDescription { get; set; }
 
         public string Value { get; set; }
     }

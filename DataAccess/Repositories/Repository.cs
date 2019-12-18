@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity, TDbContext> : IRepository<TEntity> 
+        where TEntity : class
+        where TDbContext:DbContext
     {
-        protected readonly DbContext Context;
+        protected readonly TDbContext Context;
         protected readonly DbSet<TEntity> Entity;
         protected readonly DatabaseFacade Database;
 
-       public Repository(DbContext context)
+       public Repository(TDbContext context)
         {
             Context = context;
             Entity = context.Set<TEntity>();
@@ -44,9 +46,9 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
            await Entity.AddRangeAsync(entities);
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual EntityEntry<TEntity> Update(TEntity entity)
         {
-            Entity.Update(entity);
+            return Entity.Update(entity);
         }
 
         public virtual void UpdateRange(IEnumerable<TEntity> entities)
@@ -54,9 +56,9 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
             Entity.UpdateRange(entities);
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual EntityEntry<TEntity> Remove(TEntity entity)
         {
-            Entity.Remove(entity);
+            return Entity.Remove(entity);
         }
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)
@@ -75,17 +77,17 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
             return await Entity.CountAsync();
         }
 
-        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
+        public virtual IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
         {
             IQueryable<TEntity> query = Entity.Where(predicate);
 
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return query.ToList();
+            return query;
         }
 
-        public async virtual Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
+        public async virtual Task<IList<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate, int pageNumber = -1, int pageSize = -1)
         {
             IQueryable<TEntity> query = Entity.Where(predicate);
             
@@ -115,17 +117,17 @@ namespace GrowRoomEnvironment.DataAccess.Repositories
             return await Entity.FindAsync(id);
         }
 
-        public virtual IEnumerable<TEntity> GetAll(int pageNumber = -1, int pageSize = -1)
+        public virtual IQueryable<TEntity> GetAll(int pageNumber = -1, int pageSize = -1)
         {
             IQueryable<TEntity> query = Entity;
 
             if (pageNumber != -1 && pageSize != -1)
                 query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-            return query.ToList();
+            return query;
         }
 
-        public async virtual Task<IEnumerable<TEntity>> GetAllAsync(int pageNumber = -1, int pageSize = -1)
+        public async virtual Task<IList<TEntity>> GetAllAsync(int pageNumber = -1, int pageSize = -1)
         {
             IQueryable<TEntity> query = Entity;
 

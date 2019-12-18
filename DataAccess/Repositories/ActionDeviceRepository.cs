@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess.Repositories
 {
-    public class ActionDeviceRepository : Repository<ActionDevice>, IActionDeviceRepository
+    public class ActionDeviceRepository : ApplicationDbRepository<ActionDevice>, IActionDeviceRepository
     {
-        public ActionDeviceRepository(DbContext context) : base(context)
+        public ActionDeviceRepository(ApplicationDbContext context) : base(context)
         { }
     }
 }

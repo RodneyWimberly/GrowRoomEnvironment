@@ -2,7 +2,11 @@
 using GrowRoomEnvironment.DataAccess.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,12 +22,26 @@ namespace GrowRoomEnvironment.DataAccess
         public DbSet<Event> Events { get; set; }
         public DbSet<EventCondition> EventConditions { get; set; }
         public DbSet<DataPoint> DataPoints { get; set; }
-        public DbSet<EnumLookup> EnumLookups { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)  { }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
 
-       protected override void OnConfiguring(DbContextOptionsBuilder options)
+        }
+
+        public void DetachAllEntities()
+        {
+            List<EntityEntry> changedEntriesCopy = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added ||
+                            e.State == EntityState.Modified ||
+                            e.State == EntityState.Deleted)
+                .ToList();
+
+            foreach (var entry in changedEntriesCopy)
+                entry.State = EntityState.Detached;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder options)
           => options.UseSqlite("Data Source=./GrowRoomEnvironment.db");
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,14 +54,43 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<ExtendedLog>().HasIndex(r => r.TimeStamp).HasName("IX_Log_TimeStamp");
             builder.Entity<ExtendedLog>().HasIndex(r => r.EventId).HasName("IX_Log_EventId");
             builder.Entity<ExtendedLog>().HasIndex(r => r.Level).HasName("IX_Log_Level");
-            builder.Entity<ExtendedLog>().Property(u => u.Name).HasMaxLength(255);
             builder.Entity<ExtendedLog>().Property(u => u.Browser).HasMaxLength(255);
             builder.Entity<ExtendedLog>().Property(u => u.User).HasMaxLength(255);
             builder.Entity<ExtendedLog>().Property(u => u.Host).HasMaxLength(255);
             builder.Entity<ExtendedLog>().Property(u => u.Path).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.Method).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.StatusCode).HasColumnType("INTEGER");
+            builder.Entity<ExtendedLog>().Property(u => u.ServerVariables).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.Cookies).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.FormVariables).HasMaxLength(255);
+            builder.Entity<ExtendedLog>().Property(u => u.QueryString).HasMaxLength(255);
             builder.Entity<ExtendedLog>().ToTable($"App{nameof(this.Logs)}");
 
             // ApplicationUser
+            builder.Entity<ApplicationUser>().Property(u => u.Id).HasColumnType("TEXT");
+            builder.Entity<ApplicationUser>().HasKey(u => u.Id);
+            builder.Entity<ApplicationUser>().Property(u => u.AccessFailedCount).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().Property(u => u.Email).HasColumnType("TEXT").HasMaxLength(256);
+            builder.Entity<ApplicationUser>().Property(u => u.EmailConfirmed).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().Property(u => u.LockoutEnabled).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().Property(u => u.LockoutEnd).HasColumnType("TEXT");
+            builder.Entity<ApplicationUser>().Property(u => u.NormalizedEmail).HasColumnType("TEXT").HasMaxLength(256);
+            builder.Entity<ApplicationUser>().HasIndex(u => u.NormalizedEmail).HasName("EmailIndex");
+            builder.Entity<ApplicationUser>().Property(u => u.NormalizedUserName).HasColumnType("TEXT").HasMaxLength(256);
+            builder.Entity<ApplicationUser>().HasIndex(u => u.NormalizedUserName).IsUnique().HasName("UserNameIndex"); 
+            builder.Entity<ApplicationUser>().Property(u => u.PasswordHash).HasColumnType("TEXT");
+            builder.Entity<ApplicationUser>().Property(u => u.PhoneNumber).HasColumnType("TEXT");
+            builder.Entity<ApplicationUser>().Property(u => u.PhoneNumberConfirmed).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().Property(u => u.SecurityStamp).HasColumnType("TEXT");
+            builder.Entity<ApplicationUser>().Property(u => u.TwoFactorEnabled).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().Property(u => u.UserName).HasColumnType("TEXT").HasMaxLength(256);
+            //builder.Entity<ApplicationUser>().Property(u => u.FriendlyName).HasMaxLength(255);
+            builder.Entity<ApplicationUser>().Property(u => u.JobTitle).HasMaxLength(255);
+            builder.Entity<ApplicationUser>().Property(u => u.FullName).HasMaxLength(255);
+            builder.Entity<ApplicationUser>().Property(u => u.Configuration).HasMaxLength(255);
+            builder.Entity<ApplicationUser>().Property(u => u.IsEnabled).HasColumnType("INTEGER");
+            builder.Entity<ApplicationUser>().SetupAuditableEntityProperties();
+            builder.Entity<ApplicationUser>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<ApplicationUser>().HasMany(u => u.Claims)
                 .WithOne()
                 .HasForeignKey(c => c.UserId)
@@ -56,6 +103,14 @@ namespace GrowRoomEnvironment.DataAccess
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ApplicationRole
+            builder.Entity<ApplicationRole>().Property(u => u.Id).HasColumnType("TEXT");
+            builder.Entity<ApplicationRole>().HasKey(u => u.Id);
+            builder.Entity<ApplicationRole>().Property(u => u.Name).HasColumnType("TEXT").HasMaxLength(256);
+            builder.Entity<ApplicationRole>().Property(u => u.NormalizedName).HasColumnType("TEXT").HasMaxLength(256);
+            builder.Entity<ApplicationRole>().HasIndex(u => u.NormalizedName).IsUnique().HasName("RoleNameIndex");
+            builder.Entity<ApplicationRole>().Property(u => u.Description).HasMaxLength(255);
+            builder.Entity<ApplicationRole>().SetupAuditableEntityProperties();
+            builder.Entity<ApplicationRole>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<ApplicationRole>()
                 .HasMany(r => r.Claims)
                 .WithOne()
@@ -77,6 +132,8 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<ActionDevice>().HasIndex(e => e.Type);
             builder.Entity<ActionDevice>().Property(e => e.Name).IsRequired().HasMaxLength(100);
             builder.Entity<ActionDevice>().Property(e => e.Parameters).IsRequired().HasMaxLength(200);
+            builder.Entity<ActionDevice>().SetupAuditableEntityProperties();
+            builder.Entity<ActionDevice>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<ActionDevice>().ToTable($"App{nameof(this.ActionDevices)}");
             builder.Entity<ActionDevice>().HasMany(e => e.Events)
                 .WithOne(e => e.ActionDevice)
@@ -91,8 +148,10 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<DataPoint>().Property(e => e.Caption).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().Property(e => e.Icon).IsRequired().HasMaxLength(100);
             builder.Entity<DataPoint>().Property(e => e.Template).IsRequired().HasMaxLength(100);
-            builder.Entity<DataPoint>().Property(e => e.ShowInUI ).IsRequired().HasColumnType("INTEGER");         
+            builder.Entity<DataPoint>().Property(e => e.ShowInUI).IsRequired().HasColumnType("INTEGER");
             builder.Entity<DataPoint>().Property(e => e.Template).IsRequired().HasMaxLength(100);
+            builder.Entity<DataPoint>().SetupAuditableEntityProperties();
+            builder.Entity<DataPoint>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<DataPoint>().ToTable($"App{nameof(this.DataPoints)}");
             builder.Entity<DataPoint>().HasMany(e => e.EventConditions)
                 .WithOne(e => e.DataPoint)
@@ -109,6 +168,8 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<Event>().Property(e => e.Name).IsRequired().HasMaxLength(100);
             builder.Entity<Event>().Property(e => e.ActionDeviceId).IsRequired();
             builder.Entity<Event>().HasIndex(e => e.ActionDeviceId);
+            builder.Entity<Event>().SetupAuditableEntityProperties();
+            builder.Entity<Event>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<Event>().ToTable($"App{nameof(this.Events)}");
             builder.Entity<Event>().HasMany(e => e.EventConditions)
                 .WithOne(e => e.Event)
@@ -131,6 +192,8 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<EventCondition>().HasIndex(e => e.DataPointId);
             builder.Entity<EventCondition>().Property(e => e.Operator).IsRequired();
             builder.Entity<EventCondition>().Property(e => e.Value).IsRequired().HasMaxLength(100);
+            builder.Entity<EventCondition>().SetupAuditableEntityProperties();
+            builder.Entity<EventCondition>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<EventCondition>().ToTable($"App{nameof(this.EventConditions)}");
             builder.Entity<EventCondition>().HasOne(e => e.Event)
                .WithMany(e => e.EventConditions)
@@ -143,17 +206,6 @@ namespace GrowRoomEnvironment.DataAccess
                .IsRequired()
                .OnDelete(DeleteBehavior.SetNull);
 
-            // EnumLookup
-            builder.Entity<EnumLookup>().Property(e => e.Id).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
-            builder.Entity<EnumLookup>().HasIndex(e => e.Id).IsUnique();
-            builder.Entity<EnumLookup>().HasKey(e => e.Id);
-            builder.Entity<EnumLookup>().Property(e => e.Table).IsRequired().HasMaxLength(100);
-            builder.Entity<EnumLookup>().HasIndex(e => e.Table);
-            builder.Entity<EnumLookup>().Property(e => e.EnumName).IsRequired().HasMaxLength(100);
-            builder.Entity<EnumLookup>().HasIndex(e => e.EnumName);
-            builder.Entity<EnumLookup>().Property(e => e.EnumValue).IsRequired().HasColumnType("INTEGER");
-            builder.Entity<EnumLookup>().Property(e => e.EnumDescription).IsRequired().HasMaxLength(250);
-            builder.Entity<EnumLookup>().ToTable($"App{nameof(this.EnumLookups)}");
 
             // Notification
             builder.Entity<Notification>().Property(e => e.NotificationId).IsRequired().HasColumnType("INTEGER").ValueGeneratedOnAdd();
@@ -164,43 +216,46 @@ namespace GrowRoomEnvironment.DataAccess
             builder.Entity<Notification>().Property(e => e.IsRead);
             builder.Entity<Notification>().Property(e => e.IsPinned);
             builder.Entity<Notification>().Property(e => e.Date);
+            builder.Entity<Notification>().SetupAuditableEntityProperties();
+            builder.Entity<Notification>().SetupConcurrencyTrackingEntityProperties();
             builder.Entity<Notification>().ToTable($"App{nameof(this.Notifications)}");
         }
-                     
+
         public override int SaveChanges()
         {
             UpdateAuditEntities();
             return base.SaveChanges();
         }
-        
+
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             UpdateAuditEntities();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             UpdateAuditEntities();
             return base.SaveChangesAsync(cancellationToken);
         }
-        
+
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
         {
             UpdateAuditEntities();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
-        
+
+
         private void UpdateAuditEntities()
         {
-            System.Collections.Generic.IEnumerable<Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry> modifiedEntries = ChangeTracker.Entries()
-                .Where(x => x.Entity is IAuditableEntity && 
+            IEnumerable<EntityEntry> modifiedEntries = ChangeTracker.Entries()
+                .Where(x => x.Entity is ApplicationEntityBase &&
                 (x.State == EntityState.Added || x.State == EntityState.Modified));
 
 
-            foreach (Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry entry in modifiedEntries)
+            foreach (EntityEntry entry in modifiedEntries)
             {
-                IAuditableEntity entity = (IAuditableEntity)entry.Entity;
+                ApplicationEntityBase entity = (ApplicationEntityBase)entry.Entity;
                 DateTime now = DateTime.UtcNow;
 
                 if (entry.State == EntityState.Added)
@@ -216,6 +271,7 @@ namespace GrowRoomEnvironment.DataAccess
 
                 entity.UpdatedDate = now;
                 entity.UpdatedBy = CurrentUserId;
+                entity.ConcurrencyStamp = Guid.NewGuid().ToString();
             }
         }
     }

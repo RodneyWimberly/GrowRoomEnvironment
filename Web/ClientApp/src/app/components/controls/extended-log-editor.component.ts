@@ -53,30 +53,7 @@ export class ExtendedLogEditorComponent {
     }
 
     get errorLevel(): string {
-        var returnValue: string;
-        switch (this.logEdit.level) {
-            case 1: {
-                returnValue = "1 - Debug";
-                break;
-            }
-            case 2: {
-                returnValue = "2 - Information";
-                break;
-            }
-            case 3: {
-                returnValue = "3 - Warning";
-                break;
-            }
-            case 4: {
-                returnValue = "4 - Error";
-                break;
-            }
-            default: {
-                returnValue = this.logEdit.level + " - Unknown";
-                break;
-            }
-        }
-        return returnValue;
+      return this.logEdit.level + " - " + this.logEdit.levelDescription;
     }
 
     set errorLevel(value: string) {

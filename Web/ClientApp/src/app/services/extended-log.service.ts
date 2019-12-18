@@ -12,13 +12,13 @@ export class ExtendedLogService {
     }
 
     getExtendedLogs(pageNumber?: number, pageSize?: number) {
-        return pageNumber && pageSize ? this.extendedLogEndpointService.getExtendedLogs(pageNumber, pageSize) :
+        return pageNumber && pageSize ? this.extendedLogEndpointService.getAllPaged(pageNumber, pageSize) :
             this.extendedLogEndpointService.getAll();
     }
 
     getExtendedLogsByLevel(level: number, pageNumber?: number, pageSize?: number) {
-        return pageNumber && pageSize ? this.extendedLogEndpointService.getExtendedLogsByLevel(level, pageNumber, pageSize) :
-            this.extendedLogEndpointService.getAllByLevel(level);
+        return pageNumber && pageSize ? this.extendedLogEndpointService.getByLevelPaged(level, pageNumber, pageSize) :
+            this.extendedLogEndpointService.getByLevel(level);
     }
 
     clearExtendedLogs() {

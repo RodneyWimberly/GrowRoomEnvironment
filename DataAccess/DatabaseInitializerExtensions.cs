@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using GrowRoomEnvironment.Contracts.DataAccess;
 using GrowRoomEnvironment.DataAccess;
 using GrowRoomEnvironment.DataAccess.Core;
 using GrowRoomEnvironment.DataAccess.Core.Constants;
@@ -15,13 +17,27 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace GrowRoomEnvironment.Web
+namespace GrowRoomEnvironment.DataAccess
 {
     public static class DatabaseInitializerExtensions
     {
+        public static void SetupAuditableEntityProperties<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder) where TEntity : class, IAuditableEntity
+        {
+            entityTypeBuilder.Property(e => e.CreatedBy);
+            entityTypeBuilder.Property(e => e.CreatedDate).HasConversion(v => v.ToUniversalTime().ToString("o", CultureInfo.CurrentCulture), v => DateTime.Parse(v, null, DateTimeStyles.AssumeUniversal));
+            entityTypeBuilder.Property(e => e.UpdatedBy);
+            entityTypeBuilder.Property(e => e.UpdatedDate).HasConversion(v => v.ToUniversalTime().ToString("o", CultureInfo.CurrentCulture), v => DateTime.Parse(v, null, DateTimeStyles.AssumeUniversal));
+        }
+
+        public static void SetupConcurrencyTrackingEntityProperties<TEntity>(this EntityTypeBuilder<TEntity> entityTypeBuilder) where TEntity : class, IConcurrencyTrackingEntity
+        {
+            entityTypeBuilder.Property(e => e.ConcurrencyStamp).IsConcurrencyToken();
+        }
+
         public static IApplicationBuilder InitializeDatabase(this IApplicationBuilder app)
         {
             return app.InitializeDatabaseAsync().Result;
@@ -90,6 +106,8 @@ namespace GrowRoomEnvironment.Web
             using (IServiceScope serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 ApplicationDbContext applicationDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                applicationDbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+                applicationDbContext.ChangeTracker.LazyLoadingEnabled = false;
                 IAccountManager accountManager = serviceScope.ServiceProvider.GetRequiredService<IAccountManager>();
                 ILogger logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
 
@@ -121,7 +139,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_1 = new DataPoint
                     {
-                        DataPointId = 1,
                         Caption = "Air Temperature",
                         Icon = "thermostat.jpg",
                         Template = "OffOnValueTemplate",
@@ -132,7 +149,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_2 = new DataPoint
                     {
-                        DataPointId = 2,
                         Caption = "Air Humidity",
                         Icon = "Humidity.png",
                         Template = "OffOnValueTemplate",
@@ -143,7 +159,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_3 = new DataPoint
                     {
-                        DataPointId = 3,
                         Caption = "CO2 Parts per million",
                         Icon = "CO2.png",
                         Template = "PPMValueTemplate",
@@ -154,7 +169,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_4 = new DataPoint
                     {
-                        DataPointId = 4,
                         Caption = "Time",
                         Icon = "Time.png",
                         Template = "OffOnDateTimeTemplate",
@@ -165,7 +179,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_5 = new DataPoint
                     {
-                        DataPointId = 5,
                         Caption = "Lights currently one",
                         Icon = "LightOn.png",
                         Template = "OffOnValueTemplate",
@@ -176,7 +189,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_6 = new DataPoint
                     {
-                        DataPointId = 6,
                         Caption = "Plant Growth Medium Moisture Level",
                         Icon = "Moisture.png",
                         Template = "LevelTemplate",
@@ -187,7 +199,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_7 = new DataPoint
                     {
-                        DataPointId = 7,
                         Caption = "Nutrient pH",
                         Icon = "ph.png",
                         Template = "LevelTemplate",
@@ -198,7 +209,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_8 = new DataPoint
                     {
-                        DataPointId = 8,
                         Caption = "Nutrient Parts per million",
                         Icon = "tds.png",
                         Template = "LevelTemplate",
@@ -209,7 +219,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_9 = new DataPoint
                     {
-                        DataPointId = 9,
                         Caption = "Nutrient Temperature",
                         Icon = "Temperature.png",
                         Template = "LevelTemplate",
@@ -220,7 +229,6 @@ namespace GrowRoomEnvironment.Web
 
                     DataPoint dp_10 = new DataPoint
                     {
-                        DataPointId = 10,
                         Caption = "Nutrient Volume",
                         Icon = "volume.jpg",
                         Template = "LevelTemplate",
@@ -278,148 +286,6 @@ namespace GrowRoomEnvironment.Web
 
                     await applicationDbContext.SaveChangesAsync();
                     logger.LogInformation("Seeding Notifications completed");
-                }
-
-                // EnumLooks
-                if (!await applicationDbContext.EnumLookups.AnyAsync())
-                {
-                    logger.LogInformation("Generating EnumLookups");
-
-                    // ActionDeviceStates
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceStates",
-                        EnumValue = 0,
-                        EnumDescription = "Off",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceStates",
-                        EnumValue = 1,
-                        EnumDescription = "On",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-
-                    // ActionDeviceTypes
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 0,
-                        EnumDescription = "X10",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 1,
-                        EnumDescription = "ZWave",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 2,
-                        EnumDescription = "ZeeBee",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppActionDevice",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 3,
-                        EnumDescription = "WiFi",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-
-                    // ErrorLevels
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppLogs",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 1,
-                        EnumDescription = "Debug",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppLogs",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 2,
-                        EnumDescription = "Information",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppLogs",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 3,
-                        EnumDescription = "Warning",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppLogs",
-                        EnumName = "ActionDeviceTypes",
-                        EnumValue = 4,
-                        EnumDescription = "Error",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-
-                    // Operators
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppEventConditions",
-                        EnumName = "Operators",
-                        EnumValue = 0,
-                        EnumDescription = "Equal",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppEventConditions",
-                        EnumName = "Operators",
-                        EnumValue = 1,
-                        EnumDescription = "NotEqual",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppEventConditions",
-                        EnumName = "Operators",
-                        EnumValue = 2,
-                        EnumDescription = "GreaterThan",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.EnumLookups.AddAsync(new EnumLookup
-                    {
-                        Table = "AppEventConditions",
-                        EnumName = "Operators",
-                        EnumValue = 3,
-                        EnumDescription = "LessThan",
-                        CreatedDate = DateTime.UtcNow,
-                        UpdatedDate = DateTime.UtcNow
-                    });
-                    await applicationDbContext.SaveChangesAsync();
-                    logger.LogInformation("Seeding EnumLookups completed");
                 }
 
                 // ActionDevices

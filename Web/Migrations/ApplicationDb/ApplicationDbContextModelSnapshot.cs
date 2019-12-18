@@ -14,7 +14,7 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.1");
+                .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("GrowRoomEnvironment.DataAccess.Models.ActionDevice", b =>
                 {
@@ -22,11 +22,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -46,7 +51,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ActionDeviceId");
@@ -71,11 +77,13 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT")
@@ -88,7 +96,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -113,12 +122,14 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Configuration")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -129,13 +140,15 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("JobTitle")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -169,7 +182,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<string>("UpdatedBy")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
@@ -199,11 +213,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(100);
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Icon")
@@ -223,7 +242,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("DataPointId");
@@ -232,56 +252,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .IsUnique();
 
                     b.ToTable("AppDataPoints");
-                });
-
-            modelBuilder.Entity("GrowRoomEnvironment.DataAccess.Models.EnumLookup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EnumDescription")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(250);
-
-                    b.Property<string>("EnumName")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
-
-                    b.Property<int>("EnumValue")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Table")
-                        .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("UpdatedBy")
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(256);
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EnumName");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("Table");
-
-                    b.ToTable("AppEnumLookups");
                 });
 
             modelBuilder.Entity("GrowRoomEnvironment.DataAccess.Models.Event", b =>
@@ -293,11 +263,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<int>("ActionDeviceId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -312,7 +287,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("EventId");
@@ -333,11 +309,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("DataPointId")
@@ -353,7 +334,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
@@ -383,8 +365,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
 
+                    b.Property<string>("Cookies")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
                     b.Property<int>("EventId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("FormVariables")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
 
                     b.Property<string>("Host")
                         .HasColumnType("TEXT")
@@ -396,6 +386,10 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<string>("Message")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Method")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
@@ -403,6 +397,17 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                     b.Property<string>("Path")
                         .HasColumnType("TEXT")
                         .HasMaxLength(255);
+
+                    b.Property<string>("QueryString")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("ServerVariables")
+                        .HasColumnType("TEXT")
+                        .HasMaxLength(255);
+
+                    b.Property<int>("StatusCode")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset>("TimeStamp")
                         .HasColumnType("TEXT");
@@ -436,11 +441,16 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(250);
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<string>("CreatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -461,7 +471,8 @@ namespace GrowRoomEnvironment.Web.Migrations.ApplicationDb
                         .HasColumnType("TEXT")
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<string>("UpdatedDate")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("NotificationId");

@@ -2,7 +2,7 @@
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class NotificationViewModel : AuditableViewModelBase
+    public class NotificationViewModel : ApplicationViewModelBase
     {
         public int NotificationId { get; set; }
         public string Header { get; set; }

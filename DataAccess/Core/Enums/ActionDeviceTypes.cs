@@ -5,6 +5,7 @@
         X10,
         ZWave,
         ZeeBee,
+        iHome,
         WiFi
     }
 }

@@ -2,7 +2,7 @@
 
 namespace GrowRoomEnvironment.Web.ViewModels
 {
-    public class DataPointViewModel : AuditableViewModelBase
+    public class DataPointViewModel : ApplicationViewModelBase
     {
         public int DataPointId { get; set; }
         public string Caption { get; set; }
