@@ -1,0 +1,110 @@
+<div>
+  <form *ngIf="formResetToggle" [attr.autocomplete]="'NaN'" name="eventForm" #f="ngForm" novalidate
+        (ngSubmit)="save()">
+
+    <!-- EventId -->
+    <div class="form-group row">
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="eventId-{{uniqueId}}">{{'events.editor.EventId' | translate}}</label>
+      <div [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <p class="form-control-plaintext">{{event.eventId}}</p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="!isEditMode" [class.edit-separator-hr]="isEditMode" />
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="form-group row">
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="name-{{uniqueId}}">{{'events.editor.Name' | translate}}</label>
+      <div *ngIf="!isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <p class="form-control-plaintext">{{event.name}}</p>
+      </div>
+      <div *ngIf="isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <input autofocus type="text" attr.id="name-{{uniqueId}}" name="name" placeholder="Enter name" class="form-control" [(ngModel)]="event.name" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="!isEditMode" [class.edit-separator-hr]="isEditMode" />
+      </div>
+    </div>
+
+    <!-- Action Device -->
+    <div class="form-group row has-feedback-icon">
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="actionDevice-{{uniqueId}}">{{'events.editor.ActionDevice' | translate}}</label>
+      <div *ngIf="!isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <p class="form-control-plaintext">{{event.actionDeviceId}}</p>
+      </div>
+      <div *ngIf="isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <select attr.id="actionDevice-{{uniqueId}}" name="actionDevice" class="form-control" [(ngModel)]="event.actionDeviceId" #actionDevice="ngModel">
+          <option *ngFor="let device of actionDevices" [ngValue]="device.actionDeviceId">{{device.name}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="!isEditMode" [class.edit-separator-hr]="isEditMode" />
+      </div>
+    </div>
+
+    <!-- State -->
+    <div class="form-group row has-feedback-icon">
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="state-{{uniqueId}}">{{'events.editor.State' | translate}}</label>
+      <div *ngIf="!isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <p class="form-control-plaintext">{{event.state}}</p>
+      </div>
+      <div *ngIf="isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <select attr.id="state-{{uniqueId}}" name="state" class="form-control" [(ngModel)]="event.state" #state="ngModel">
+          <option *ngFor="let stateKey of stateKeys" [ngValue]="stateKey" [label]="states[stateKey]"></option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="isEditMode" class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="!isEditMode" [class.edit-separator-hr]="isEditMode" />
+      </div>
+    </div>
+
+    <!-- Event Conditions -->
+    <div class="form-group row has-feedback-icon" *ngIf="event.eventId != undefined">
+      <label [class.col-lg-3]="isViewOnly" [class.col-lg-2]="!isViewOnly" class="col-form-label" for="eventconditions-{{uniqueId}}">{{'events.editor.EventConditions' | translate}}</label>
+      <div *ngIf="!isEditMode" [class.col-lg-9]="isViewOnly" [class.col-lg-10]="!isViewOnly">
+        <ul>
+          <li *ngFor="let condition of event.eventConditions">
+            <span class="event-conditions badge badge-pill badge-secondary">{{condition.dataPoint.caption}} {{eventService.getOperatorSymbol(condition.operator)}} '{{condition.value}}'</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="form-group row has-feedback-icon" *ngIf="event.eventId != undefined">
+      <div *ngIf="isEditMode" [class.col-lg-11]="isViewOnly" [class.col-lg-12]="!isViewOnly">
+        <event-conditions-management [event]="event" [dataPoints]="dataPoints" (eventConditionsChanged)="onEventConditionsChanged($event)" (editModeChanged)="onChildEditModeChanged($event)"></event-conditions-management>
+      </div>
+    </div>
+
+    <div *ngIf="isEditMode" class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="!isEditMode" [class.edit-separator-hr]="isEditMode" />
+      </div>
+    </div>
+
+    <div *ngIf="!isViewOnly" class="form-group row">
+      <div class="col-sm-12">
+        <div ngPreserveWhitespaces class="float-right">
+          <button *ngIf="!isEditMode" type="button" (click)="close()" class="btn btn-outline-secondary"><i class='fa fa-close'></i> {{'events.editor.Close' | translate}}</button>
+          <button *ngIf="isEditMode" type="button" (click)="cancel()" class="btn btn-danger" [disabled]="isSaving || isChildEditMode"><i class='fa fa-times'></i> {{'events.editor.Cancel' | translate}}</button>
+          <button *ngIf="isEditMode" type="submit" class="btn btn-primary" [disabled]="isSaving || isChildEditMode">
+            <i *ngIf="!isSaving" class='fa fa-save'></i><i *ngIf="isSaving" class='fa fa-circle-o-notch fa-spin'></i> {{isSaving ? ('events.editor.Saving' | translate) : ('events.editor.Save' | translate)}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </form>
+</div>

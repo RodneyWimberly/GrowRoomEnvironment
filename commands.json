@@ -1,0 +1,15 @@
+{
+  "commands": {
+    "StartNodeServer": {
+      "fileName": "cmd.exe",
+      "workingDirectory": ".",
+      "arguments": "/c StartNodeServer.cmd"
+    },
+    "StartNodeServer 272975697": {
+      "fileName": "powershell.exe",
+      "workingDirectory": ".",
+      "arguments": "-ExecutionPolicy Bypass -NonInteractive -File StartNodeServer.ps1"
+    }
+  }
+, "-vs-binding":{"ProjectOpened":["StartNodeServer 272975697"]}
+}

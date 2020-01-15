@@ -3,7 +3,8 @@ import { Routes, RouterModule, DefaultUrlSerializer, UrlSerializer, UrlTree } fr
 
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { ExtendedLogComponent } from './components/extended-log/extended-log.component';
+import { EventsComponent } from './components/events/events.component';
+import { ExtendedLogsComponent } from './components/extended-logs/extended-logs.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
@@ -37,7 +38,8 @@ export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuardService], data: { title: 'Home' } },
     { path: 'login', component: LoginComponent, data: { title: 'Login' } },
-    { path: 'logs', component: ExtendedLogComponent, canActivate: [AuthGuardService], data: { title: 'Logs' } },
+    { path: 'events', component: EventsComponent, canActivate: [AuthGuardService], data: { title: 'Logs' } },
+    { path: 'logs', component: ExtendedLogsComponent, canActivate: [AuthGuardService], data: { title: 'Logs' } },
     { path: 'settings', component: SettingsComponent, canActivate: [AuthGuardService], data: { title: 'Settings' } },
     { path: 'about', component: AboutComponent, data: { title: 'About Us' } },
     { path: 'home', redirectTo: '/', pathMatch: 'full' },

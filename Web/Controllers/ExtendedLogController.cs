@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Arch.EntityFrameworkCore.UnitOfWork;
+using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 using AutoMapper;
-using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
 using IdentityServer4.AccessTokenValidation;
@@ -10,75 +9,89 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.Web.Controllers
 {
-    //[Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = IdentityServerAuthenticationDefaults.AuthenticationScheme)]
     [Route("api/[controller]")]
     [ApiController]
     public class ExtendedLogController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<ExtendedLog> _repository;
         private readonly ILogger _logger;
         private readonly IAuthorizationService _authorizationService;
 
-        public ExtendedLogController(IMapper mapper, IUnitOfWork unitOfWork, ILogger<ExtendedLogController> logger,  IAuthorizationService authorizationService)
+        public ExtendedLogController(IMapper mapper, IUnitOfWork unitOfWork, ILogger<ExtendedLogController> logger, IAuthorizationService authorizationService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _repository = _unitOfWork.GetRepository<ExtendedLog>();
             _logger = logger;
             _authorizationService = authorizationService;
         }
 
         [HttpGet]
-        //[Authorize(Authorization.Policies.)]
+        [Authorize(Authorization.Policies.ViewLogsPolicy)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
         public async Task<IActionResult> GetAll()
         {
-            return await GetExtendedLogs(-1, -1);
+            return await GetAllPaged(0, 1000);
         }
 
         [HttpGet("{pageNumber:int}/{pageSize:int}")]
-        //[Authorize(Authorization.Policies.)]
+        [Authorize(Authorization.Policies.ViewLogsPolicy)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetExtendedLogs(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetAllPaged(int pageNumber, int pageSize)
         {
-            IEnumerable<ExtendedLog> extendedLogs = await _unitOfWork.ExtendedLogs.GetAllAsync(pageNumber, pageSize);
-            return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
+            IPagedList<ExtendedLog> extendedLogs = await _repository.GetPagedListAsync(pageIndex: pageNumber, pageSize: pageSize);
+            return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs.Items));
         }
 
-        [HttpGet("level/{level:int}")]
-        //[Authorize(Authorization.Policies.)]
+        [HttpGet("level/{level}")]
+        [Authorize(Authorization.Policies.ViewLogsPolicy)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetAllByLevel(int level)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByLevel(int level)
         {
-            return await GetExtendedLogsByLevel(level, -1, -1);
+            return await GetByLevelPaged(level, 0, 1000);
         }
 
-        [HttpGet("level/{level:int}/{pageNumber:int}/{pageSize:int}")]
-        //[Authorize(Authorization.Policies.)]
+        [HttpGet("level/{level}/{pageNumber:int}/{pageSize:int}")]
+        [Authorize(Authorization.Policies.ViewLogsPolicy)]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ExtendedLogViewModel>))]
-        public async Task<IActionResult> GetExtendedLogsByLevel(int level, int pageNumber, int pageSize)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> GetByLevelPaged(int level, int pageNumber, int pageSize)
         {
-            IEnumerable<ExtendedLog> extendedLogs = await _unitOfWork.ExtendedLogs.FindAsync(l => l.Level == level, pageNumber, pageSize);
-            return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs));
+            IPagedList<ExtendedLog> extendedLogs = await _repository.GetPagedListAsync(l => l.Level == level, pageIndex: pageNumber, pageSize: pageSize);
+            if (extendedLogs.Items.Count > 0)
+                return Ok(_mapper.Map<IEnumerable<ExtendedLogViewModel>>(extendedLogs.Items));
+            else
+                return NotFound(level);
         }
 
         [HttpGet("{id:int}")]
-        //[Authorize(Authorization.Policies.)]
+        [Authorize(Authorization.Policies.ViewLogsPolicy)]
         [ProducesResponseType(200, Type = typeof(ExtendedLogViewModel))]
-        public async Task<IActionResult> GetById(int id)
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int id)
         {
-            ExtendedLog extendedLog = await _unitOfWork.ExtendedLogs.GetAsync(id);
-            return Ok(_mapper.Map<ExtendedLogViewModel>(extendedLog));
+            ExtendedLog extendedLog = await _repository.FindAsync(id);
+            if (extendedLog == null)
+                return NotFound(id);
+            else
+                return Ok(_mapper.Map<ExtendedLogViewModel>(extendedLog));
         }
 
         [HttpDelete]
         [ProducesResponseType(204)]
+        [Authorize(Authorization.Policies.ManageLogsPolicy)]
         public async Task<IActionResult> DeleteAll()
         {
-            _unitOfWork.ExtendedLogs.RemoveRange(await _unitOfWork.ExtendedLogs.GetAllAsync());
+            _unitOfWork.ExecuteSqlCommand("Delete from AppExtendedLogs");
             await _unitOfWork.SaveChangesAsync();
             return NoContent();
         }
@@ -86,13 +99,14 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpDelete("{id:int}")]
         [ProducesResponseType(200, Type = typeof(ExtendedLogViewModel))]
         [ProducesResponseType(404)]
+        [Authorize(Authorization.Policies.ManageLogsPolicy)]
         public async Task<IActionResult> Delete(int id)
         {
-            ExtendedLog extendedLog = _unitOfWork.ExtendedLogs.Get(id);
-            if(extendedLog == null)
+            ExtendedLog extendedLog = await _repository.FindAsync(id);
+            if (extendedLog == null)
                 return NotFound(id);
             ExtendedLogViewModel extendedLogVM = _mapper.Map<ExtendedLogViewModel>(extendedLog);
-            _unitOfWork.ExtendedLogs.Remove(extendedLog);
+            _repository.Delete(extendedLog);
             await _unitOfWork.SaveChangesAsync();
             return Ok(extendedLogVM);
         }
@@ -101,6 +115,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpPost]
         [ProducesResponseType(201, Type = typeof(ExtendedLogViewModel))]
         [ProducesResponseType(400)]
+        [Authorize(Authorization.Policies.ManageLogsPolicy)]
         public async Task<IActionResult> Post([FromBody]ExtendedLogViewModel extendedLogVM)
         {
             if (ModelState.IsValid)
@@ -108,7 +123,7 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (extendedLogVM == null)
                     return BadRequest($"{nameof(extendedLogVM)} cannot be null");
                 ExtendedLog extendedLog = _mapper.Map<ExtendedLog>(extendedLogVM);
-                EntityEntry<ExtendedLog> addedExtendedLog = await _unitOfWork.ExtendedLogs.AddAsync(extendedLog);
+                EntityEntry<ExtendedLog> addedExtendedLog = await _repository.InsertAsync(extendedLog);
                 await _unitOfWork.SaveChangesAsync();
                 extendedLogVM = _mapper.Map<ExtendedLogViewModel>(addedExtendedLog.Entity);
                 return CreatedAtAction("GetById", new { id = extendedLogVM.Id }, extendedLogVM);
@@ -120,6 +135,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpPut("{id:int}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Authorization.Policies.ManageLogsPolicy)]
         public async Task<IActionResult> Put(int id, [FromBody]ExtendedLogViewModel extendedLogVM)
         {
             if (ModelState.IsValid)
@@ -129,7 +145,7 @@ namespace GrowRoomEnvironment.Web.Controllers
 
                 if (id != extendedLogVM.Id)
                     return BadRequest("Conflicting ExtendedLog id in parameter and model data");
-                _unitOfWork.ExtendedLogs.Update(_mapper.Map<ExtendedLog>(extendedLogVM));
+                _repository.Update(_mapper.Map<ExtendedLog>(extendedLogVM));
                 await _unitOfWork.SaveChangesAsync();
                 return NoContent();
             }
@@ -140,6 +156,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [HttpPatch("{id:int}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
+        [Authorize(Authorization.Policies.ManageLogsPolicy)]
         public async Task<IActionResult> Patch(int id, [FromBody]JsonPatchDocument<ExtendedLogViewModel> patch)
         {
             if (ModelState.IsValid)
@@ -147,16 +164,16 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (patch == null)
                     return BadRequest($"{nameof(patch)} cannot be null");
 
-                ExtendedLogViewModel extendedLogVM = _mapper.Map<ExtendedLogViewModel>(await _unitOfWork.ExtendedLogs.GetAsync(id));
+                ExtendedLogViewModel extendedLogVM = _mapper.Map<ExtendedLogViewModel>(await _repository.FindAsync(id));
                 patch.ApplyTo(extendedLogVM, e => ModelState.AddModelError("", e.ErrorMessage));
                 if (ModelState.IsValid)
                 {
-                    _unitOfWork.ExtendedLogs.Update(_mapper.Map<ExtendedLog>(extendedLogVM));
+                    _repository.Update(_mapper.Map<ExtendedLog>(extendedLogVM));
                     await _unitOfWork.SaveChangesAsync();
                     return NoContent();
                 }
             }
-            
+
             return BadRequest(ModelState);
         }
 

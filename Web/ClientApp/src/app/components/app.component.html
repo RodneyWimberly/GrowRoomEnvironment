@@ -16,7 +16,10 @@
           <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <a class="nav-link" routerLink=""><i class="fa fa-home"></i></a>
           </li>
-          <li class="nav-item" routerLinkActive="active" *ngIf="canViewCustomers">
+          <li class="nav-item" routerLinkActive="active" *ngIf="canViewEvents">
+            <a class="nav-link" routerLink="/events">{{'mainMenu.Events' | translate}}</a>
+          </li>
+          <li class="nav-item" routerLinkActive="active" *ngIf="canViewLogs">
             <a class="nav-link" routerLink="/logs">{{'mainMenu.Logs' | translate}}</a>
           </li>
           <li class="nav-item" routerLinkActive="active">
@@ -34,7 +37,7 @@
           <span *ngIf="newNotificationCount > 0" class="badge badge-pill badge-secondary">{{newNotificationCount}}</span>
         </a>
         <ng-template #popTemplate>
-          <notifications-viewer [isViewOnly]="true"></notifications-viewer>
+          <notifications-management [isViewOnly]="true"></notifications-management>
         </ng-template>
         <span class="app-component navbar-text">, </span>
         <ul class="app-component nav nav-pills ml-lg-2 flex-column flex-lg-row">

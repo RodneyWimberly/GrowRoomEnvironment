@@ -2,6 +2,21 @@
 {
     public class Policies
     {
+        ///<summary>Policy to allow viewing log records.</summary>
+        public const string ViewLogsPolicy = "View Logs";
+
+        ///<summary>Policy to allow adding, removing and updating log records.</summary>
+        public const string ManageLogsPolicy = "Manage Logs";
+
+        ///<summary>Policy to allow viewing event records.</summary>
+        public const string ViewEventsPolicy = "View Events";
+
+        ///<summary>Policy to allow adding, removing and updating event records.</summary>
+        public const string ManageEventsPolicy = "Manage Events";
+
+        ///<summary>Policy to allow executing events.</summary>
+        public const string ExecuteEventsPolicy = "Execute Events";
+
         ///<summary>Policy to allow viewing all user records.</summary>
         public const string ViewAllUsersPolicy = "View All Users";
 

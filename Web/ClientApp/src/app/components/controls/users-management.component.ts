@@ -5,7 +5,7 @@ import { AlertService, DialogType, MessageSeverity } from '../../services/alert.
 import { AppTranslationService } from '../../services/app-translation.service';
 import { AccountService } from "../../services/account.service";
 import { Utilities } from '../../helpers/utilities';
-import { UserInfoComponent } from './user-info.component';
+import { UserEditorComponent } from './user-editor.component';
 import * as generated from '../../services/endpoint.services';
 
 @Component({
@@ -41,7 +41,7 @@ export class UsersManagementComponent implements OnInit, AfterViewInit {
     editorModal: ModalDirective;
 
     @ViewChild('userEditor', { static: true })
-    userEditor: UserInfoComponent;
+    userEditor: UserEditorComponent;
 
     constructor(private alertService: AlertService, private translationService: AppTranslationService, private accountClient: AccountService) {
     }

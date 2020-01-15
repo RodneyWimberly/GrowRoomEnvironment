@@ -14,7 +14,6 @@ import { LoginComponent } from '../components/login/login.component';
 
 const alertify: any = require('../assets/scripts/alertify.js');
 
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -51,12 +50,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   constructor(
     storageManager: LocalStorageService,
     private toastaService: ToastaService,
     private toastaConfig: ToastaConfig,
-    private accountClient: AccountService,
+    private accountService: AccountService,
     private alertService: AlertService,
     private notificationService: NotificationService,
     private appTitleService: AppTitleService,
@@ -76,7 +74,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.appTitleService.appName = this.appTitle;
   }
 
-
   ngAfterViewInit() {
 
     this.modalLoginControls.changes.subscribe((controls: QueryList<any>) => {
@@ -94,11 +91,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   onLoginModalShown() {
     this.alertService.showStickyMessage('Session Expired', 'Your Session has expired. Please log in again', MessageSeverity.info);
   }
-
 
   onLoginModalHidden() {
     this.alertService.resetStickyMessage();
@@ -110,11 +105,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-
   onLoginModalHide() {
     this.alertService.resetStickyMessage();
   }
-
 
   ngOnInit() {
     this.isUserLoggedIn = this.authEndpointService.isLoggedIn;
@@ -158,19 +151,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   ngOnDestroy() {
     this.unsubscribeNotifications();
   }
-
 
   private unsubscribeNotifications() {
     if (this.notificationsLoadingSubscription) {
       this.notificationsLoadingSubscription.unsubscribe();
     }
   }
-
-
 
   initNotificationsLoading() {
 
@@ -190,13 +179,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
   }
 
-
   markNotificationsAsRead() {
 
     const recentNotifications = this.notificationService.recentNotifications;
 
     if (recentNotifications.length) {
-      this.notificationService.readUnreadNotification(recentNotifications.map(n => n.id), true)
+      this.notificationService.readUnreadNotification(recentNotifications.map(n => n.notificationId), true)
         .subscribe(response => {
           for (const n of recentNotifications) {
             n.isRead = true;
@@ -211,8 +199,6 @@ export class AppComponent implements OnInit, AfterViewInit {
           });
     }
   }
-
-
 
   showDialog(dialog: AlertDialog) {
 
@@ -257,8 +243,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   showToast(alert: AlertCommand) {
 
     if (alert.operation == 'clear') {
@@ -300,7 +284,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       toastOptions.timeout = 4000;
     }
 
-
     switch (alert.message.severity) {
       case MessageSeverity.default: this.toastaService.default(toastOptions); break;
       case MessageSeverity.info: this.toastaService.info(toastOptions); break;
@@ -311,39 +294,28 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-
   logout() {
     this.authEndpointService.logout();
     this.authEndpointService.redirectLogoutUser();
   }
 
-
   getYear() {
     return new Date().getUTCFullYear();
   }
-
 
   get userName(): string {
     return this.authEndpointService.currentUser ? this.authEndpointService.currentUser.userName : '';
   }
 
-
   get fullName(): string {
     return this.authEndpointService.currentUser ? this.authEndpointService.currentUser.fullName : '';
   }
 
-
-
-    get canViewCustomers() {
-        return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewCustomersPermission
+  get canViewEvents() {
+    return this.accountService.userHasPermission(generated.PermissionValues.ViewEvents);
   }
 
-  get canViewProducts() {
-      return this.accountClient.userHasPermission(generated.PermissionValues.ViewUsers); // eg. viewProductsPermission
-  }
-
-  get canViewOrders() {
-    return true; // eg. viewOrdersPermission
+  get canViewLogs() {
+    return this.accountService.userHasPermission(generated.PermissionValues.ViewLogs);
   }
 }

@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using GrowRoomEnvironment.Contracts.DataAccess;
+﻿using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace GrowRoomEnvironment.DataAccess.Models
 {
-    public class ApplicationRole : IdentityRole, IAuditableEntity
+    public class ApplicationRole : IdentityRole, IAuditableEntity, IConcurrencyTrackingEntity
     {
         /// <summary>
         /// Initializes a new instance of <see cref="ApplicationRole"/>.
@@ -54,6 +55,11 @@ namespace GrowRoomEnvironment.DataAccess.Models
         public string UpdatedBy { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
+        #endregion
+
+        #region IConcurrencyTrackingEntity
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
         #endregion
 
         /// <summary>

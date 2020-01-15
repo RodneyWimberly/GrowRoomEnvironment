@@ -27,6 +27,10 @@ import { AuthStorageService } from './services/auth-storage.service';
 import { NotificationService } from './services/notification.service';
 import { NotificationMockService } from './services/notification-mock.service';
 import { AccountService } from "./services/account.service";
+import { EventService } from "./services/event.service";
+import { EventConditionService } from "./services/event-condition.service";
+import { ActionDeviceService } from "./services/action-device.service";
+import { DataPointService } from "./services/data-point.service";
 import { ExtendedLogService } from "./services/extended-log.service";
 import * as generated from './services/endpoint.services';
 
@@ -38,6 +42,7 @@ import { BootstrapToggleDirective } from './directives/bootstrap-toggle.directiv
 import { BootstrapSelectDirective } from './directives/bootstrap-select.directive';
 import { BootstrapDatepickerDirective } from './directives/bootstrap-datepicker.directive';
 import { GroupByPipe } from './pipes/group-by.pipe';
+import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 
 import { AppComponent } from './components/app.component';
 import { LoginComponent } from './components/login/login.component';
@@ -45,12 +50,17 @@ import { HomeComponent } from './components/home/home.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { ExtendedLogComponent } from './components/extended-log/extended-log.component';
+import { ExtendedLogsComponent } from './components/extended-logs/extended-logs.component';
+import { EventsComponent } from './components/events/events.component';
 
-import { ExtendedLogManagementComponent } from './components/controls/extended-log-management.component';
-import { NotificationsViewerComponent } from './components/controls/notifications-viewer.component';
+import { EventConditionsManagementComponent } from './components/controls/event-conditions-management.component';
+import { EventsManagementComponent } from './components/controls/events-management.component';
+import { EventEditorComponent } from './components/controls/event-editor.component';
+import { ExtendedLogsManagementComponent } from './components/controls/extended-logs-management.component';
+import { ExtendedLogEditorComponent } from './components/controls/extended-log-editor.component';
+import { NotificationsManagementComponent } from './components/controls/notifications-management.component';
 import { SearchBoxComponent } from './components/controls/search-box.component';
-import { UserInfoComponent } from './components/controls/user-info.component';
+import { UserEditorComponent } from './components/controls/user-editor.component';
 import { UserPreferencesComponent } from './components/controls/user-preferences.component';
 import { UsersManagementComponent } from './components/controls/users-management.component';
 import { RolesManagementComponent } from './components/controls/roles-management.component';
@@ -84,13 +94,14 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
         AppComponent,
         LoginComponent,
         HomeComponent,
-        ExtendedLogComponent, ExtendedLogManagementComponent,
+        EventsComponent, EventsManagementComponent, EventEditorComponent, EventConditionsManagementComponent,
+        ExtendedLogsComponent, ExtendedLogsManagementComponent, ExtendedLogEditorComponent,
         SettingsComponent,
-        UsersManagementComponent, UserInfoComponent, UserPreferencesComponent,
+        UsersManagementComponent, UserEditorComponent, UserPreferencesComponent,
         RolesManagementComponent, RoleEditorComponent,
         AboutComponent,
         NotFoundComponent,
-        NotificationsViewerComponent,
+        NotificationsManagementComponent,
         SearchBoxComponent,
         EqualValidatorDirective,
         LastElementDirective,
@@ -99,7 +110,7 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
         BootstrapToggleDirective,
         BootstrapSelectDirective,
         BootstrapDatepickerDirective,
-        GroupByPipe
+        GroupByPipe, EnumToArrayPipe
     ],
     providers: [
         { provide: ErrorHandler, useClass: AppErrorHandler },
@@ -110,10 +121,19 @@ import { RoleEditorComponent } from './components/controls/role-editor.component
         AppTitleService,
         AppTranslationService,
         NotificationService,
-        NotificationMockService,
         AccountService,
         ExtendedLogService,
-        generated.AccountEndpointService, generated.ExtendedLogEndpointService,
+        EventService,
+        EventConditionService,
+        ActionDeviceService,
+        DataPointService,
+        NotificationMockService,
+        generated.AccountEndpointService,
+        generated.ExtendedLogEndpointService,
+        generated.EventEndpointService,
+        generated.EventConditionEndpointService,
+        generated.ActionDeviceEndpointService,
+        generated.DataPointEndpointService,
         LocalStorageService
     ],
     bootstrap: [AppComponent]

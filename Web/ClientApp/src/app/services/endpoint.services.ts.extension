@@ -117,7 +117,7 @@ export class AuthEndpointService {
 
     private configureOauthService(rememberMe?: boolean) {
         this.oAuthService.issuer = this.baseUrl;
-        this.oAuthService.clientId = 'growroom_spa';
+        this.oAuthService.clientId = 'growroom_web';
         this.oAuthService.scope = 'openid email phone profile offline_access roles growroom_api';
         this.oAuthService.skipSubjectCheck = true;
         this.oAuthService.dummyClientSecret = 'not_used';
@@ -331,14 +331,24 @@ export class BaseEndpointService {
 }
 
 export type PermissionName =
+    'View Logs' | 'Manage Logs' |
+    'View Events' | 'Manage Events' | 'Execute Events' |
     'View Users' | 'Manage Users' |
     'View Roles' | 'Manage Roles' | 'Assign Roles';
 
 export type PermissionValue =
+    'logs.view' | 'logs.manage' |
+    'events.view' | 'events.manage' | 'events.execute' |
     'users.view' | 'users.manage' |
     'roles.view' | 'roles.manage' | 'roles.assign';
 
 export class PermissionValues {
+    public static readonly ViewLogs: PermissionValue = 'logs.view';
+    public static readonly ManageLogs: PermissionValue = 'logs.manage';
+
+    public static readonly ViewEvents: PermissionValue = 'events.view';
+    public static readonly ManageEvents: PermissionValue = 'events.manage';
+    public static readonly ExecuteEvents: PermissionValue = 'events.execute';
 
     public static readonly ViewUsers: PermissionValue = 'users.view';
     public static readonly ManageUsers: PermissionValue = 'users.manage';

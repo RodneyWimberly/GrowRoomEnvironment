@@ -1,31 +1,30 @@
 using AutoMapper;
-using GrowRoomEnvironment.Contracts.DataAccess;
+using FluentValidation;
 using GrowRoomEnvironment.Contracts.Email;
-using GrowRoomEnvironment.Contracts.Logging;
 using GrowRoomEnvironment.Core;
 using GrowRoomEnvironment.Core.Email;
 using GrowRoomEnvironment.Core.Logging;
 using GrowRoomEnvironment.DataAccess;
 using GrowRoomEnvironment.DataAccess.Core;
 using GrowRoomEnvironment.DataAccess.Core.Constants;
-using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.Authorization;
+using GrowRoomEnvironment.Web.ViewModels;
+using GrowRoomEnvironment.Web.ViewModels.Mappers;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Logging;
+using Newtonsoft.Json;
 using NSwag.AspNetCore;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace GrowRoomEnvironment.Web
 {
@@ -43,66 +42,45 @@ namespace GrowRoomEnvironment.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            string connectString = Configuration["ConnectionStrings:DefaultConnection"];
-            string migrationsAssembly = GetType().Assembly.GetName().Name;
+            Assembly thisAssembly = GetType().Assembly;
 
             // Logging
-            services.AddLogging(logging =>
-            {
-                logging.AddConsole();
-                logging.AddDebug();
-            });
+            services.AddLogging();
 
-            // EF
-            services.AddDbContext<ApplicationDbContext>(dbOptions =>
-                dbOptions.UseSqlite(connectString,
-                sqliteOptions => sqliteOptions.MigrationsAssembly(migrationsAssembly)));
+            // Setup use of ApplicationContextDb
+            services.AddApplicationDbContext(
+                Configuration.GetSection("IdentityOptions"),
+                Configuration["ConnectionStrings:DefaultConnection"],
+                thisAssembly.FullName,
+                WebHostEnvironment.IsDevelopment());
 
-            // UnitOfWorkTransactionFactory
-            DbContextOptionsBuilder<ApplicationDbContext> dbContextBuilder = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlite(connectString,
-                sqliteOptions => sqliteOptions.MigrationsAssembly(migrationsAssembly));
-            services.AddSingleton(new UnitOfWorkTransactionFactory(dbContextBuilder.Options));
-
-            // add identity
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-                        
-            services.Configure<IdentityOptions>(Configuration.GetSection("IdentityOptions"));
-
-            // Adds IdentityServer.
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
-                .AddConfigurationStore(options =>
+            // Configure JSON serializer to not complain when returning entities plus reference and navigational properties
+            services.AddMvc()
+                .AddNewtonsoftJson(options =>
                 {
-                    options.ConfigureDbContext = builder =>
-                    builder.UseSqlite(connectString, sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                    builder.UseSqlite(connectString, sql => sql.MigrationsAssembly(migrationsAssembly));
-                    options.EnableTokenCleanup = true;
-                    options.TokenCleanupInterval = 30;
-                })
-                .AddAspNetIdentity<ApplicationUser>()
-                .AddProfileService<ProfileService>();
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
 
-
-            string applicationUrl = Configuration["ApplicationUrl"].TrimEnd('/');
-
+            // Set authentication to use identity server and set identity server authentication options
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = applicationUrl;
+                    options.Authority = Configuration["ApplicationUrl"].TrimEnd('/');
                     options.SupportedTokens = SupportedTokens.Jwt;
-                    options.RequireHttpsMetadata = false; // Note: Set to true in production
-                    options.ApiName = IdentityServerConfigurationExtensions.ApiName;
+                    options.RequireHttpsMetadata = !WebHostEnvironment.IsDevelopment();
+                    options.ApiName = IdentityServerValues.ApiId;
                 });
 
-            services.AddAuthorization(options =>
+            // Set authorization policies
+            services.AddAuthorizationCore(options =>
             {
+                options.AddPolicy(Policies.ViewLogsPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ViewLogs));
+                options.AddPolicy(Policies.ManageLogsPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ManageLogs));
+
+                options.AddPolicy(Policies.ViewEventsPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ViewEvents));
+                options.AddPolicy(Policies.ManageEventsPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ManageEvents));
+                options.AddPolicy(Policies.ExecuteEventsPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ExecuteEvents));
+
                 options.AddPolicy(Policies.ViewAllUsersPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ViewUsers));
                 options.AddPolicy(Policies.ManageAllUsersPolicy, policy => policy.RequireClaim(Claims.Permission, ApplicationPermissions.ManageUsers));
 
@@ -113,84 +91,82 @@ namespace GrowRoomEnvironment.Web
                 options.AddPolicy(Policies.AssignAllowedRolesPolicy, policy => policy.Requirements.Add(new AssignRolesAuthorizationRequirement()));
             });
 
-
-            // Add cors
-            services.AddCors();
-
-            services.AddControllersWithViews();
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
-
-
-            services.AddValidatorsFromAssembly(GetType().Assembly);
-          
-            services.AddAutoMapper(typeof(Startup));
-
-            // Configurations
-            services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
-
-            // Business Services
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<ILoggerService, LoggerService>();
-
-            // Repositories
-            services.AddScoped<IUnitOfWork, HttpUnitOfWork>();
-            services.AddScoped<IAccountManager, AccountManager>();
-
-            // Auth Handlers
+            // Authorization Handlers
             services.AddSingleton<IAuthorizationHandler, ViewUserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, ManageUserAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, ViewRoleAuthorizationHandler>();
             services.AddSingleton<IAuthorizationHandler, AssignRolesAuthorizationHandler>();
 
-            // DB Creation and Seeding
-            services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
+            // Add CORS
+            services.AddCors();
 
+            // Set health checks listener
+            services.AddHealthChecks();
+
+            // Add all controllers with view but not pages
+            services.AddControllersWithViews();
+
+            // Serve up SinglePageApplication files
+            services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
+
+            //  Fluent Validators for ViewModelx
+            services.AddValidatorsFromAssembly(thisAssembly);
+
+            // AutoMapper type mappers
+            services.AddScoped<ITypeConverter<EventViewModel, Event>, EventMapper>();
+            services.AddScoped<ITypeConverter<EventConditionViewModel, EventCondition>, EventConditionMapper>();
+            services.AddScoped<ITypeConverter<ICollection<EventConditionViewModel>, ICollection<EventCondition>>, EventConditionsMapper>();
+            services.AddScoped<ITypeConverter<DataPointViewModel, DataPoint>, DataPointMapper>();
+            services.AddScoped<ITypeConverter<ActionDeviceViewModel, ActionDevice>, ActionDeviceMapper>();
+            services.AddScoped<ITypeConverter<NotificationViewModel, Notification>, NotificationMapper>();
+            services.AddAutoMapper(thisAssembly);
+
+            // Reads SMTP Configurations from appsettings.json
+            services.Configure<SmtpConfig>(Configuration.GetSection("SmtpConfig"));
+
+            // Business Services
+            services.AddScoped<IEmailService, EmailService>();
+
+            // Register Data Access Layer
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpUnitOfWork();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger, IDatabaseInitializer databaseInitializer)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger)
         {
-            IdentityModelEventSource.ShowPII = true;
-
             StoragePath.Initialize(env);
             EmailTemplates.Initialize(env);
-
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                try
+                {
+                    app.InitializeDatabase();
+                }
+                catch (Exception ex)
+                {
+                    logger.LogCritical(LoggingEvents.INIT_DATABASE, ex, LoggingEvents.INIT_DATABASE.Name);
+                    throw new Exception(LoggingEvents.INIT_DATABASE.Name, ex);
+                }
             }
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            try
-            {
-                app.InitializeIdentityServerDatabase();
-                databaseInitializer.SeedAsync().Wait();
-            }
-            catch (Exception ex)
-            {
-                logger.LogCritical(LoggingEvents.INIT_DATABASE, ex, LoggingEvents.INIT_DATABASE.Name);
-                throw new Exception(LoggingEvents.INIT_DATABASE.Name, ex);
-            }
-
-            //app.UseHttpsRedirection();
+            app.UseEntityFrameworkLoggingScopeStateProvider();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
             }
-           
+
             app.UseRouting();
             app.UseCors(builder => builder
                .AllowAnyOrigin()
@@ -202,7 +178,7 @@ namespace GrowRoomEnvironment.Web
 
             app.UseSwaggerUi3(settings =>
             {
-                settings.OAuth2Client = new OAuth2ClientSettings { ClientId = IdentityServerConfigurationExtensions.SwaggerClientID, ClientSecret = "no_password" };
+                settings.OAuth2Client = new OAuth2ClientSettings { ClientId = IdentityServerValues.DocumentationClientId, ClientSecret = IdentityServerValues.DocumentationClientSecret };
                 settings.Path = "/docs";
                 settings.DocumentPath = "/docs/api-specification.json";
             });
@@ -212,9 +188,8 @@ namespace GrowRoomEnvironment.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("default", "{controller}/{action=Index}/{id?}");
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseSpa(spa =>
@@ -223,7 +198,7 @@ namespace GrowRoomEnvironment.Web
 
                 if (env.IsDevelopment())
                 {
-                    //sqa.UseAngularCliServer(npmScript: "serve");
+                    //spa.UseAngularCliServer(npmScript: "serve");
                     //spa.Options.StartupTimeout = TimeSpan.FromSeconds(120); // Increase the timeout if angular app is taking longer to startup
                     spa.UseProxyToSpaDevelopmentServer("http://localhost:4200"); // Use this instead to use the angular cli server
                 }

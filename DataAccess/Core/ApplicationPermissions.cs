@@ -8,6 +8,15 @@ namespace GrowRoomEnvironment.DataAccess.Core
     {
         public static ReadOnlyCollection<ApplicationPermission> AllPermissions;
 
+        public const string LogsPermissionGroupName = "Log Permissions";
+        public static ApplicationPermission ViewLogs = new ApplicationPermission("View Events", "logs.view", LogsPermissionGroupName, "Permission to view log details");
+        public static ApplicationPermission ManageLogs = new ApplicationPermission("Manage Events", "logs.manage", LogsPermissionGroupName, "Permission to create, delete and modify log details");
+
+        public const string EventsPermissionGroupName = "Event Permissions";
+        public static ApplicationPermission ViewEvents = new ApplicationPermission("View Events", "events.view", EventsPermissionGroupName, "Permission to view event details");
+        public static ApplicationPermission ManageEvents = new ApplicationPermission("Manage Events", "events.manage", EventsPermissionGroupName, "Permission to create, delete and modify event details");
+        public static ApplicationPermission ExecuteEvents = new ApplicationPermission("Execute Events", "events.execute", EventsPermissionGroupName, "Permission to execute events");
+
         public const string UsersPermissionGroupName = "User Permissions";
         public static ApplicationPermission ViewUsers = new ApplicationPermission("View Users", "users.view", UsersPermissionGroupName, "Permission to view other users account details");
         public static ApplicationPermission ManageUsers = new ApplicationPermission("Manage Users", "users.manage", UsersPermissionGroupName, "Permission to create, delete and modify other users account details");
@@ -21,6 +30,13 @@ namespace GrowRoomEnvironment.DataAccess.Core
         {
             List<ApplicationPermission> allPermissions = new List<ApplicationPermission>()
             {
+                ViewLogs,
+                ManageLogs,
+
+                ViewEvents,
+                ManageEvents,
+                ExecuteEvents,
+
                 ViewUsers,
                 ManageUsers,
 
@@ -49,7 +65,7 @@ namespace GrowRoomEnvironment.DataAccess.Core
 
         public static string[] GetAdministrativePermissionValues()
         {
-            return new string[] { ManageUsers, ManageRoles, AssignRoles };
+            return new string[] { ManageLogs, ManageEvents, ExecuteEvents, ManageUsers, ManageRoles, AssignRoles };
         }
     }
 }

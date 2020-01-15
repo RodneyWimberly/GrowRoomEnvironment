@@ -1,0 +1,201 @@
+<div>
+  <form *ngIf="formResetToggle" name="logEditorForm" #f="ngForm" novalidate>
+
+    <!-- Id / EventId -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logId">{{'logs.editor.Id' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logId" name="logId" class="form-control" [(ngModel)]="logEdit.id" />
+        </div>
+        <label class="col-form-label col-md-1" for="logEventId">{{'logs.editor.EventId' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logEventId" name="logEventId" class="form-control" [(ngModel)]="logEdit.eventId" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Level / User -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logLevel">{{'logs.editor.Level' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logLevel" name="logLevel" class="form-control" [(ngModel)]="errorLevel" />
+        </div>
+        <label class="col-form-label col-md-1" for="logUser">{{'logs.editor.User' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logUser" name="logUser" class="form-control" [(ngModel)]="logEdit.user" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Host / Method -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logHost">{{'logs.editor.Host' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logHost" name="logHost" class="form-control" [(ngModel)]="logEdit.host" />
+        </div>
+
+        <label class="col-form-label col-md-1" for="logMethod">{{'logs.editor.Method' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logMethod" name="logMethod" class="form-control" [(ngModel)]="logEdit.method" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+    <!-- Path / StatusCode -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logPath">{{'logs.editor.Path' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logPath" name="logPath" class="form-control" [(ngModel)]="logEdit.path" />
+        </div>
+        <label class="col-form-label col-md-1" for="logStatusCode">{{'logs.editor.StatusCode' | translate}}</label>
+        <div class="col-md-5">
+          <input [disabled]="true" type="text" id="logStatusCode" name="logStatusCode" class="form-control" [(ngModel)]="logEdit.statusCode" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+
+
+    <!-- ServerVariables / Form Variables-->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logServerVariables">{{'logs.editor.ServerVariables' | translate}}</label>
+        <div class="col-md-5">
+          <textarea rows="2" [disabled]="true" type="text" id="logServerVariables" name="logServerVariables" class="form-control" [(ngModel)]="logEdit.serverVariables"></textarea>
+        </div>
+        <label class="col-form-label col-md-1" for="logFormVariables">{{'logs.editor.FormVariables' | translate}}</label>
+        <div class="col-md-5">
+          <textarea rows="2" [disabled]="true" type="text" id="logFormVariables" name="logFormVariables" class="form-control" [(ngModel)]="logEdit.formVariables"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Cookies / QueryString-->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logCookies">{{'logs.editor.Cookies' | translate}}</label>
+        <div class="col-md-5">
+          <textarea rows="2" [disabled]="true" type="text" id="logCookies" name="logCookies" class="form-control" [(ngModel)]="logEdit.cookies"></textarea>
+        </div>
+        <label class="col-form-label col-md-1" for="logQueryString">{{'logs.editor.QueryString' | translate}}</label>
+        <div class="col-md-5">
+          <textarea rows="2" [disabled]="true" type="text" id="logQueryString" name="logQueryString" class="form-control" [(ngModel)]="logEdit.queryString"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- TimeStamp -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logTimeStamp">{{'logs.editor.TimeStamp' | translate}}</label>
+        <div class="col-md-11">
+          <input [disabled]="true" type="text" id="logTimeStamp" name="logTimeStamp" class="form-control" [(ngModel)]="logEdit.timeStamp" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Name -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logName">{{'logs.editor.Name' | translate}}</label>
+        <div class="col-md-11">
+          <input [disabled]="true" type="text" id="logName" name="logName" class="form-control" [(ngModel)]="logEdit.name" />
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+
+
+    <!-- Browser -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logBrowser">{{'logs.editor.Browser' | translate}}</label>
+        <div class="col-md-11">
+          <textarea rows="2" [disabled]="true" type="text" id="logBrowser" name="logBrowser" class="form-control" [(ngModel)]="logEdit.browser"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div class="col-sm-12">
+      <div class="form-group row">
+        <label class="col-form-label col-md-1" for="logMessage">{{'logs.editor.Message' | translate}}</label>
+        <div class="col-md-11">
+          <textarea rows="4" [disabled]="true" type="text" id="logMessage" name="logMessage" class="form-control" [(ngModel)]="logEdit.message"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <hr [class.last-separator-hr]="true" />
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="form-group row">
+      <div class="col-sm-12">
+        <div ngPreserveWhitespaces class="float-right">
+          <button type="button" (click)="cancel()" class="btn btn-outline-secondary">{{'roles.editor.Close' | translate}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </form>
+</div>

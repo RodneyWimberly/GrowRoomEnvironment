@@ -1,0 +1,64 @@
+<div>
+  <div class="row control-box">
+    <div class="col-lg-8">
+      <div class="form-group search-box">
+        <search-box (searchChange)="onSearchChanged($event)" placeholder="{{'events.management.Search' | translate}}">></search-box>
+      </div>
+    </div>
+    <div class="col-lg-4 pr-lg-5">
+      <ul class="nav flex-column flex-lg-row justify-content-end">
+        <li *ngIf="canManageEvents" class="nav-item toolbaritem">
+          <a class="nav-link" href="javascript:;" (click)="newEvent()">
+            <i class="fa fa-plus-circle"></i> {{'events.management.NewEvent' | translate}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <ngx-datatable #dataTable class="material colored-header sm table table-striped table-hover"
+                 [loadingIndicator]="loadingIndicator"
+                 [rows]="rows"
+                 [headerHeight]="35"
+                 [footerHeight]="35"
+                 [columns]="columns"
+                 [scrollbarV]="false"
+                 [rowHeight]="'auto'"
+                 [columnMode]="'force'"
+                 [limit]="8">
+  </ngx-datatable>
+
+  <ng-template #idTemplate let-value="value">
+    <strong>{{value}}</strong>
+  </ng-template>
+  
+  <ng-template #eventConditionsTemplate let-row="row" let-value="value" let-i="eventId">
+    <div *ngIf="value && value.length > 0"> 
+      <div class="event-conditions badge badge-pill badge-secondary" *ngFor="let condition of value"><p>{{condition?.dataPoint?.name}} {{eventService.getOperatorSymbol(condition.operator)}} '{{condition.value}}'</p></div>
+    </div>
+  </ng-template>
+
+  <ng-template #actionsTemplate let-row="row" let-value="value" let-i="eventId">
+    <div *ngIf="canManageEvents">
+      <a class="btn btn-link btn-sm" href="javascript:;" (click)="editEvent(row)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> {{'events.management.Edit' | translate}}</a>|
+      <a class="btn btn-link btn-sm" href="javascript:;" (click)="deleteEvent(row)"><i class="fa fa-trash-o" aria-hidden="true"></i> {{'events.management.Delete' | translate}}</a>
+    </div>
+  </ng-template>
+  
+  <div class="modal fade" bsModal #editorModal="bs-modal" (onHidden)="onEditorModalHidden()" [config]="{backdrop: 'static'}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 *ngIf="!editingEventName" class="modal-title float-left"><i class="fa fa-tasks"></i> {{'events.management.NewEvent' | translate}}</h4>
+          <h4 *ngIf="editingEventName" class="modal-title float-left"><i class="fa fa-tasks"></i> {{'events.management.EditEvent' | translate:editingEventName}}</h4>
+          <button type="button" class="close float-right" title="Close" (click)="eventEditor.close()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <event-editor #eventEditor></event-editor>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
