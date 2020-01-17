@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
+namespace GrowRoomEnvironment.DataAccess.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
     partial class PersistedGrantDbContextModelSnapshot : ModelSnapshot
@@ -14,8 +14,7 @@ namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("IdentityOperationalSchema")
-                .HasAnnotation("ProductVersion", "3.0.1");
+                .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {

@@ -66,11 +66,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\ApplicationDb\20191126144422_InitialCreate.cs" />
-    <Compile Remove="Migrations\ApplicationDb\20191126144422_InitialCreate.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="GrowRoomEnvironment.db" />
   </ItemGroup>
 

@@ -50,7 +50,7 @@ namespace GrowRoomEnvironment.Web
             services.AddApplicationDbContext(
                 Configuration.GetSection("IdentityOptions"),
                 Configuration["ConnectionStrings:DefaultConnection"],
-                thisAssembly.FullName,
+                typeof(DatabaseInitializer).Assembly.FullName,
                 WebHostEnvironment.IsDevelopment());
 
             // Configure JSON serializer to not complain when returning entities plus reference and navigational properties
@@ -141,16 +141,7 @@ namespace GrowRoomEnvironment.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                /*
-                try
-                {
-                    app.InitializeDatabase();
-                }
-                catch (Exception ex)
-                {
-                    logger.LogCritical(LoggingEvents.INIT_DATABASE, ex, LoggingEvents.INIT_DATABASE.Name);
-                    throw new Exception(LoggingEvents.INIT_DATABASE.Name, ex);
-                }*/
+                app.InitializeDatabase();
             }
             else
             {

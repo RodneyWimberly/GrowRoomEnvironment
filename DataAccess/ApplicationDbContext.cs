@@ -13,7 +13,7 @@ using ZNetCS.AspNetCore.Logging.EntityFrameworkCore;
 
 namespace GrowRoomEnvironment.DataAccess
 {
-    public partial class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         private const string systemUserId = "11111111-1111-1111-1111-111111111111";
         private string _currentUserId;

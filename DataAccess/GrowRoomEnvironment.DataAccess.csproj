@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contracts\GrowRoomEnvironment.Contracts.csproj" />
+    <ProjectReference Include="..\Core\GrowRoomEnvironment.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,18 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
+namespace GrowRoomEnvironment.DataAccess.Migrations.PersistedGrantDb
 {
-    public partial class AddPersistedGrant : Migration
+    public partial class CreatePersistedGrantDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "IdentityOperationalSchema");
-
             migrationBuilder.CreateTable(
                 name: "DeviceCodes",
-                schema: "IdentityOperationalSchema",
                 columns: table => new
                 {
                     UserCode = table.Column<string>(maxLength: 200, nullable: false),
@@ -30,7 +26,6 @@ namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
 
             migrationBuilder.CreateTable(
                 name: "PersistedGrants",
-                schema: "IdentityOperationalSchema",
                 columns: table => new
                 {
                     Key = table.Column<string>(maxLength: 200, nullable: false),
@@ -48,26 +43,22 @@ namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
-                schema: "IdentityOperationalSchema",
                 table: "DeviceCodes",
                 column: "DeviceCode",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_Expiration",
-                schema: "IdentityOperationalSchema",
                 table: "DeviceCodes",
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
-                schema: "IdentityOperationalSchema",
                 table: "PersistedGrants",
                 column: "Expiration");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
-                schema: "IdentityOperationalSchema",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
         }
@@ -75,12 +66,10 @@ namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DeviceCodes",
-                schema: "IdentityOperationalSchema");
+                name: "DeviceCodes");
 
             migrationBuilder.DropTable(
-                name: "PersistedGrants",
-                schema: "IdentityOperationalSchema");
+                name: "PersistedGrants");
         }
     }
 }

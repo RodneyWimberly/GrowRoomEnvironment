@@ -6,18 +6,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GrowRoomEnvironment.Web.Migrations.PersistedGrantDb
+namespace GrowRoomEnvironment.DataAccess.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20191125120210_AddPersistedGrant")]
-    partial class AddPersistedGrant
+    [Migration("20200117031933_CreatePersistedGrantDb")]
+    partial class CreatePersistedGrantDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("IdentityOperationalSchema")
-                .HasAnnotation("ProductVersion", "3.0.1");
+                .HasAnnotation("ProductVersion", "3.1.0");
 
             modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {

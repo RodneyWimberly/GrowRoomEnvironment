@@ -1,18 +1,14 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
+namespace GrowRoomEnvironment.DataAccess.Migrations.ConfigurationDb
 {
-    public partial class AddConfiguration : Migration
+    public partial class CreateConfigurationDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.EnsureSchema(
-                name: "IdentityConfigurationSchema");
-
             migrationBuilder.CreateTable(
                 name: "ApiResources",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -33,7 +29,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "Clients",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -87,7 +82,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityResources",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -110,7 +104,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiClaims",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -124,7 +117,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ApiClaims_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "ApiResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -132,7 +124,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiProperties",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -147,7 +138,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ApiProperties_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "ApiResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -155,7 +145,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiScopes",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -174,7 +163,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ApiScopes_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "ApiResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -182,7 +170,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiSecrets",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -200,7 +187,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ApiSecrets_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "ApiResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -208,7 +194,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientClaims",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -223,7 +208,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientClaims_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -231,7 +215,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientCorsOrigins",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -245,7 +228,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientCorsOrigins_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -253,7 +235,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientGrantTypes",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -267,7 +248,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientGrantTypes_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -275,7 +255,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientIdPRestrictions",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -289,7 +268,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientIdPRestrictions_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -297,7 +275,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientPostLogoutRedirectUris",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -311,7 +288,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientPostLogoutRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -319,7 +295,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientProperties",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -334,7 +309,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientProperties_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -342,7 +316,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientRedirectUris",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -356,7 +329,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -364,7 +336,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientScopes",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -378,7 +349,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientScopes_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -386,7 +356,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ClientSecrets",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -404,7 +373,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ClientSecrets_Clients_ClientId",
                         column: x => x.ClientId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -412,7 +380,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityClaims",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -426,7 +393,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_IdentityClaims_IdentityResources_IdentityResourceId",
                         column: x => x.IdentityResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "IdentityResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -434,7 +400,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "IdentityProperties",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -449,7 +414,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_IdentityProperties_IdentityResources_IdentityResourceId",
                         column: x => x.IdentityResourceId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "IdentityResources",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -457,7 +421,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateTable(
                 name: "ApiScopeClaims",
-                schema: "IdentityConfigurationSchema",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -471,7 +434,6 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
                     table.ForeignKey(
                         name: "FK_ApiScopeClaims_ApiScopes_ApiScopeId",
                         column: x => x.ApiScopeId,
-                        principalSchema: "IdentityConfigurationSchema",
                         principalTable: "ApiScopes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -479,124 +441,104 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiClaims_ApiResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiClaims",
                 column: "ApiResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiProperties_ApiResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiProperties",
                 column: "ApiResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiResources_Name",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiResources",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiScopeClaims_ApiScopeId",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiScopeClaims",
                 column: "ApiScopeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiScopes_ApiResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiScopes",
                 column: "ApiResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiScopes_Name",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiScopes",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiSecrets_ApiResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "ApiSecrets",
                 column: "ApiResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientClaims_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientClaims",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientCorsOrigins_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientCorsOrigins",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientGrantTypes_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientGrantTypes",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientIdPRestrictions_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientIdPRestrictions",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientPostLogoutRedirectUris_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientPostLogoutRedirectUris",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientProperties_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientProperties",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientRedirectUris_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientRedirectUris",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Clients_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "Clients",
                 column: "ClientId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientScopes_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientScopes",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ClientSecrets_ClientId",
-                schema: "IdentityConfigurationSchema",
                 table: "ClientSecrets",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityClaims_IdentityResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "IdentityClaims",
                 column: "IdentityResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityProperties_IdentityResourceId",
-                schema: "IdentityConfigurationSchema",
                 table: "IdentityProperties",
                 column: "IdentityResourceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityResources_Name",
-                schema: "IdentityConfigurationSchema",
                 table: "IdentityResources",
                 column: "Name",
                 unique: true);
@@ -605,80 +547,61 @@ namespace GrowRoomEnvironment.Web.Migrations.ConfigurationDb
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApiClaims",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiClaims");
 
             migrationBuilder.DropTable(
-                name: "ApiProperties",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiProperties");
 
             migrationBuilder.DropTable(
-                name: "ApiScopeClaims",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiScopeClaims");
 
             migrationBuilder.DropTable(
-                name: "ApiSecrets",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiSecrets");
 
             migrationBuilder.DropTable(
-                name: "ClientClaims",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientClaims");
 
             migrationBuilder.DropTable(
-                name: "ClientCorsOrigins",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientCorsOrigins");
 
             migrationBuilder.DropTable(
-                name: "ClientGrantTypes",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientGrantTypes");
 
             migrationBuilder.DropTable(
-                name: "ClientIdPRestrictions",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientIdPRestrictions");
 
             migrationBuilder.DropTable(
-                name: "ClientPostLogoutRedirectUris",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientPostLogoutRedirectUris");
 
             migrationBuilder.DropTable(
-                name: "ClientProperties",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientProperties");
 
             migrationBuilder.DropTable(
-                name: "ClientRedirectUris",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientRedirectUris");
 
             migrationBuilder.DropTable(
-                name: "ClientScopes",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientScopes");
 
             migrationBuilder.DropTable(
-                name: "ClientSecrets",
-                schema: "IdentityConfigurationSchema");
+                name: "ClientSecrets");
 
             migrationBuilder.DropTable(
-                name: "IdentityClaims",
-                schema: "IdentityConfigurationSchema");
+                name: "IdentityClaims");
 
             migrationBuilder.DropTable(
-                name: "IdentityProperties",
-                schema: "IdentityConfigurationSchema");
+                name: "IdentityProperties");
 
             migrationBuilder.DropTable(
-                name: "ApiScopes",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiScopes");
 
             migrationBuilder.DropTable(
-                name: "Clients",
-                schema: "IdentityConfigurationSchema");
+                name: "Clients");
 
             migrationBuilder.DropTable(
-                name: "IdentityResources",
-                schema: "IdentityConfigurationSchema");
+                name: "IdentityResources");
 
             migrationBuilder.DropTable(
-                name: "ApiResources",
-                schema: "IdentityConfigurationSchema");
+                name: "ApiResources");
         }
     }
 }
