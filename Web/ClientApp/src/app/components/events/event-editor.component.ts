@@ -18,6 +18,7 @@ export class EventEditorComponent implements OnInit {
   public changesFailedCallback: () => void;
   public changesCancelledCallback: () => void;
 
+  protected showValidationErrors = false;
   protected isSaving = false;
   protected uniqueId: string = Utilities.uniqueId();
   protected formResetToggle = true;
@@ -40,8 +41,14 @@ export class EventEditorComponent implements OnInit {
   @ViewChild('actionDevice', { static: false })
   public actionDevice;
 
+  @ViewChild('actionDeviceSelector', { static: false })
+  public actionDeviceSelector;
+
   @ViewChild('state', { static: false })
   public state;
+
+  @ViewChild('stateSelector', { static: false })
+  public stateSelector;
 
   @ViewChild('eventConditions', { static: false })
   public eventConditions: EventConditionsManagementComponent;
@@ -68,11 +75,13 @@ export class EventEditorComponent implements OnInit {
 
   public newEvent(): generated.EventViewModel {
     this.viewModelState = ViewModelStates.New;
+    this.showValidationErrors = true;
     return this.event = undefined;
   }
 
   public editEvent(event: generated.EventViewModel): generated.EventViewModel {
     this.viewModelState = ViewModelStates.Edit;
+    this.showValidationErrors = true;
     return this.event = event;
   }
 
@@ -94,9 +103,11 @@ export class EventEditorComponent implements OnInit {
       event = new generated.EventViewModel();
       event.eventConditions = [];
     }
-    this.eventConditions.event = new generated.EventViewModel();
-    Object.assign(this.eventConditions.event, event);
-    this.eventConditions.loadData();
+    if (this.eventConditions) {
+      this.eventConditions.event = new generated.EventViewModel();
+      Object.assign(this.eventConditions.event, event);
+      this.eventConditions.loadData();
+    }
   }
 
   protected get canManageEvents(): boolean {
@@ -108,6 +119,7 @@ export class EventEditorComponent implements OnInit {
   }
 
   protected cancel(): void {
+    this.showValidationErrors = false;
     this.alertService.showMessage('Canceled', 'Operation canceled by user', MessageSeverity.default);
     this.alertService.resetStickyMessage();
 
@@ -117,6 +129,7 @@ export class EventEditorComponent implements OnInit {
   }
 
   protected close(): void {
+    this.showValidationErrors = false;
     if (this.changesCancelledCallback) {
       this.changesCancelledCallback();
     }
@@ -142,8 +155,13 @@ export class EventEditorComponent implements OnInit {
     }
   }
 
+  protected showErrorAlert(caption: string, message: string) {
+    this.alertService.showMessage(caption, message, MessageSeverity.error);
+  }
+
   private saveSuccessHelper(event?: generated.EventViewModel): void {
-    Object.assign(this.event, event);
+    this.showValidationErrors = false;
+   Object.assign(this.event, event);
     this.event.eventConditions = [...event.eventConditions]
 
     this.isSaving = false;
@@ -165,6 +183,7 @@ export class EventEditorComponent implements OnInit {
   }
 
   private saveFailedHelper(error: any): void {
+    this.showValidationErrors = false;
     this.isSaving = false;
     this.alertService.stopLoadingMessage();
     this.alertService.showStickyMessage('Save Error', 'The below errors occurred while saving your changes:', MessageSeverity.error, error);
@@ -186,6 +205,14 @@ export class EventEditorComponent implements OnInit {
     this.alertService.stopLoadingMessage();
     this.actionDevices = actionDevices;
     this.dataPoints = dataPoints;
+    setTimeout(() => {
+      if (this.actionDeviceSelector) {
+        this.actionDeviceSelector.refresh();
+      }
+      if (this.stateSelector) {
+        this.stateSelector.refresh();
+      }
+    });
   }
 
   private onLoadDataFailed(error: any): void {

@@ -41,6 +41,7 @@
     },
     "editor": {
       "ActionDevice": "Action Device",
+      "ActionDeviceRequired": "Action Device is required",
       "Cancel": "Cancel",
       "Close": "Close",
       "Edit": "Edit",
@@ -48,9 +49,11 @@
       "EventId": "Id",
       "IsEnabled": "Enabled",
       "Name": "Name",
+      "NameRequired": "Name is required (minimum of 2 and maximum of 200 characters)",
       "Save": "Save",
       "Saving": "Saving...",
-      "State": "State"
+      "State": "State",
+      "StateRequired":  "State is required"
     }
   },
   "eventConditions": {
@@ -65,8 +68,11 @@
       "EventConditionId": "Id",
       "EventId": "EventId",
       "DataPoint": "Data Point",
+      "DataPointRequired": "Data Point is required",
       "Operator": "Operator",
+      "OperatorRequired": "Operator is required",
       "Value": "Value",
+      "ValueRequired": "Value is required (minimum of 2 and maximum of 200 characters)",
       "Cancel": "Cancel",
       "Save": "Save"
     },

@@ -16,3 +16,13 @@
   padding-bottom: 3px;
   min-width: 100px;
 }
+
+.datatable-body-cell {
+  overflow-y: visible !important;
+  overflow-x: visible !important;
+}
+
+.ngx-datatable {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}

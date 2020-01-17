@@ -81,7 +81,7 @@ import { EventConditionsManagementComponent } from './components/events/event-co
                 useClass: TranslateLanguageLoader
             }
         }),
-        NgxDatatableModule,
+    NgxDatatableModule,
         OAuthModule.forRoot(),
         ToastaModule.forRoot(),
         TooltipModule.forRoot(),

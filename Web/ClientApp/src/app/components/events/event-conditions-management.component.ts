@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild, Input, ViewChildren, QueryList, ElementRef } from '@angular/core';
 
 import { AlertService, DialogType } from '../../services/alert.service';
 import { AppTranslationService } from '../../services/app-translation.service';
@@ -6,29 +6,51 @@ import { EventService } from "../../services/event.service";
 import { Utilities } from '../../helpers/utilities';
 import * as generated from '../../services/endpoint.services';
 import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { ControlValueAccessor, FormControl, NG_VALIDATORS } from '@angular/forms';
 
 @Component({
   selector: 'event-conditions-management',
   templateUrl: './event-conditions-management.component.html',
-  styleUrls: ['./event-conditions-management.component.scss']
+  styleUrls: ['./event-conditions-management.component.scss'],
+  providers: [
+    {
+      provide: NG_VALIDATORS,
+      useExisting: EventConditionsManagementComponent,
+      multi: true
+    }
+  ]
 })
 
-export class EventConditionsManagementComponent implements OnInit {
+export class EventConditionsManagementComponent implements OnInit, ControlValueAccessor {
   public event: generated.EventViewModel;
+
   protected columns: any[] = [];
   protected rows: generated.EventConditionViewModel[] = [];
   protected loadingIndicator: boolean;
   protected operators = generated.Operators;
   protected operatorKeys: number[];
 
+  onChange;
+  onTouched;
+  isDisabled: boolean;
+
   @Input()
   public dataPoints: generated.DataPointViewModel[];
+
+  @Input()
+  protected form;
+
+  @Input()
+  protected showValidationErrors: boolean;
 
   @ViewChild('dataTable', { static: true })
   private ngxDatatable: DatatableComponent;
 
   @ViewChild('dataPointTemplate', { static: true })
   private dataPointTemplate: TemplateRef<any>;
+
+  @ViewChildren('valueText')
+  private valueTexts: QueryList<ElementRef>;
 
   @ViewChild('operatorTemplate', { static: true })
   private operatorTemplate: TemplateRef<any>;
@@ -57,6 +79,33 @@ export class EventConditionsManagementComponent implements OnInit {
     ];
 
     this.loadData();
+  }
+
+  public validate({ value }: FormControl) {
+    var isValid: boolean = true;
+    this.valueTexts.forEach(vt => isValid = isValid && vt.nativeElement.valid)
+    return isValid;
+  }
+
+  public writeValue(obj: any): void {
+    //this.event = obj;
+  }
+
+  public registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  public registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  public setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
+  change(value: string) {
+    this.onChange(value);
+    this.onTouched();
   }
 
   protected getDataPointName(dataPointId: number): string {

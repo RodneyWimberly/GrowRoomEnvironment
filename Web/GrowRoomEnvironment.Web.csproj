@@ -66,6 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\directives\input-ref.directive.ts" />
     <None Remove="GrowRoomEnvironment.db" />
   </ItemGroup>
 
@@ -84,6 +85,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\docs\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\directives\input-ref.directive.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
