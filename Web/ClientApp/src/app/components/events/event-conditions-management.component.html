@@ -1,0 +1,49 @@
+<div>
+  <div class="row control-box">
+    <div class="col-lg-8">
+      <div class="form-group search-box">
+        <search-box (searchChange)="onSearchChanged($event)" placeholder="{{'eventConditions.management.Search' | translate}}">></search-box>
+      </div>
+    </div>
+    <div class="col-lg-4 pr-lg-5">
+      <ul class="nav flex-column flex-lg-row justify-content-end">
+        <li class="nav-item toolbaritem">
+          <a class="nav-link" href="javascript:;" (click)="newEventCondition()">
+            <i class="fa fa-plus-circle"></i> {{'eventConditions.management.NewEventCondition' | translate}}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <ngx-datatable #dataTable class="material colored-header sm table table-striped table-hover"
+                 [loadingIndicator]="loadingIndicator"
+                 [rows]="rows"
+                 [headerHeight]="35"
+                 [footerHeight]="35"
+                 [columns]="columns"
+                 [rowHeight]="'auto'"
+                 [columnMode]="'standard'"
+                 [limit]='3'>
+  </ngx-datatable>
+
+  <ng-template #dataPointTemplate let-row="row" let-value="value">
+    <select [(ngModel)]="row.dataPointId">
+      <option *ngFor="let dataPoint of dataPoints" [value]="dataPoint.dataPointId">{{dataPoint.name}}</option>
+    </select>
+  </ng-template>
+
+  <ng-template #operatorTemplate let-row="row" let-value="value">
+    <select [(ngModel)]="row.operator">
+      <option *ngFor="let operatorKey of operatorKeys" [ngValue]="operatorKey" [label]="operators[operatorKey]"></option>
+    </select>
+  </ng-template>
+
+  <ng-template #valueTemplate let-row="row" let-value="value">
+    <input type="text" placeholder="Enter value" [(ngModel)]="row.value" />
+  </ng-template>
+
+  <ng-template #actionsTemplate let-row="row">
+    <a class="btn btn-link btn-sm" href="javascript:;" (click)="deleteEventCondition(row)"><i class="fa fa-trash-o" aria-hidden="true"></i> {{'eventConditions.management.Delete' | translate}}</a>
+  </ng-template>
+</div>

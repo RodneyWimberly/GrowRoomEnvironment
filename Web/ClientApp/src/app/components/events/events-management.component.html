@@ -28,8 +28,13 @@
                  [limit]="8">
   </ngx-datatable>
 
-  <ng-template #idTemplate let-value="value">
-    <strong>{{value}}</strong>
+  <ng-template #isEnabledTemplate let-value="value">
+    <div *ngIf="value">
+      <input type="checkbox" checked disabled/>
+    </div>
+    <div *ngIf="!value">
+      <input type="checkbox" disabled/>
+    </div>
   </ng-template>
   
   <ng-template #eventConditionsTemplate let-row="row" let-value="value" let-i="eventId">

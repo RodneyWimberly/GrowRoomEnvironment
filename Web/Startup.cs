@@ -22,7 +22,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NSwag.AspNetCore;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -56,6 +55,7 @@ namespace GrowRoomEnvironment.Web
 
             // Configure JSON serializer to not complain when returning entities plus reference and navigational properties
             services.AddMvc()
+                .AddControllersAsServices()
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -130,8 +130,6 @@ namespace GrowRoomEnvironment.Web
             // Register Data Access Layer
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpUnitOfWork();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -143,6 +141,7 @@ namespace GrowRoomEnvironment.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                /*
                 try
                 {
                     app.InitializeDatabase();
@@ -151,7 +150,7 @@ namespace GrowRoomEnvironment.Web
                 {
                     logger.LogCritical(LoggingEvents.INIT_DATABASE, ex, LoggingEvents.INIT_DATABASE.Name);
                     throw new Exception(LoggingEvents.INIT_DATABASE.Name, ex);
-                }
+                }*/
             }
             else
             {

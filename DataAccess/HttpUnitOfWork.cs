@@ -8,7 +8,9 @@ namespace GrowRoomEnvironment.DataAccess
     {
         public HttpUnitOfWork(ApplicationDbContext context, IHttpContextAccessor httpAccessor) : base(context)
         {
-            context.CurrentUserId = httpAccessor.HttpContext.User.FindFirst(Claims.Subject)?.Value?.Trim();
+            DbContext.CurrentUserId = httpAccessor.HttpContext.User.FindFirst(Claims.Subject)?.Value?.Trim();
+            //DbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            //DbContext.ChangeTracker.LazyLoadingEnabled = false;
         }
     }
 }

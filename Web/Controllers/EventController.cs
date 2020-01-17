@@ -1,6 +1,7 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using Arch.EntityFrameworkCore.UnitOfWork.Collections;
 using AutoMapper;
+using GrowRoomEnvironment.DataAccess;
 using GrowRoomEnvironment.DataAccess.Models;
 using GrowRoomEnvironment.Web.ViewModels;
 using IdentityServer4.AccessTokenValidation;
@@ -23,20 +24,17 @@ namespace GrowRoomEnvironment.Web.Controllers
     public class EventController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork<ApplicationDbContext> _unitOfWork;
         private readonly IRepository<Event> _repository;
         private readonly ILogger _logger;
-        private readonly IAuthorizationService _authorizationService;
 
-        public EventController(IMapper mapper, IUnitOfWork unitOfWork, ILogger<EventController> logger, IAuthorizationService authorizationService)
+        public EventController(IMapper mapper, IUnitOfWork<ApplicationDbContext> unitOfWork, ILogger<EventController> logger)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.GetRepository<Event>();
             _logger = logger;
-            _authorizationService = authorizationService;
         }
-
 
         [HttpGet("{getDisabled:bool?}")]
         [Authorize(Authorization.Policies.ViewEventsPolicy)]
@@ -104,6 +102,7 @@ namespace GrowRoomEnvironment.Web.Controllers
             if (@event == null)
                 return NotFound(eventId);
             EventViewModel eventVM = _mapper.Map<EventViewModel>(@event);
+            @event = MegreViewModelToEntity(eventVM, @event);
             _repository.Delete(@event);
             await _unitOfWork.SaveChangesAsync();
             return Ok(eventVM);
@@ -121,6 +120,7 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (eventVM == null)
                     return BadRequest($"{nameof(eventVM)} cannot be null");
                 Event @event = _mapper.Map<Event>(eventVM);
+                @event = MegreViewModelToEntity(eventVM, @event);
                 EntityEntry<Event> addedEvent = await _repository.InsertAsync(@event);
                 await _unitOfWork.SaveChangesAsync();
                 eventVM = _mapper.Map<EventViewModel>(addedEvent.Entity);
@@ -148,7 +148,10 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (@event == null)
                     return BadRequest($"Cannot find Event with EventId: {eventId}");
 
+                @event = MegreViewModelToEntity(eventVM, @event);
+
                 Event eventToUpdate = _mapper.Map(eventVM, @event);
+
                 _repository.Update(eventToUpdate);
                 await _unitOfWork.SaveChangesAsync();
                 Event updatedEvent = await GetByIdAsync(eventId);
@@ -157,6 +160,7 @@ namespace GrowRoomEnvironment.Web.Controllers
             else
                 return BadRequest(ModelState);
         }
+
 
         [HttpPatch("{eventId:int}")]
         [Authorize(Authorization.Policies.ManageEventsPolicy)]
@@ -171,6 +175,7 @@ namespace GrowRoomEnvironment.Web.Controllers
 
                 Event @event = await GetByIdAsync(eventId);
                 EventViewModel eventVM = _mapper.Map<EventViewModel>(@event);
+                @event = MegreViewModelToEntity(eventVM, @event);
                 patch.ApplyTo(eventVM, e => ModelState.AddModelError("", e.ErrorMessage));
                 if (ModelState.IsValid)
                 {
@@ -201,5 +206,22 @@ namespace GrowRoomEnvironment.Web.Controllers
 
             return include;
         }
+
+        private Event MegreViewModelToEntity(EventViewModel eventVM, Event @event)
+        {
+            @event.ActionDevice = null;
+            foreach (EventCondition ec in @event.EventConditions)
+                ec.DataPoint = null;
+
+            List<EventCondition> deleteList = new List<EventCondition>();
+            foreach (EventCondition eventCondition in @event.EventConditions)
+            {
+                if (!eventVM.EventConditions.Any(ecVM => ecVM.EventConditionId == eventCondition.EventConditionId))
+                    deleteList.Add(eventCondition);
+            }
+            _unitOfWork.DbContext.RemoveRange(deleteList);
+            return @event;
+        }
+
     }
 }

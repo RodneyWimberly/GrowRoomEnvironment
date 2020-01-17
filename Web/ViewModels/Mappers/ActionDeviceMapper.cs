@@ -15,12 +15,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public ActionDevice Convert(ActionDeviceViewModel source, ActionDevice destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
                 destination = source.ActionDeviceId > 0 ?
-                    _unitOfWork.GetRepository<ActionDevice>().Find(source.ActionDeviceId) :
+                    _unitOfWork.GetRepository<ActionDevice>().GetFirstOrDefault(predicate: ad => ad.ActionDeviceId == source.ActionDeviceId) :
                     new ActionDevice(source.ActionDeviceId, source.Name, source.Type, source.Parameters, source.IsEnabled)
                     {
                         CreatedBy = source.CreatedBy,

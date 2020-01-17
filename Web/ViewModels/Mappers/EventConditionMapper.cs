@@ -1,6 +1,5 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using AutoMapper;
-using GrowRoomEnvironment.DataAccess;
 using GrowRoomEnvironment.DataAccess.Models;
 
 namespace GrowRoomEnvironment.Web.ViewModels.Mappers
@@ -16,12 +15,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public EventCondition Convert(EventConditionViewModel source, EventCondition destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
                 destination = source.EventConditionId > 0 ?
-                    _unitOfWork.GetRepository<EventCondition>().Find(source.EventConditionId) :
+                    _unitOfWork.GetRepository<EventCondition>().GetFirstOrDefault(predicate: ec => ec.EventConditionId == source.EventConditionId) :
                     new EventCondition(source.EventConditionId, source.EventId, source.DataPointId, source.Operator, source.Value)
                     {
                         CreatedBy = source.CreatedBy,

@@ -57,7 +57,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Get(int dataPointId)
         {
-            DataPoint dataPoint = await _repository.FindAsync(dataPointId);
+            DataPoint dataPoint = await _repository.GetFirstOrDefaultAsync(predicate: d => d.DataPointId == dataPointId);
             if (dataPoint == null)
                 return NotFound(dataPointId);
             else
@@ -70,7 +70,7 @@ namespace GrowRoomEnvironment.Web.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> Delete(int dataPointId)
         {
-            DataPoint dataPoint = await _repository.FindAsync(dataPointId);
+            DataPoint dataPoint = await _repository.GetFirstOrDefaultAsync(predicate: d => d.DataPointId == dataPointId);
             if (dataPoint == null)
                 return NotFound(dataPointId);
             DataPointViewModel dataPointVM = _mapper.Map<DataPointViewModel>(dataPoint);
@@ -129,7 +129,7 @@ namespace GrowRoomEnvironment.Web.Controllers
                 if (patch == null)
                     return BadRequest($"{nameof(patch)} cannot be null");
 
-                DataPointViewModel dataPointVM = _mapper.Map<DataPointViewModel>(await _repository.FindAsync(dataPointId));
+                DataPointViewModel dataPointVM = _mapper.Map<DataPointViewModel>(await _repository.GetFirstOrDefaultAsync(predicate: d => d.DataPointId == dataPointId));
                 patch.ApplyTo(dataPointVM, e => ModelState.AddModelError("", e.ErrorMessage));
                 if (ModelState.IsValid)
                 {

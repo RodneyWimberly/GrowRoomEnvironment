@@ -1,6 +1,5 @@
 ﻿using Arch.EntityFrameworkCore.UnitOfWork;
 using AutoMapper;
-using GrowRoomEnvironment.DataAccess;
 using GrowRoomEnvironment.DataAccess.Models;
 
 namespace GrowRoomEnvironment.Web.ViewModels.Mappers
@@ -16,12 +15,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public Notification Convert(NotificationViewModel source, Notification destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
                 destination = source.NotificationId > 0 ?
-                    _unitOfWork.GetRepository<Notification>().Find(source.NotificationId) :
+                    _unitOfWork.GetRepository<Notification>().GetFirstOrDefault(predicate: n => n.NotificationId == source.NotificationId) :
                     new Notification(source.NotificationId, source.Header, source.Body, source.IsRead, source.IsPinned, source.Date)
                     {
                         CreatedBy = source.CreatedBy,

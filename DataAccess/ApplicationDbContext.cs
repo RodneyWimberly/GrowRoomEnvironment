@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +36,7 @@ namespace GrowRoomEnvironment.DataAccess
 
         public void DetachAllEntities()
         {
-            List<EntityEntry> changedEntriesCopy = this.ChangeTracker.Entries()
+            List<EntityEntry> changedEntriesCopy = ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Added ||
                             e.State == EntityState.Modified ||
                             e.State == EntityState.Deleted)
@@ -45,7 +47,8 @@ namespace GrowRoomEnvironment.DataAccess
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-          => options.UseSqlite("Data Source=./GrowRoomEnvironment.db");
+          => options.UseSqlite("Data Source=./GrowRoomEnvironment.db")
+            .ConfigureWarnings(b => b.Ignore(new EventId[] { RelationalEventId.AmbientTransactionWarning }));
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -43,77 +43,85 @@ export class EventService {
     return symbol;
   }
 
-  userHasPermission(permissionValue: generated.PermissionValue): boolean {
-    return this.authEndpointService.userPermissions.some(p => p == permissionValue);
+  public get canManageEvents(): boolean {
+    return this.authEndpointService.userPermissions.some(p => p == generated.PermissionValues.ManageEvents);
   }
 
-  getActionDevices(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.ActionDeviceViewModel[]> {
+  public get canViewEvents(): boolean {
+    return this.authEndpointService.userPermissions.some(p => p == generated.PermissionValues.ViewEvents);
+  }
+
+  public get canExecuteEvents(): boolean {
+    return this.authEndpointService.userPermissions.some(p => p == generated.PermissionValues.ExecuteEvents);
+  }
+
+  public getActionDevices(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.ActionDeviceViewModel[]> {
     if (getDisabled == null)
       getDisabled = false;
     return pageNumber && pageSize ? this.actionDeviceEndpointService.getAllPaged(pageNumber, pageSize, getDisabled) :
       this.actionDeviceEndpointService.getAll(getDisabled);
   }
 
-  getActionDevice(actionDeviceId: number): Observable<generated.ActionDeviceViewModel> {
+  public getActionDevice(actionDeviceId: number): Observable<generated.ActionDeviceViewModel> {
     return this.actionDeviceEndpointService.get(actionDeviceId);
   }
 
-  getDataPoints(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.DataPointViewModel[]> {
+  public getDataPoints(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.DataPointViewModel[]> {
     if (getDisabled == null)
       getDisabled = false;
     return pageNumber && pageSize ? this.dataPointEndpointService.getAllPaged(pageNumber, pageSize, getDisabled) :
       this.dataPointEndpointService.getAll(getDisabled);
   }
 
-  getDataPoint(dataPointId: number): Observable<generated.DataPointViewModel> {
+  public getDataPoint(dataPointId: number): Observable<generated.DataPointViewModel> {
     return this.dataPointEndpointService.get(dataPointId);
   }
 
-  getEventConditionsByEventId(eventId: number, pageNumber?: number, pageSize?: number): Observable<generated.EventConditionViewModel[]> {
+  public getEventConditionsByEventId(eventId: number, pageNumber?: number, pageSize?: number): Observable<generated.EventConditionViewModel[]> {
     return pageNumber && pageSize ? this.eventConditionEndpointService.getByEventIdPaged(eventId, pageNumber, pageSize) :
       this.eventConditionEndpointService.getByEventId(eventId);
   }
 
-  addEventCondition(eventCondition: generated.EventConditionViewModel): Observable<generated.EventConditionViewModel> {
+  public addEventCondition(eventCondition: generated.EventConditionViewModel): Observable<generated.EventConditionViewModel> {
     return this.eventConditionEndpointService.post(eventCondition);
   }
 
-  updateEventCondition(eventCondition: generated.EventConditionViewModel): Observable<generated.EventConditionViewModel> {
+  public updateEventCondition(eventCondition: generated.EventConditionViewModel): Observable<generated.EventConditionViewModel> {
     return this.eventConditionEndpointService.put(eventCondition.eventConditionId, eventCondition);
   }
 
-  patchEventCondition(eventConditionId: number, eventCondition: generated.Operation[]): Observable<generated.EventConditionViewModel> {
+  public patchEventCondition(eventConditionId: number, eventCondition: generated.Operation[]): Observable<generated.EventConditionViewModel> {
     return this.eventConditionEndpointService.patch(eventConditionId, eventCondition);
   }
 
-  deleteEventCondition(eventConditionId: number): Observable<generated.EventConditionViewModel> {
+  public deleteEventCondition(eventConditionId: number): Observable<generated.EventConditionViewModel> {
     return this.eventConditionEndpointService.delete(eventConditionId);
   }
 
-  getEvents(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.EventViewModel[]> {
+  public getEvents(getDisabled?: boolean, pageNumber?: number, pageSize?: number): Observable<generated.EventViewModel[]> {
     if (getDisabled == null)
       getDisabled = false;
     return pageNumber && pageSize ? this.eventEndpointService.getAllPaged(pageNumber, pageSize, getDisabled) :
       this.eventEndpointService.getAll(getDisabled);
   }
 
-  getEvent(eventId: number): Observable<generated.EventViewModel> {
+  public getEvent(eventId: number): Observable<generated.EventViewModel> {
     return this.eventEndpointService.get(eventId);
   }
 
-  addEvent(event: generated.EventViewModel): Observable<generated.EventViewModel> {
+  public addEvent(event: generated.EventViewModel): Observable<generated.EventViewModel> {
     return this.eventEndpointService.post(event);
   }
 
-  updateEvent(event: generated.EventViewModel): Observable<generated.EventViewModel> {
+  public updateEvent(event: generated.EventViewModel): Observable<generated.EventViewModel> {
     return this.eventEndpointService.put(event.eventId, event);
   }
 
-  patchEvent(eventId: number, event: generated.Operation[]): Observable<generated.EventViewModel> {
+  public patchEvent(eventId: number, event: generated.Operation[]): Observable<generated.EventViewModel> {
     return this.eventEndpointService.patch(eventId, event);
   }
 
-  deleteEvent(eventId: number): Observable<generated.EventViewModel> {
+  public deleteEvent(eventId: number): Observable<generated.EventViewModel> {
     return this.eventEndpointService.delete(eventId);
   }
 }

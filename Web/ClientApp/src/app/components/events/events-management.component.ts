@@ -28,8 +28,8 @@ export class EventsManagementComponent implements OnInit, AfterViewInit {
   @ViewChild('dataTable', { static: true })
   private ngxDatatable: DatatableComponent;
   
-  @ViewChild('idTemplate', { static: true })
-  private idTemplate: TemplateRef<any>;
+  @ViewChild('isEnabledTemplate', { static: true })
+  private isEnabled: TemplateRef<any>;
 
   @ViewChild('eventConditionsTemplate', { static: true })
   private eventConditionsTemplate: TemplateRef<any>;
@@ -54,7 +54,7 @@ export class EventsManagementComponent implements OnInit, AfterViewInit {
     const gT = (key: string) => this.translationService.getTranslation(key);
 
     this.columns = [
-      { prop: 'eventId', name: gT('events.management.EventId'), width: 40, cellTemplate: this.idTemplate, canAutoResize: false },
+      { prop: 'isEnabled', name: gT('events.management.IsEnabled'), width: 70, cellTemplate: this.isEnabled, canAutoResize: false },
       { prop: 'name', name: gT('events.management.Name'), width: 50 },
       { prop: 'eventConditions', name: gT('events.management.EventConditions'), width: 350, cellTemplate: this.eventConditionsTemplate },
       { prop: 'actionDevice.name', name: gT('events.management.ActionDevice'), width: 50 },
@@ -114,11 +114,8 @@ export class EventsManagementComponent implements OnInit, AfterViewInit {
       let sourceIndex = this.cachedRows.indexOf(this.cachedEvent, 0);
       if (sourceIndex > -1) {
         Object.assign(this.cachedEvent, newEvent);
-        //this.cachedEvent.eventConditions = [...newEvent.eventConditions];
         Object.assign(this.cachedRows[sourceIndex], this.cachedEvent);
-        //this.cachedRows[sourceIndex].eventConditions = [...this.cachedEvent.eventConditions];
         Object.assign(this.rows[sourceIndex], this.cachedEvent);
-        //this.rows[sourceIndex].eventConditions = [...this.cachedEvent.eventConditions];
       }
     } else {
       const event = new generated.EventViewModel();
@@ -178,6 +175,6 @@ export class EventsManagementComponent implements OnInit, AfterViewInit {
   }
 
   protected get canManageEvents() {
-    return this.eventService.userHasPermission(generated.PermissionValues.ManageEvents);
+    return this.eventService.canManageEvents;
   }
 }

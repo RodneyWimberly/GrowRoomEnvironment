@@ -18,7 +18,7 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public ICollection<EventCondition> Convert(ICollection<EventConditionViewModel> source, ICollection<EventCondition> destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
@@ -28,7 +28,7 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
             {
                 foreach (EventConditionViewModel sourceItem in source)
                 {
-                    EventCondition destinitionItem = _unitOfWork.GetRepository<EventCondition>().Find(sourceItem.EventConditionId);
+                    EventCondition destinitionItem = _unitOfWork.GetRepository<EventCondition>().GetFirstOrDefault(predicate: ec => ec.EventConditionId == sourceItem.EventConditionId);
 
                     destination.Add(destinitionItem != null ?
                         context.Mapper.Map(sourceItem, destinitionItem) :
@@ -43,9 +43,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
                     if (destinationItem == null)
                     {
                         destinationItem = _unitOfWork.GetRepository<EventCondition>().GetFirstOrDefault(ec => ec, ec => ec.EventConditionId == sourceItem.EventConditionId);
+                        if (destinationItem == null)
+                            destinationItem = context.Mapper.Map<EventCondition>(sourceItem);
                         destination.Add(destinationItem);
                     }
-                    destinationItem = context.Mapper.Map(sourceItem, destinationItem);
+                    else
+                        destinationItem = context.Mapper.Map(sourceItem, destinationItem);
                 }
             }
             return destination;

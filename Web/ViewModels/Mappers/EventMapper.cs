@@ -16,12 +16,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public Event Convert(EventViewModel source, Event destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
                 destination = source.EventId > 0 ?
-                    _unitOfWork.GetRepository<Event>().Find(source.EventId) :
+                    _unitOfWork.GetRepository<Event>().GetFirstOrDefault(predicate: e => e.EventId == source.EventId) :
                     new Event(source.EventId, source.Name, source.ActionDeviceId, source.State, source.IsEnabled)
                     {
                         ActionDevice = context.Mapper.Map<ActionDevice>(source.ActionDevice),

@@ -16,12 +16,12 @@ namespace GrowRoomEnvironment.Web.ViewModels.Mappers
         public DataPoint Convert(DataPointViewModel source, DataPoint destination, ResolutionContext context)
         {
             if (source == null)
-                return null; ;
+                return null;
 
             if (destination == null)
             {
                 destination = source.DataPointId > 0 ?
-                    _unitOfWork.GetRepository<DataPoint>().Find(source.DataPointId) :
+                    _unitOfWork.GetRepository<DataPoint>().GetFirstOrDefault(predicate: d => d.DataPointId == source.DataPointId) :
                     new DataPoint(source.DataPointId, source.Name, source.IsEnabled)
                     {
                         CreatedBy = source.CreatedBy,

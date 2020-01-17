@@ -43,9 +43,9 @@ namespace GrowRoomEnvironment.DataAccess
         public static IServiceCollection AddHttpUnitOfWork(this IServiceCollection services)
 
         {
-            services.AddScoped<IRepositoryFactory, HttpUnitOfWork>();
-            services.AddScoped<IUnitOfWork, HttpUnitOfWork>();
-            services.AddScoped<IUnitOfWork<ApplicationDbContext>, HttpUnitOfWork>();
+            services.AddTransient<IRepositoryFactory, HttpUnitOfWork>();
+            services.AddTransient<IUnitOfWork, HttpUnitOfWork>();
+            services.AddTransient<IUnitOfWork<ApplicationDbContext>, HttpUnitOfWork>();
             return services;
         }
 
@@ -59,7 +59,7 @@ namespace GrowRoomEnvironment.DataAccess
                 dbOptions.UseSqlite(connectString, sqliteOptions => sqliteOptions.MigrationsAssembly(migrationsAssembly));
                 dbOptions.EnableSensitiveDataLogging(enableSensitiveDataLogging);
                 dbOptions.UseLazyLoadingProxies(useLazyLoadingProxies);
-            });
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             // add identity system for users and roles
             services.AddIdentity<ApplicationUser, ApplicationRole>()

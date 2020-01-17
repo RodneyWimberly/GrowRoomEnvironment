@@ -47,25 +47,26 @@ import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 import { AppComponent } from './components/app.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
-import { SettingsComponent } from './components/settings/settings.component';
 import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-import { ExtendedLogsComponent } from './components/extended-logs/extended-logs.component';
-import { EventsComponent } from './components/events/events.component';
-
-import { EventConditionsManagementComponent } from './components/controls/event-conditions-management.component';
-import { EventsManagementComponent } from './components/controls/events-management.component';
-import { EventEditorComponent } from './components/controls/event-editor.component';
-import { ExtendedLogsManagementComponent } from './components/controls/extended-logs-management.component';
-import { ExtendedLogEditorComponent } from './components/controls/extended-log-editor.component';
 import { NotificationsManagementComponent } from './components/controls/notifications-management.component';
 import { SearchBoxComponent } from './components/controls/search-box.component';
-import { UserEditorComponent } from './components/controls/user-editor.component';
-import { UserPreferencesComponent } from './components/controls/user-preferences.component';
-import { UsersManagementComponent } from './components/controls/users-management.component';
-import { RolesManagementComponent } from './components/controls/roles-management.component';
-import { RoleEditorComponent } from './components/controls/role-editor.component';
 
+import { SettingsComponent } from './components/settings/settings.component';
+import { UserEditorComponent } from './components/settings/user-editor.component';
+import { UserPreferencesComponent } from './components/settings/user-preferences.component';
+import { UsersManagementComponent } from './components/settings/users-management.component';
+import { RolesManagementComponent } from './components/settings/roles-management.component';
+import { RoleEditorComponent } from './components/settings/role-editor.component';
+
+import { ExtendedLogsComponent } from './components/extended-logs/extended-logs.component';
+import { ExtendedLogsManagementComponent } from './components/extended-logs/extended-logs-management.component';
+import { ExtendedLogEditorComponent } from './components/extended-logs/extended-log-editor.component';
+
+import { EventsComponent } from './components/events/events.component';
+import { EventsManagementComponent } from './components/events/events-management.component';
+import { EventEditorComponent } from './components/events/event-editor.component';
+import { EventConditionsManagementComponent } from './components/events/event-conditions-management.component';
 
 @NgModule({
     imports: [
