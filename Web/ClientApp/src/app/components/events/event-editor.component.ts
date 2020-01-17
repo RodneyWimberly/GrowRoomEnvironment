@@ -125,11 +125,15 @@ export class EventEditorComponent implements OnInit {
   protected save(): void {
     this.isSaving = true;
     this.alertService.startLoadingMessage('Saving changes...');
-    this.event.actionDevice = this.actionDevices.find(ad => ad.actionDeviceId == this.event.actionDeviceId);
+    if (!this.event.actionDevice)
+      this.event.actionDevice = new generated.ActionDeviceViewModel();
+    Object.assign(this.event.actionDevice, this.actionDevices.find(ad => ad.actionDeviceId == this.event.actionDeviceId));
     this.event.stateDescription = this.states[this.event.state];
     this.event.eventConditions.forEach((value: generated.EventConditionViewModel, index: number, array: generated.EventConditionViewModel[]) => {
       value.operatorDescription = generated.Operators[value.operator].toString();
-      value.dataPoint = this.dataPoints.find(dp => dp.dataPointId == value.dataPointId);
+      if (!value.dataPoint)
+        value.dataPoint = new generated.DataPointViewModel();
+      Object.assign(value.dataPoint, this.dataPoints.find(dp => dp.dataPointId == value.dataPointId));
     });
     if (this.viewModelState == ViewModelStates.New) {
       this.eventService.addEvent(this.event).subscribe(event => this.saveSuccessHelper(event), error => this.saveFailedHelper(error));

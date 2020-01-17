@@ -123,7 +123,8 @@ namespace GrowRoomEnvironment.Web.Controllers
                 @event = MegreViewModelToEntity(eventVM, @event);
                 EntityEntry<Event> addedEvent = await _repository.InsertAsync(@event);
                 await _unitOfWork.SaveChangesAsync();
-                eventVM = _mapper.Map<EventViewModel>(addedEvent.Entity);
+                @event = await GetByIdAsync(addedEvent.Entity.EventId);
+                eventVM = _mapper.Map<EventViewModel>(@event);
                 return CreatedAtAction("GetByEventId", new { eventId = eventVM.EventId }, eventVM);
             }
             else
