@@ -3,6 +3,7 @@ using GrowRoomEnvironment.DataAccess.Core;
 using GrowRoomEnvironment.DataAccess.Core.Interfaces;
 using GrowRoomEnvironment.DataAccess.Models;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -31,18 +32,20 @@ namespace GrowRoomEnvironment.DataAccess
         }
 
         public static IServiceCollection AddHttpUnitOfWork(this IServiceCollection services)
-
         {
             services.AddScoped<IRepositoryFactory, HttpUnitOfWork>();
             services.AddScoped<IUnitOfWork, HttpUnitOfWork>();
             services.AddScoped<IUnitOfWork<ApplicationDbContext>, HttpUnitOfWork>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }
 
         public static IServiceCollection AddApplicationDbContext(this IServiceCollection services, IConfigurationSection identityOptionsConfig,
-            string connectString, string migrationsAssembly, bool enableSensitiveDataLogging = false, bool useLazyLoadingProxies = false)
+            string connectString, bool enableSensitiveDataLogging = false, bool useLazyLoadingProxies = false)
 
         {
+            string migrationsAssembly = typeof(DatabaseExtensions).Assembly.FullName;
+
             // EF
             services.AddDbContext<ApplicationDbContext>(dbOptions =>
             {

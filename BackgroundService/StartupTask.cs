@@ -1,20 +1,23 @@
 ﻿using GrowRoomEnvironment.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.System.Threading;
 
 namespace BackgroundService
 {
-    public sealed class StartupTask : IBackgroundTask
+    public sealed class StartupTask : IBackgroundTask, IDisposable
     {
         BackgroundTaskDeferral _deferral;
         ThreadPoolTimer _timer;
         HttpClient _httpClient;
+
+        public void Dispose()
+        {
+            _timer.Cancel();
+            _httpClient.Dispose();
+            _deferral.Complete();
+        }
 
         public void Run(IBackgroundTaskInstance taskInstance)
         {

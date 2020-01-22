@@ -1,8 +1,7 @@
-﻿using GrowRoomEnvironment.Contracts.Email;
-
+﻿
 namespace GrowRoomEnvironment.Core.Email
 {
-    public class SmtpConfig : ISmtpConfig
+    public class SmtpConfig
     {
         public string Host { get; set; }
         public int Port { get; set; }

@@ -1,21 +1,19 @@
-﻿using MailKit.Net.Smtp;
+﻿using GrowRoomEnvironment.Core.Logging;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System;
-using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
-using GrowRoomEnvironment.Core.Logging;
-using GrowRoomEnvironment.Contracts.Email;
-using GrowRoomEnvironment.Core.Services;
-using Microsoft.Extensions.Options;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 
 namespace GrowRoomEnvironment.Core.Email
 {
 
-    public class EmailService : ServiceBase, IEmailService
+    public class EmailService : IEmailService
     {
-        readonly ISmtpConfig _smtpConfig;
+        readonly SmtpConfig _smtpConfig;
         readonly ILogger _logger;
 
         public EmailService(IOptions<SmtpConfig> smtpConfig, ILogger<EmailService> logger)
@@ -29,7 +27,7 @@ namespace GrowRoomEnvironment.Core.Email
             string recepientEmail,
             string subject,
             string body,
-            ISmtpConfig config = null,
+            SmtpConfig config = null,
             bool isHtml = true)
         {
             MailboxAddress from = new MailboxAddress(_smtpConfig.Name, _smtpConfig.EmailAddress);
@@ -47,7 +45,7 @@ namespace GrowRoomEnvironment.Core.Email
             string recepientEmail,
             string subject,
             string body,
-            ISmtpConfig config = null,
+            SmtpConfig config = null,
             bool isHtml = true)
         {
             MailboxAddress from = new MailboxAddress(senderName, senderEmail);
@@ -63,7 +61,7 @@ namespace GrowRoomEnvironment.Core.Email
             MailboxAddress[] recepients,
             string subject,
             string body,
-            ISmtpConfig config = null,
+            SmtpConfig config = null,
             bool isHtml = true)
         {
             MimeMessage message = new MimeMessage();

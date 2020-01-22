@@ -1,7 +1,7 @@
 ﻿using MimeKit;
 using System.Threading.Tasks;
 
-namespace GrowRoomEnvironment.Contracts.Email
+namespace GrowRoomEnvironment.Core.Email
 {
     public interface IEmailService
     {

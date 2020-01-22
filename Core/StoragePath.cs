@@ -1,26 +1,17 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting;
-using System;
+﻿using System;
 using System.IO;
 
 namespace GrowRoomEnvironment.Core
 {
     public static class StoragePath
     {
-        static IWebHostEnvironment _hostingEnvironment;
-        public static void Initialize(IWebHostEnvironment hostingEnvironment)
+        public static void Initialize(string rootPath)
         {
-            _hostingEnvironment = hostingEnvironment;
-
-            RootPath = _hostingEnvironment.ContentRootPath;
+            RootPath = rootPath; 
             WWWRootPath = Path.Combine(RootPath, "wwwroot");
             ClientAppPath = Path.Combine(RootPath, "ClientApp");
             EmailTemplatesPath = Path.Combine(RootPath, "EmailTemplates");
-            if(_hostingEnvironment.IsDevelopment())
-                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment-Dev.db");
-            else
-                DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
+            DbFile = Path.Combine(RootPath, "GrowRoomEnvironment.db");
             LogFile = Path.Combine(RootPath, "Log.txt");
         }
 
@@ -47,14 +38,12 @@ namespace GrowRoomEnvironment.Core
 
         public static string ReadPhysicalFile(string path)
         {
-            if (_hostingEnvironment == null)
-                throw new InvalidOperationException($"{nameof(StoragePath)} is not initialized");
+            FileInfo fileInfo = new FileInfo(path);
 
-            IFileInfo fileInfo = _hostingEnvironment.ContentRootFileProvider.GetFileInfo(path);
             if (!fileInfo.Exists)
                 throw new FileNotFoundException($"Cannot read file \"{path}\" because it was not found!");
 
-            using (Stream fs = fileInfo.CreateReadStream())
+            using (Stream fs = fileInfo.OpenRead())
             {
                 using (StreamReader sr = new StreamReader(fs))
                 {

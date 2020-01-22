@@ -1,6 +1,5 @@
 using AutoMapper;
 using FluentValidation;
-using GrowRoomEnvironment.Contracts.Email;
 using GrowRoomEnvironment.Core;
 using GrowRoomEnvironment.Core.Email;
 using GrowRoomEnvironment.Core.Logging;
@@ -15,7 +14,6 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -50,7 +48,6 @@ namespace GrowRoomEnvironment.Web
             services.AddApplicationDbContext(
                 Configuration.GetSection("IdentityOptions"),
                 Configuration["ConnectionStrings:DefaultConnection"],
-                typeof(DatabaseInitializer).Assembly.FullName,
                 WebHostEnvironment.IsDevelopment());
 
             // Configure JSON serializer to not complain when returning entities plus reference and navigational properties
@@ -128,15 +125,13 @@ namespace GrowRoomEnvironment.Web
             services.AddScoped<IEmailService, EmailService>();
 
             // Register Data Access Layer
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHttpUnitOfWork();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ILogger<Startup> logger)
         {
-            StoragePath.Initialize(env);
-            EmailTemplates.Initialize(env);
+            StoragePath.Initialize(env.ContentRootPath);
 
             if (env.IsDevelopment())
             {
