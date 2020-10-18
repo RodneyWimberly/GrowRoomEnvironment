@@ -11,8 +11,8 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import * as generated from './services/endpoint.services';
 import { AuthGuardService} from './services/auth-guard.service';
 import { Utilities } from './helpers/utilities';
-
-
+import { InputRefDirective } from './directives/input-ref.directive';
+import { CustomInputComponent } from './components/controls/custom-input.component';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -48,6 +48,7 @@ const routes: Routes = [
 
 
 @NgModule({
+  declarations: [InputRefDirective, CustomInputComponent],
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
   providers: [
