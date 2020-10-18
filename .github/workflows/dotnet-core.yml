@@ -45,7 +45,7 @@ jobs:
     - name: Set Angular version
       uses: ngworker/angular-versions-action@v1
       with:
-        angular-version: ${{ env.ANGULAR_VERSION }}
+        angular_version: ${{ env.ANGULAR_VERSION }}
 
     # Run NuGet and DotNet Restore
     - name: Restore Dependencies
