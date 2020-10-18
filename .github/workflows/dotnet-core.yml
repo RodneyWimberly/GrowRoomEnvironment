@@ -46,7 +46,7 @@ jobs:
       run: |
         npm uninstall -g @angular/cli
         npm cache clean --force
-        npm install -g .\web\clientapp
+        npm install -g './web/clientapp''
 
     # Run NuGet and DotNet Restore
     - name: Restore Dependencies
