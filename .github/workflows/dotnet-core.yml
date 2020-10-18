@@ -43,7 +43,7 @@ jobs:
 
     # Set Angular Version
     - name: Set Angular version
-      uses: ngworker/angular-versions-action@v1
+      uses: ngworker/angular-versions-action@v2
       with:
         angular_version: ${{ env.ANGULAR_VERSION }}
 
