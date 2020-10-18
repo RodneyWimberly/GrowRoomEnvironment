@@ -15,10 +15,11 @@ env:
   DOTNET_SOLUTION_NAME: 'GrowRoomEnvironment.sln'
   NUGET_VERSION: '5.0'
   NODE_VERSION: '12.19.0'
-  ANGULAR_VERSION: '8.1.0'
+  ANGULAR_VERSION: '8.1.x'
 
 jobs:
-  build-and-deploy:
+  create-and-deploy:
+    name: Create and Deploy WebApp
     runs-on: ubuntu-latest
     steps:
 
