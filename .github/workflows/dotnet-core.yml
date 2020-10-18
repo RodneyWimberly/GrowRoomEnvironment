@@ -1,4 +1,4 @@
-name: Build GrowRoomEnvironment and Deploy to GRE-WebApp Azure App Service
+name: Build GrowRoomEnvironment and Deploy to GRE-WebApp
 
 on:
   push:
@@ -25,31 +25,34 @@ jobs:
       uses: actions/checkout@v2
 
     # Install .NET Core
-    - name: Install .NET Core
+    - name: Install SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}  
 
     # Install NuGet
-    - name: Install NuGet Package Manager
+    - name: Install Package Manager
       uses: NuGet/setup-nuget@v1.0.2
       with:
         nuget-version: ${{ env.NUGET_VERSION }} 
 
     # Run NuGet Restore and DotNet Restore
-    - name: Restore Package
+    - name: Restore Dependencies
       run: |
         nuget restore ${{ env.DOTNET_SOLUTION_NAME }} 
         dotnet restore
 
-    # Run dotnet build and publish
-    - name: Build WebApp
-      run: |
-        dotnet build --configuration Release
-        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
+    # Run dotnet build 
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
           
-    # Deploy to Azure Web apps
-    - name: Deploy WebApp
+    # Run dotnet publish
+    - name: Publish
+      run: |
+        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
+      
+   # Deploy to Azure Web apps
+    - name: Deploy
       uses: azure/webapps-deploy@v2
       with: 
         app-name: ${{ env.AZURE_WEBAPP_NAME }}
