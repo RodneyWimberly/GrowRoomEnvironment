@@ -1,5 +1,4 @@
-name: Build GrowRoomEnvironment and Deploy to GRE-WebApp
-
+name: Build and Deploy GrowRoomEnvironment
 on:
   push:
     branches: 
@@ -7,7 +6,6 @@ on:
   pull_request:
     branches: 
       - '*'
-
 env:
   AZURE_WEBAPP_NAME: GRE-WebApp
   AZURE_WEBAPP_PACKAGE_PATH: '.'
@@ -16,13 +14,11 @@ env:
   NUGET_VERSION: '5.0'
   NODE_VERSION: '12.19.0'
   ANGULAR_VERSION: '8.1.x'
-
 jobs:
   create-and-deploy:
-    name: Create and Deploy WebApp
+    name: DevOps Pipeline
     runs-on: ubuntu-latest
     steps:
-
     # Get latest code
     - name: Clone Repository
       uses: actions/checkout@v2
