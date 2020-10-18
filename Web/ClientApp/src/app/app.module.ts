@@ -41,7 +41,6 @@ import { BootstrapTabDirective } from './directives/bootstrap-tab.directive';
 import { BootstrapToggleDirective } from './directives/bootstrap-toggle.directive';
 import { BootstrapSelectDirective } from './directives/bootstrap-select.directive';
 import { BootstrapDatepickerDirective } from './directives/bootstrap-datepicker.directive';
-import { InputRefDirective } from './directives/input-ref.directive';
 import { GroupByPipe } from './pipes/group-by.pipe';
 import { EnumToArrayPipe } from './pipes/enum-to-array.pipe';
 
@@ -52,7 +51,6 @@ import { AboutComponent } from './components/about/about.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { NotificationsManagementComponent } from './components/controls/notifications-management.component';
 import { SearchBoxComponent } from './components/controls/search-box.component';
-import { CustomInputComponent } from './components/controls/custom-input.component';
  
 import { SettingsComponent } from './components/settings/settings.component';
 import { UserEditorComponent } from './components/settings/user-editor.component';
