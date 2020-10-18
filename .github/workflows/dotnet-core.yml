@@ -42,11 +42,11 @@ jobs:
         node-version: ${{ env.NODE_VERSION }}
 
     # Set Angular Version
-    - name: Set Angular version
-      uses: ngworker/angular-versions-action@v2
-      with:
-        angular_version: ${{ env.ANGULAR_VERSION }}
-        file_path: './web/clientapp'
+    - name: Install Angular
+      run: |
+        npm uninstall -g @angular/cli
+        npm cache clean --force
+        npm install -g .\web\clientapp
 
     # Run NuGet and DotNet Restore
     - name: Restore Dependencies
