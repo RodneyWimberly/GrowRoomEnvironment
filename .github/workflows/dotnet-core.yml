@@ -46,7 +46,7 @@ jobs:
       uses: ngworker/angular-versions-action@v2
       with:
         angular_version: ${{ env.ANGULAR_VERSION }}
-        file_path: '.web/clientapp'
+        file_path: './web/clientapp'
 
     # Run NuGet and DotNet Restore
     - name: Restore Dependencies
