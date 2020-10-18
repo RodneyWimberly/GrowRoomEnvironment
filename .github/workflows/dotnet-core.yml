@@ -1,31 +1,57 @@
-name: .NET Core
+name: Build GrowRoomEnvironment and Deploy to GRE-WebApp Azure App Service
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+      - master 
   pull_request:
-    branches: [ master ]
+    branches: 
+      - '*'
+
+env:
+  AZURE_WEBAPP_NAME: GRE-WebApp
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+  DOTNET_VERSION: '3.1.301'   
+  DOTNET_SOLUTION_NAME: 'GrowRoomEnvironment.sln'
+  NUGET_VERSION: '5.0'
 
 jobs:
-  build:
-
-    runs-on: windows-2019
-
+  build-and-deploy:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
+
+    # Get latest code
+    - name: Clone Repository
+      uses: actions/checkout@v2
+
+    # Install .NET Core
+    - name: Install .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301  
-    - name: Setup NuGet
+        dotnet-version: ${{ env.DOTNET_VERSION }}  
+
+    # Install NuGet
+    - name: Install NuGet Package Manager
       uses: NuGet/setup-nuget@v1.0.2
       with:
-        nuget-version: '5.0' 
-    - name: NuGet Restore
-      run: nuget restore GrowRoomEnvironment.sln
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+        nuget-version: ${{ env.NUGET_VERSION }} 
+
+    # Run NuGet Restore and DotNet Restore
+    - name: Restore Package
+      run: |
+        nuget restore ${{ env.DOTNET_SOLUTION_NAME }} 
+        dotnet restore
+
+    # Run dotnet build and publish
+    - name: Build WebApp
+      run: |
+        dotnet build --configuration Release
+        dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp' 
+          
+    # Deploy to Azure Web apps
+    - name: Deploy WebApp
+      uses: azure/webapps-deploy@v2
+      with: 
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE  }} 
+        package: '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
